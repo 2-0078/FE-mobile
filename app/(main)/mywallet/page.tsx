@@ -7,8 +7,8 @@ import GraphSection from "@/components/(main)/graphsection";
 
 export default function page() {
   return (
-    <PageWrapper className=" px-0">
-      <Header title="내 지갑" />
+    <PageWrapper className="px-0">
+      <Header title="내 지갑" className="px-6" />
       <section className="text-center px-6 py-8">
         <p className="text-lg mb-2">현재 잔액</p>
         <h2>
