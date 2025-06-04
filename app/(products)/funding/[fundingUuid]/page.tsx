@@ -1,6 +1,5 @@
 import PageWrapper from "@/components/layout/PageWrapper";
 import Image from "next/image";
-import BackButton from "@/components/common/BackButton";
 import InfoCardLayout from "@/components/layout/InfoCardLayout";
 import ClockIcon from "@/repo/ui/Icons/ClockIcon";
 import TempPriceIcon from "@/repo/ui/Icons/TempPriceIcon";
