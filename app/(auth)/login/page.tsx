@@ -15,7 +15,7 @@ export default function page() {
 
   return (
     <PageWrapper>
-      <Header isAlert={false} title="SIGN UP" />
+      <Header isAlert={false} title="LOGIN" />
 
       {/* Form Fields */}
       <div className="px-6 flex-1">
@@ -71,10 +71,16 @@ export default function page() {
         </div>
       </div>
 
-      {/* Next Button */}
-      <div className="absolute bottom-5 left-0 right-0 p-6">
+      {/* Login Button */}
+      <div className="absolute bottom-20 left-0 right-0 p-6">
+        <Button className="w-full bg-custom-light-blue font-bold text-lg py-4 rounded-full h-14">
+          LOGIN
+        </Button>
+      </div>
+      {/* SIGNUP Button */}
+      <div className="absolute bottom-4 left-0 right-0 p-6">
         <Button className="w-full bg-custom-green text-black font-bold text-lg py-4 rounded-full h-14">
-          NEXT
+          SIGN UP
         </Button>
       </div>
     </PageWrapper>
