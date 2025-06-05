@@ -52,7 +52,7 @@ export default function Stepper({
         {Array.from({ length: totalStepsLength }, (_, index) => (
           <p
             key={index}
-            className={`transition-colors delay-300 duration-500 ease-in-out
+            className={`transition-colors w-10 text-xs delay-300 duration-500 ease-in-out
             ${
               index + 1 <= steps ? "text-custom-green " : "text-custom-gray-300"
             }`}
