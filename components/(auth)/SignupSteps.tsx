@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
 
-import { signup } from "@/app/action/auth-service";
-import { useFunnel } from "@/app/action/funnel";
+import { signup } from "@/action/auth-service";
+import { useFunnel } from "@/action/funnel";
 
 import Stepper from "./Stepper";
 import SignupInfoSection from "./SignupInfoSection";

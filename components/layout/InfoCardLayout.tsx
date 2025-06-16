@@ -15,12 +15,12 @@ export default function InfoCardLayout({
   return (
     <div
       className={cn(
-        "flex items-center px-4 py-1.5 space-x-2 rounded-full bg-custom-slate",
+        "flex h-14 w-full items-center px-4 py-1.5 space-x-2 rounded-full bg-custom-slate",
         className
       )}
     >
       {icon}
-      <div className="space-y-1 text-center">
+      <div className="space-y-1 text-center grow-1">
         <p className="text-xs text-custom-gray-200 leading-none">{title}</p>
         {children}
       </div>
