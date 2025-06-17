@@ -14,8 +14,8 @@ export interface FunnelProps {
 interface FunnelState {
   currentStep: string;
   setStep: (step: string) => void;
-  formData: Record<string, any>;
-  setFormData: (data: Record<string, any>) => void;
+  formData: Record<string, string>;
+  setFormData: (data: Record<string, string>) => void;
   initializeStep: (step: string) => void;
 }
 

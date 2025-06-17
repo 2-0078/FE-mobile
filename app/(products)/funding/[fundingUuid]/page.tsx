@@ -31,7 +31,7 @@ const productData: ProductData = {
   endDateTime: "2026-01-01",
 };
 
-export default function LuxuryAuctionApp() {
+export default function FundingPage() {
   return (
     <PageWrapper>
       <div className="relative rounded-xl overflow-hidden w-full h-[50vh]">

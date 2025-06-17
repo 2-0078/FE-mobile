@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import Header from "@/components/layout/Header";
 import PageWrapper from "@/components/layout/PageWrapper";
 
-export default function page() {
+export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("ronaldosilva@gmail.com");
   const [password, setPassword] = useState("password123");

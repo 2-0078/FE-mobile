@@ -7,7 +7,12 @@ import { Label } from "../ui/label";
 export default function PhonenumberSection({
   onNext,
 }: {
-  onNext: (data: any) => void;
+  onNext: (data: {
+    phoneNumber: string;
+    name: string;
+    birthdate: string;
+    gender: string;
+  }) => void;
 }) {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [name, setName] = useState("");

@@ -8,7 +8,7 @@ import { Label } from "../ui/label";
 export default function SignupInfoSection({
   onNext,
 }: {
-  onNext: (data: any) => void;
+  onNext: (data: { email: string; password: string }) => void;
 }) {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("ronaldosilva@gmail.com");

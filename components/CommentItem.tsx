@@ -1,5 +1,3 @@
-import { MoreHorizontal, Trash2 } from "lucide-react";
-
 interface CommentItemProps {
   id: string;
   avatar: string;

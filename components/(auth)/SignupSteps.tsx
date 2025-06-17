@@ -15,11 +15,11 @@ export default function SignupSteps() {
   const { Funnel, Step, setStep, formData, setFormData, currentStep } =
     useFunnel("step1");
 
-  const handleNext = (data: any, step: string) => {
+  const handleNext = (data: Record<string, string>, step: string) => {
     setStep(step);
     setFormData({ ...formData, ...data });
   };
-  const handleSubmit = async (data: any) => {
+  const handleSubmit = async (data: Record<string, string>) => {
     const signupData = { ...formData, ...data };
     setFormData(signupData);
     const res = await signup(signupData);
@@ -31,9 +31,9 @@ export default function SignupSteps() {
       <Stepper
         totalSteps={["step1", "step2", "step3"]}
         icons={[
-          <FileTextIcon className="w-4 h-4" />,
-          <CreditCardIcon className="w-4 h-4" />,
-          <UserPenIcon className="w-4 h-4" />,
+          <FileTextIcon className="w-4 h-4" key="step1" />,
+          <CreditCardIcon className="w-4 h-4" key="step2" />,
+          <UserPenIcon className="w-4 h-4" key="step3" />,
         ]}
         currentStep={currentStep}
         className="mb-10"
@@ -41,21 +41,26 @@ export default function SignupSteps() {
       <Funnel>
         <Step name="step1">
           <SignupInfoSection
-            onNext={(data: any) => {
+            onNext={(data: { email: string; password: string }) => {
               handleNext(data, "step2");
             }}
           />
         </Step>
         <Step name="step2">
           <PhonenumberSection
-            onNext={(data: any) => {
+            onNext={(data: {
+              phoneNumber: string;
+              name: string;
+              birthdate: string;
+              gender: string;
+            }) => {
               handleNext(data, "step3");
             }}
           />
         </Step>
         <Step name="step3">
           <NicknameSection
-            onNext={(data: any) => {
+            onNext={(data: { nickname: string }) => {
               handleSubmit(data);
             }}
           />
