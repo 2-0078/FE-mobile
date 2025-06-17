@@ -95,11 +95,8 @@ export default function ModalSection() {
                 totalPieces={productData.totalPieces}
                 remainingPieces={productData.remainingPieces}
               />
-              <BalanceInfo
-                depositBalance={1200000000}
-                reserveAmount={490000000}
-              />
-              <AmountSection />
+              <BalanceInfo depositBalance={1200000000} />
+              <AmountSection piecePrice={productData.currentPrice} />
               <div className="sticky bottom-0 bg-white p-4">
                 <Button className="w-full h-14 bg-custom-green text-black text-lg font-bold rounded-full">
                   매수하기

@@ -10,19 +10,20 @@ export function PriceInfo({
   remainingPieces,
 }: PriceInfoProps) {
   return (
-    <div>
+    <div className="mb-2">
       <div className="flex items-center justify-between">
-        <span className="text-gray-600 text-sm">조각 공모가</span>
-        <span className="text-gray-600 text-sm">총조각/남은조각</span>
+        <span className="text-custom-gray-200 text-xs">조각 공모가</span>
+        <span className="text-custom-gray-200 text-xs">남은조각/총조각</span>
       </div>
-      <div className="flex items-center justify-between">
+      <p className="flex items-center justify-between">
         <span className="text-black text-3xl font-bold">
           {currentPrice.toLocaleString()}
         </span>
-        <span className="text-black text-xl">
-          {totalPieces}/{remainingPieces}
+        <span className="text-black text-lg font-semibold">
+          {remainingPieces}/
+          <span className="text-black text-lg font-light">{totalPieces}</span>
         </span>
-      </div>
+      </p>
     </div>
   );
 }

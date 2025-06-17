@@ -53,7 +53,6 @@ export default function LuxuryAuctionApp() {
       </div>
 
       <CountdownTimer endDateTime={productData.endDateTime} />
-
       <div className="flex justify-around gap-x-2">
         <InfoCardLayout
           className="border-white border-1"

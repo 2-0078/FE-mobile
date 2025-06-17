@@ -2,13 +2,9 @@ import { Button } from "@/components/ui/button";
 
 interface BalanceInfoProps {
   depositBalance: number;
-  reserveAmount: number;
 }
 
-export function BalanceInfo({
-  depositBalance,
-  reserveAmount,
-}: BalanceInfoProps) {
+export function BalanceInfo({ depositBalance }: BalanceInfoProps) {
   return (
     <>
       <div>
@@ -18,16 +14,9 @@ export function BalanceInfo({
             {depositBalance.toLocaleString()}원
           </span>
         </p>
-        <Button className="w-full h-12 bg-black hover:bg-black/90 text-white rounded-lg">
-          예치금이 부족합니까?
+        <Button className="w-full h-10 bg-black text-white rounded-full">
+          예치금이 부족하신가요?
         </Button>
-      </div>
-
-      <div className="text-center">
-        <p className="text-gray-600 text-xs">매수 총액</p>
-        <p className="text-black text-3xl font-bold mb-4">
-          {reserveAmount.toLocaleString()}원
-        </p>
       </div>
     </>
   );
