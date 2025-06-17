@@ -16,10 +16,14 @@ export default function Header({
   className?: string;
 }) {
   return (
-    <header className={cn("flex items-center justify-between", className)}>
-      {isBackButton && <BackButton />}
-      <TitleWrapper className="text-xl">{title}</TitleWrapper>
-      {isAlert && <AlertButton isActive={true} />}
+    <header className={cn("grid grid-cols-3 items-center", className)}>
+      <div className="justify-self-start">{isBackButton && <BackButton />}</div>
+      <div className="justify-self-center">
+        <TitleWrapper className="text-xl text-center">{title}</TitleWrapper>
+      </div>
+      <div className="justify-self-end">
+        {isAlert && <AlertButton isActive={true} />}
+      </div>
     </header>
   );
 }
