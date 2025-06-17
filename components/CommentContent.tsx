@@ -21,8 +21,8 @@ export function CommentsContent({ comments }: CommentsContentProps) {
 
       {/* Bottom Input */}
       <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4">
-        <Button className="w-full h-12 bg-black hover:bg-black/90 text-white rounded-lg">
-          댓글을 입력해 주세요
+        <Button className="w-full h-12 bg-black text-white rounded-lg">
+          댓글 작성하기
         </Button>
       </div>
     </>
