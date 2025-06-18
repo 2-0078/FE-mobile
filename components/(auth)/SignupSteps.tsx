@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-
+import { useRouter } from "next/navigation";
 import { signup } from "@/action/auth-service";
 import { useFunnel } from "@/action/funnel";
 
@@ -12,6 +12,7 @@ import PhonenumberSection from "./PhonenumberSection";
 import NicknameSection from "./NicknameSection";
 
 export default function SignupSteps() {
+  const router = useRouter();
   const { Funnel, Step, setStep, formData, setFormData, currentStep } =
     useFunnel("step1");
 
@@ -23,7 +24,12 @@ export default function SignupSteps() {
     const signupData = { ...formData, ...data };
     setFormData(signupData);
     const res = await signup(signupData);
-    console.log(res);
+    if (res.isSuccess) {
+      alert("회원가입 성공");
+      router.push("/login");
+    } else {
+      alert(res.message);
+    }
   };
 
   return (
