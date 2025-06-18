@@ -7,16 +7,19 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Header from "@/components/layout/Header";
 import PageWrapper from "@/components/layout/PageWrapper";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 
-export default function LoginPage() {
+export default function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ callbackUrl: string }>;
+}) {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
   const [error, setError] = useState("");
-  const searchParams = useSearchParams();
   return (
     <PageWrapper>
       <Header isAlert={false} title="LOGIN" />
@@ -33,7 +36,7 @@ export default function LoginPage() {
             return;
           }
           if (res?.ok) {
-            const callbackUrl = searchParams.get("callbackUrl");
+            const callbackUrl = (await searchParams).callbackUrl;
             router.push(callbackUrl || "/");
             router.refresh();
           }
