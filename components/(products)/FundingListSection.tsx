@@ -19,7 +19,7 @@ const crowdfundingProducts: CrowdfundingProduct[] = [
   {
     id: "1",
     image: "/placeholder.svg?height=60&width=60",
-    title: "샤넬 클래식 플랩백 길어지면 이렇게 됩니다.",
+    title: "샤넬 클래식 플랩백",
     brand: "Chanel",
     currentParticipants: 45,
     totalParticipants: 100,

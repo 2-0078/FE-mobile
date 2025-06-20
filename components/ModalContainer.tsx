@@ -5,17 +5,18 @@ import { useState, useEffect, type ReactNode } from "react";
 interface ModalContainerProps {
   children: ReactNode | ((handleClose: () => void) => ReactNode);
   isOpen: boolean;
-  onClose: () => void;
+  onClose?: () => void;
+  withAnimation?: boolean;
 }
 
 export function ModalContainer({
   children,
   isOpen,
+  withAnimation = true,
   onClose,
 }: ModalContainerProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
-
   useEffect(() => {
     if (isOpen) {
       // 뒤쪽 페이지 스크롤 비활성화
@@ -40,7 +41,7 @@ export function ModalContainer({
       document.body.style.overflow = "unset";
       setIsVisible(false);
       setIsClosing(false);
-      onClose();
+      onClose?.();
     }, 300);
   };
 
@@ -49,11 +50,13 @@ export function ModalContainer({
   return (
     <div
       className={`fixed inset-0 z-50 transform transition-transform duration-300 ease-in-out ${
-        isClosing
-          ? "translate-y-full"
-          : isVisible
-          ? "translate-y-0"
-          : "translate-y-full"
+        withAnimation
+          ? isClosing
+            ? "translate-y-full"
+            : isVisible
+            ? "translate-y-0"
+            : "translate-y-full"
+          : ""
       }`}
     >
       <div className="h-full overflow-y-auto">

@@ -60,10 +60,10 @@ export default function ModalSection() {
   const { currentModal, closeModal } = useModal();
   return (
     <>
-      {/* Comments Modal */}
       <ModalContainer
         isOpen={currentModal === "comments"}
         onClose={() => closeModal()}
+        withAnimation={false}
       >
         {(handleClose: () => void) => (
           <>

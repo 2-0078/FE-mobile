@@ -112,7 +112,7 @@ export default async function FundingPage({
     ];
   }
   return (
-    <div className="max-w-sm mx-auto  min-h-screen pb-20">
+    <div className=" pb-20">
       {/* Header */}
       <div className="px-4 py-4 text-center border-b border-gray-800">
         <h1 className="text-2xl font-bold text-custom-green">Piece of Cake</h1>
