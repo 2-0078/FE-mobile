@@ -43,7 +43,7 @@ export default function Pagenation({ totalPages }: { totalPages: number }) {
       <Button
         variant="ghost"
         size="sm"
-        className="text-gray-400 hover:text-white"
+        className="text-gray-400 "
         onClick={() => {
           if (currentPage > 1) {
             handlePageChange(currentPage - 1);
@@ -59,7 +59,7 @@ export default function Pagenation({ totalPages }: { totalPages: number }) {
               className={`w-8 h-8 rounded-full text-sm ${
                 page === currentPage
                   ? "bg-green-500 text-white"
-                  : "text-gray-400 hover:text-white hover:bg-gray-800"
+                  : "text-gray-400  "
               }`}
               onClick={() => handlePageChange(page as number)}
             >
@@ -71,7 +71,7 @@ export default function Pagenation({ totalPages }: { totalPages: number }) {
       <Button
         variant="ghost"
         size="sm"
-        className="text-gray-400 hover:text-white"
+        className="text-gray-400 "
         onClick={() => {
           if (currentPage < totalPages) {
             handlePageChange(currentPage + 1);

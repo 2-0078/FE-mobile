@@ -147,10 +147,10 @@ export default async function PiecePage({
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
             <Input
               placeholder="상품을 검색하세요"
-              className="pl-10 bg-gray-800 border-gray-700 rounded-lg text-white placeholder-gray-400"
+              className="pl-10 bg-slate-800/50 border-gray-700 rounded-lg text-white placeholder-gray-400"
             />
           </div>
-          <Button className="bg-green-500 hover:bg-green-600 px-4">검색</Button>
+          <Button className="bg-green-500 px-4">검색</Button>
         </div>
       </div>
 
@@ -164,7 +164,7 @@ export default async function PiecePage({
                 className={`px-3 py-1 rounded-full text-xs transition-all ${
                   selectedSort === filter
                     ? "bg-gray-700 text-green-400"
-                    : "text-gray-400 hover:text-white"
+                    : "text-gray-400"
                 }`}
               >
                 {filter}
@@ -187,11 +187,11 @@ export default async function PiecePage({
         {products.map((product) => (
           <div
             key={product.id}
-            className="bg-slate-800/50 h-24 rounded-lg px-4 py-2 border border-slate-700/50"
+            className="bg-slate-800/50 h-30 rounded-lg px-4 py-2 border border-slate-700/50"
           >
             <Link href={`/piece/${product.id}`}>
               <div className="flex items-center gap-3">
-                <div className="w-16 h-20 relative rounded-lg flex items-center justify-center">
+                <div className="w-16 h-24 relative rounded-lg flex items-center justify-center">
                   <Image
                     src="/example.png"
                     alt="example"

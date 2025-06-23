@@ -20,28 +20,28 @@ export function NumberPad({
         {/* 첫 번째 줄: 1, 2, 3, Clear */}
         <Button
           variant="ghost"
-          className="w-14 h-14 rounded-full bg-black hover:bg-black/90 text-white text-xl font-bold"
+          className="w-14 h-14 rounded-full bg-black  text-white text-xl font-bold"
           onClick={() => onNumberClick("1")}
         >
           1
         </Button>
         <Button
           variant="ghost"
-          className="w-14 h-14 rounded-full bg-black hover:bg-black/90 text-white text-xl font-bold"
+          className="w-14 h-14 rounded-full bg-black  text-white text-xl font-bold"
           onClick={() => onNumberClick("2")}
         >
           2
         </Button>
         <Button
           variant="ghost"
-          className="w-14 h-14 rounded-full bg-black hover:bg-black/90 text-white text-xl font-bold"
+          className="w-14 h-14 rounded-full bg-black  text-white text-xl font-bold"
           onClick={() => onNumberClick("3")}
         >
           3
         </Button>
         <Button
           variant="ghost"
-          className="w-14 h-14 rounded-full bg-red-600 hover:bg-red-700 text-white text-sm font-bold"
+          className="w-14 h-14 rounded-full bg-red-600 text-white text-sm font-bold"
           onClick={onClear}
         >
           <RotateCcw className="w-5 h-5" />
@@ -50,28 +50,28 @@ export function NumberPad({
         {/* 두 번째 줄: 4, 5, 6, 7 */}
         <Button
           variant="ghost"
-          className="w-14 h-14 rounded-full bg-black hover:bg-black/90 text-white text-xl font-bold"
+          className="w-14 h-14 rounded-full bg-black  text-white text-xl font-bold"
           onClick={() => onNumberClick("4")}
         >
           4
         </Button>
         <Button
           variant="ghost"
-          className="w-14 h-14 rounded-full bg-black hover:bg-black/90 text-white text-xl font-bold"
+          className="w-14 h-14 rounded-full bg-black  text-white text-xl font-bold"
           onClick={() => onNumberClick("5")}
         >
           5
         </Button>
         <Button
           variant="ghost"
-          className="w-14 h-14 rounded-full bg-black hover:bg-black/90 text-white text-xl font-bold"
+          className="w-14 h-14 rounded-full bg-black  text-white text-xl font-bold"
           onClick={() => onNumberClick("6")}
         >
           6
         </Button>
         <Button
           variant="ghost"
-          className="w-14 h-14 rounded-full bg-black hover:bg-black/90 text-white text-xl font-bold"
+          className="w-14 h-14 rounded-full bg-black  text-white text-xl font-bold"
           onClick={() => onNumberClick("7")}
         >
           7
@@ -80,28 +80,28 @@ export function NumberPad({
         {/* 세 번째 줄: 8, 9, 0, Delete */}
         <Button
           variant="ghost"
-          className="w-14 h-14 rounded-full bg-black hover:bg-black/90 text-white text-xl font-bold"
+          className="w-14 h-14 rounded-full bg-black  text-white text-xl font-bold"
           onClick={() => onNumberClick("8")}
         >
           8
         </Button>
         <Button
           variant="ghost"
-          className="w-14 h-14 rounded-full bg-black hover:bg-black/90 text-white text-xl font-bold"
+          className="w-14 h-14 rounded-full bg-black  text-white text-xl font-bold"
           onClick={() => onNumberClick("9")}
         >
           9
         </Button>
         <Button
           variant="ghost"
-          className="w-14 h-14 rounded-full bg-black hover:bg-black/90 text-white text-xl font-bold"
+          className="w-14 h-14 rounded-full bg-black  text-white text-xl font-bold"
           onClick={() => onNumberClick("0")}
         >
           0
         </Button>
         <Button
           variant="ghost"
-          className="w-14 h-14 rounded-full bg-gray-600 hover:bg-gray-700 text-white text-xl font-bold"
+          className="w-14 h-14 rounded-full bg-gray-600  text-white text-xl font-bold"
           onClick={onDelete}
         >
           <Delete className="size-5" />

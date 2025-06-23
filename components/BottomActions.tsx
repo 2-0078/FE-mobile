@@ -21,7 +21,7 @@ export function BottomActions() {
         <Button
           variant="ghost"
           size="icon"
-          className="w-14 h-14 rounded-full border-2 border-custom-green bg-transparent hover:bg-custom-green/10"
+          className="w-14 h-14 rounded-full border-2 border-custom-green bg-transparent"
           onClick={() => openModal("comments")}
         >
           <MessageCircle className="w-6 h-6 text-custom-green" />

@@ -128,10 +128,10 @@ export default async function FundingPage({
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
             <Input
               placeholder="상품을 검색하세요"
-              className="pl-10 bg-gray-800 border-gray-700 rounded-lg text-white placeholder-gray-400"
+              className="pl-10 bg-slate-800/50 border-gray-700 rounded-lg text-white placeholder-gray-400"
             />
           </div>
-          <Button className="bg-green-500 hover:bg-green-600 px-4">검색</Button>
+          <Button className="bg-green-500 px-4">검색</Button>
         </div>
       </div>
 
@@ -145,7 +145,7 @@ export default async function FundingPage({
                 className={`px-3 py-1 rounded-full text-xs transition-all ${
                   selectedSort === filter
                     ? "bg-gray-700 text-green-400"
-                    : "text-gray-400 hover:text-white"
+                    : "text-gray-400"
                 }`}
               >
                 {filter}
@@ -165,16 +165,6 @@ export default async function FundingPage({
       </div>
 
       <FundingListSection />
-      {products.length === 0 && (
-        <div className="text-center py-12">
-          <div className="text-gray-500 mb-2">
-            해당 카테고리에 상품이 없습니다
-          </div>
-          <div className="text-sm text-gray-600">
-            다른 카테고리를 선택해보세요
-          </div>
-        </div>
-      )}
 
       {/* Pagination */}
       <Pagenation totalPages={10} />

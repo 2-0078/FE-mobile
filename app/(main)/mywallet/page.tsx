@@ -53,7 +53,7 @@ function AssetPieChart() {
   };
 
   return (
-    <div className="bg-gray-800 rounded-2xl px-4 pt-2">
+    <div className="bg-slate-800/50 rounded-2xl px-4 pt-2">
       <h3 className="text-white text-lg font-semibold text-center">
         내 자산 가치
       </h3>
@@ -96,7 +96,7 @@ export default function AssetManagementPage() {
 
       {/* Total Assets Card */}
       <div>
-        <div className="bg-gray-800 rounded-2xl p-6">
+        <div className="bg-slate-800/50 rounded-2xl p-6">
           <div className="text-center mb-6">
             <p className="text-gray-400 mb-2">예치금</p>
             <h2 className="text-3xl font-bold mb-1">₩12,345</h2>
@@ -117,42 +117,42 @@ export default function AssetManagementPage() {
       <div className="grid grid-cols-2 gap-3">
         <Button
           variant="ghost"
-          className="bg-gray-800 hover:bg-gray-700 p-4 h-auto flex flex-col items-center space-y-2"
+          className="bg-slate-800/50  p-4 h-auto flex flex-col items-center space-y-2"
         >
           <Gem className="h-6 w-6 text-green-400" />
           <span className="text-white text-sm">보유 조각</span>
         </Button>
         <Button
           variant="ghost"
-          className="bg-gray-800 hover:bg-gray-700 p-4 h-auto flex flex-col items-center space-y-2"
+          className="bg-slate-800/50  p-4 h-auto flex flex-col items-center space-y-2"
         >
           <Trophy className="h-6 w-6 text-yellow-400" />
           <span className="text-white text-sm">참여 공모</span>
         </Button>
         <Button
           variant="ghost"
-          className="bg-gray-800 hover:bg-gray-700 p-4 h-auto flex flex-col items-center space-y-2"
+          className="bg-slate-800/50  p-4 h-auto flex flex-col items-center space-y-2"
         >
           <Heart className="h-6 w-6 text-red-400" />
           <span className="text-white text-sm">찜 목록</span>
         </Button>
         <Button
           variant="ghost"
-          className="bg-gray-800 hover:bg-gray-700 p-4 h-auto flex flex-col items-center space-y-2"
+          className="bg-slate-800/50  p-4 h-auto flex flex-col items-center space-y-2"
         >
           <Gavel className="h-6 w-6 text-pink-400" />
           <span className="text-white text-sm">내 경매</span>
         </Button>
         <Button
           variant="ghost"
-          className="bg-gray-800 hover:bg-gray-700 p-4 h-auto flex flex-col items-center space-y-2"
+          className="bg-slate-800/50  p-4 h-auto flex flex-col items-center space-y-2"
         >
           <Wallet className="h-6 w-6 text-gray-400" />
           <span className="text-white text-sm">예치금 사용 내역</span>
         </Button>
         <Button
           variant="ghost"
-          className="bg-gray-800 hover:bg-gray-700 p-4 h-auto flex flex-col items-center space-y-2"
+          className="bg-slate-800/50  p-4 h-auto flex flex-col items-center space-y-2"
         >
           <ShoppingBag className="h-6 w-6 text-purple-400" />
           <span className="text-white text-sm">내 구매 상품</span>
