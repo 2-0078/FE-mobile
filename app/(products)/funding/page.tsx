@@ -1,13 +1,15 @@
-import { Search } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import BottomNavbar from "@/components/layout/BottomNavbar";
 import CategorySection from "@/components/(products)/CategorySection";
-import { getMainCategories, getSubCategories } from "@/action/product-service";
-import { Category } from "@/types/ProductTypes";
+import {
+  getFundingProductsList,
+  getMainCategories,
+  getSubCategories,
+  getFundingProduct,
+} from "@/action/product-service";
+import { CategoryType } from "@/types/ProductTypes";
 import Pagenation from "@/components/common/Pagenation";
 import { FundingListSection } from "@/components/(products)/FundingListSection";
-
+import SearchBar from "@/components/common/SearchBar";
 export default async function FundingPage({
   searchParams,
 }: {
@@ -20,95 +22,27 @@ export default async function FundingPage({
   const params = await searchParams;
   const selectedSort = params.sort || "최신순";
   const selectedMainCategory = params.main || "전체";
-
   const filters = ["최신순", "인기순", "가격순"];
-
-  const products = [
-    {
-      id: 1,
-      name: "샤넬 클래식 플랩백",
-      brand: "Chanel",
-      price: "1,630만",
-      originalPrice: "1,500만",
-      change: "+8.7%",
-      isPositive: true,
-      image: "chanel-bag",
-      mainCategory: "가방",
-      subCategory: "샤넬",
-    },
-    {
-      id: 2,
-      name: "롤렉스 서브마리너",
-      brand: "Rolex",
-      price: "1,680만",
-      originalPrice: "1,720만",
-      change: "-2.3%",
-      isPositive: false,
-      image: "rolex-watch",
-      mainCategory: "시계",
-      subCategory: "롤렉스",
-    },
-    {
-      id: 3,
-      name: "에르메스 버킨백",
-      brand: "Hermès",
-      price: "2,100만",
-      originalPrice: "1,950만",
-      change: "+7.7%",
-      isPositive: true,
-      image: "hermes-bag",
-      mainCategory: "가방",
-      subCategory: "에르메스",
-    },
-    {
-      id: 4,
-      name: "샤넬 22백팩",
-      brand: "Chanel",
-      price: "934만",
-      originalPrice: "925만",
-      change: "+1.0%",
-      isPositive: true,
-      image: "chanel-backpack",
-      mainCategory: "가방",
-      subCategory: "샤넬",
-    },
-    {
-      id: 5,
-      name: "롤렉스 데이토나",
-      brand: "Rolex",
-      price: "3,060만",
-      originalPrice: "3,200만",
-      change: "-4.4%",
-      isPositive: false,
-      image: "rolex-daytona",
-      mainCategory: "시계",
-      subCategory: "롤렉스",
-    },
-    {
-      id: 6,
-      name: "루이비통 네버풀",
-      brand: "Louis Vuitton",
-      price: "180만",
-      originalPrice: "175만",
-      change: "+2.9%",
-      isPositive: true,
-      image: "lv-bag",
-      mainCategory: "가방",
-      subCategory: "루이비통",
-    },
-  ];
 
   const mainCategories = [
     { id: "전체", categoryName: "전체" },
     ...(await getMainCategories()),
   ];
-  let subCategories: Category[] = [];
+  let subCategories: CategoryType[] = [];
   if (selectedMainCategory != "전체") {
     subCategories = [
       { id: "전체", categoryName: "전체" },
       ...(await getSubCategories(selectedMainCategory)),
     ];
   }
+  const fundingProductsUuidList = await getFundingProductsList();
+
+  const fundingProducts = await Promise.all(
+    fundingProductsUuidList.fundingUuidList.map(async (Uuid) => {
+      return await getFundingProduct(Uuid);
+    })
+  );
+
   return (
     <div className=" pb-20">
       {/* Header */}
@@ -121,20 +55,7 @@ export default async function FundingPage({
         subCategories={subCategories}
       />
 
-      {/* Search Bar */}
-      <div className="px-4 mb-4">
-        <div className="flex gap-2">
-          <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <Input
-              placeholder="상품을 검색하세요"
-              className="pl-10 bg-slate-800/50 border-gray-700 rounded-lg text-white placeholder-gray-400"
-            />
-          </div>
-          <Button className="bg-green-500 px-4">검색</Button>
-        </div>
-      </div>
-
+      <SearchBar />
       {/* Filters */}
       <div className="px-4 mb-4">
         <div className="flex items-center justify-between mb-3">
@@ -159,15 +80,17 @@ export default async function FundingPage({
       <div className="px-4 mb-4">
         <p className="text-sm text-gray-400">
           총{" "}
-          <span className="text-green-400 font-medium">{products.length}</span>
+          <span className="text-green-400 font-medium">
+            {fundingProductsUuidList.totalElements}
+          </span>
           개의 상품
         </p>
       </div>
 
-      <FundingListSection />
+      <FundingListSection fundingProducts={fundingProducts} />
 
       {/* Pagination */}
-      <Pagenation totalPages={10} />
+      <Pagenation totalPages={fundingProductsUuidList.totalPage} />
       <BottomNavbar />
     </div>
   );

@@ -1,14 +1,14 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
-import { Category } from "@/types/ProductTypes";
+import { CategoryType } from "@/types/ProductTypes";
 
 export default function CategorySection({
   mainCategories,
   subCategories,
 }: {
-  mainCategories: Category[];
-  subCategories: Category[];
+  mainCategories: CategoryType[];
+  subCategories: CategoryType[];
 }) {
   const searchParams = useSearchParams();
   const selectedMainCategory = searchParams.get("main") || "전체";
@@ -27,12 +27,14 @@ export default function CategorySection({
 
     // 메인 카테고리 변경 시 서브 카테고리와 페이지 초기화
     if (key === "main") {
+      params.delete("search");
       params.delete("sub");
       params.delete("page");
     }
 
     // 서브 카테고리 변경 시 페이지 초기화
     if (key === "sub") {
+      params.delete("search");
       params.delete("page");
     }
 

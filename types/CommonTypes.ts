@@ -5,3 +5,12 @@ export interface CommonResponseType<T> {
   code: number;
   result: T;
 }
+
+export interface BasePaginationResponseType {
+  page: number;
+  size: number;
+  hasNext: boolean;
+  hasPrevious: boolean;
+  totalPage: number;
+  totalElements: number;
+}

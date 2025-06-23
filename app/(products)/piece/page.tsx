@@ -4,12 +4,13 @@ import Link from "next/link";
 import Image from "next/image";
 import { getMainCategories } from "@/action/product-service";
 import { getSubCategories } from "@/action/product-service";
-import { Category } from "@/types/ProductTypes";
+import { CategoryType } from "@/types/ProductTypes";
 import CategorySection from "@/components/(products)/CategorySection";
 import { Search, TrendingDown, TrendingUp } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Pagenation from "@/components/common/Pagenation";
+import { formatPrice } from "@/lib/utils";
 export default async function PiecePage({
   searchParams,
 }: {
@@ -82,20 +83,13 @@ export default async function PiecePage({
     { id: "전체", categoryName: "전체" },
     ...(await getMainCategories()),
   ];
-  let subCategories: Category[] = [];
+  let subCategories: CategoryType[] = [];
   if (selectedMainCategory != "전체") {
     subCategories = [
       { id: "전체", categoryName: "전체" },
       ...(await getSubCategories(selectedMainCategory)),
     ];
   }
-
-  const formatPrice = (price: number) => {
-    if (price >= 10000) {
-      return `₩${(price / 10000).toFixed(0)}만`;
-    }
-    return `₩${price.toLocaleString()}`;
-  };
 
   const MiniChart = ({
     data,
