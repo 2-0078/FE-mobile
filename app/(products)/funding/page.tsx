@@ -1,8 +1,6 @@
 import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import Image from "next/image";
-import Link from "next/link";
 import BottomNavbar from "@/components/layout/BottomNavbar";
 import CategorySection from "@/components/(products)/CategorySection";
 import { getMainCategories, getSubCategories } from "@/action/product-service";
@@ -165,53 +163,6 @@ export default async function FundingPage({
           개의 상품
         </p>
       </div>
-
-      {/* Product List */}
-      {/* 
-        {products.map((product) => (
-          <Link href={`/funding/${product.id}`} key={product.id}>
-            <div className="flex items-center py-4 border-b border-gray-800 last:border-b-0">
-              <div className="w-16 h-16 rounded-lg mr-4 flex items-center justify-center">
-                <Image
-                  src="/example.png"
-                  alt="example"
-                  width={48}
-                  height={48}
-                  className="object-cover"
-                />
-              </div>
-
-              <div className="flex-1">
-                <div className="flex items-start justify-between mb-1">
-                  <div>
-                    <div className="text-xs text-gray-400 mb-1">
-                      {product.brand}
-                    </div>
-                    <div className="text-sm font-medium text-white">
-                      {product.name}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="text-lg font-bold text-white">
-                      ₩{product.price}
-                    </span>
-                  </div>
-                  <div
-                    className={`text-sm font-medium ${
-                      product.isPositive ? "text-green-400" : "text-red-400"
-                      }`}
-                      >
-                    {product.change}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Link>
-        ))}
-        */}
 
       <FundingListSection />
       {products.length === 0 && (
