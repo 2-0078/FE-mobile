@@ -2,8 +2,7 @@ import { CountdownTimer } from "@/components/CountdownTimer";
 import { BottomActions } from "@/components/BottomActions";
 import ModalSection from "@/components/(products)/ModalSection";
 import InfoCardLayout from "@/components/layout/InfoCardLayout";
-import TempPriceIcon from "@/repo/ui/Icons/TempPriceIcon";
-import { ClockIcon } from "lucide-react";
+import { ClockIcon, Puzzle } from "lucide-react";
 import PageWrapper from "@/components/layout/PageWrapper";
 import ProductTitleWrapper from "@/components/layout/ProductTitleWrapper";
 import Image from "next/image";
@@ -57,7 +56,7 @@ export default function FundingPage() {
         <InfoCardLayout
           className="border-white border-1"
           title="현재 남은 조각"
-          icon={<TempPriceIcon />}
+          icon={<Puzzle />}
         >
           <span className="text-base font-semibold text-white leading-none">
             {productData.remainingPieces} / {productData.totalPieces}

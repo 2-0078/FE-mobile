@@ -2,50 +2,18 @@ import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 
 // 모달 타입 정의
-export type ModalType =
-  | "comments"
-  | "details"
-  | "confirmation"
-  | "error"
-  | null;
-
-// 모달 데이터 타입 정의
-export interface ModalData {
-  title?: string;
-  message?: string;
-  productData?: {
-    koreanTitle: string;
-    englishTitle: string;
-  };
-  onConfirm?: () => void;
-  onCancel?: () => void;
-  [key: string]: any;
-}
+export type ModalType = "comments" | "details" | null;
 
 // 모달 상태 인터페이스
 interface ModalState {
   // 상태
   currentModal: ModalType;
-  modalData: ModalData | null;
-  isAnimating: boolean;
   modalHistory: ModalType[];
 
   // 액션
-  openModal: (type: ModalType, data?: ModalData) => void;
+  openModal: (type: ModalType) => void;
   closeModal: () => void;
-  closeAllModals: () => void;
   goBackModal: () => void;
-
-  // 특정 모달 액션
-  openCommentsModal: (productData?: ModalData["productData"]) => void;
-  openDetailsModal: () => void;
-  openConfirmationModal: (
-    title: string,
-    message: string,
-    onConfirm?: () => void,
-    onCancel?: () => void
-  ) => void;
-  openErrorModal: (message: string) => void;
 }
 
 export const useModalStore = create<ModalState>()(
@@ -53,17 +21,14 @@ export const useModalStore = create<ModalState>()(
     (set, get) => ({
       // 초기 상태
       currentModal: null,
-      modalData: null,
-      isAnimating: false,
       modalHistory: [],
 
       // 기본 액션
-      openModal: (type, data = undefined) => {
+      openModal: (type) => {
         const { currentModal, modalHistory } = get();
 
         set({
           currentModal: type,
-          modalData: data,
           modalHistory: currentModal
             ? [...modalHistory, currentModal]
             : modalHistory,
@@ -73,14 +38,6 @@ export const useModalStore = create<ModalState>()(
       closeModal: () => {
         set({
           currentModal: null,
-          modalData: null,
-        });
-      },
-
-      closeAllModals: () => {
-        set({
-          currentModal: null,
-          modalData: null,
           modalHistory: [],
         });
       },
@@ -97,7 +54,7 @@ export const useModalStore = create<ModalState>()(
         } else {
           set({
             currentModal: null,
-            modalData: null,
+            modalHistory: [],
           });
         }
       },
@@ -108,13 +65,11 @@ export const useModalStore = create<ModalState>()(
   )
 );
 
-// 편의 훅들q
-export const useModalData = () => useModalStore((state) => state.modalData);
+// 편의 훅들
 export const useModal = () => {
   const openModal = useModalStore((state) => state.openModal);
   const closeModal = useModalStore((state) => state.closeModal);
-  const closeAllModals = useModalStore((state) => state.closeAllModals);
   const goBackModal = useModalStore((state) => state.goBackModal);
   const currentModal = useModalStore((state) => state.currentModal);
-  return { openModal, closeModal, closeAllModals, goBackModal, currentModal };
+  return { openModal, closeModal, goBackModal, currentModal };
 };

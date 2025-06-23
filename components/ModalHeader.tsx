@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
 
 interface ModalHeaderProps {
-  onClose: () => void;
+  onClose?: () => void;
   children?: React.ReactNode;
 }
 
