@@ -1,16 +1,13 @@
-"use client";
-
 import {
-  ArrowLeft,
+  PartyPopper,
   ChevronRight,
+  Package,
+  HandCoins,
   User,
-  Settings,
+  Headset,
   HelpCircle,
   FileText,
-  Gift,
-  Shield,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import Header from "@/components/layout/Header";
 import PageWrapper from "@/components/layout/PageWrapper";
 
@@ -22,25 +19,25 @@ export default function OtherPage() {
       subtitle: "새로운 소식을 확인하세요",
     },
     {
-      icon: <Gift className="w-5 h-5" />,
+      icon: <PartyPopper className="w-5 h-5" />,
       title: "이벤트",
       subtitle: "진행중인 이벤트",
     },
     {
       icon: <HelpCircle className="w-5 h-5" />,
-      title: "자주하는 질문 FAQ",
+      title: "자주하는 질문",
       subtitle: "궁금한 점을 해결하세요",
     },
   ];
 
   const productItems = [
     {
-      icon: <Shield className="w-5 h-5" />,
+      icon: <HandCoins className="w-5 h-5" />,
       title: "상품 판매하기",
       subtitle: "내 상품을 등록해보세요",
     },
     {
-      icon: <User className="w-5 h-5" />,
+      icon: <Package className="w-5 h-5" />,
       title: "등록 상품 조회하기",
       subtitle: "판매중인 상품 관리",
     },
@@ -48,7 +45,7 @@ export default function OtherPage() {
 
   const supportItems = [
     {
-      icon: <Settings className="w-5 h-5" />,
+      icon: <Headset className="w-5 h-5" />,
       title: "문의하기",
       subtitle: "고객센터 연결",
     },
