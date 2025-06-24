@@ -47,7 +47,6 @@ export default async function FundingPage({
     search: selectedSearch,
     page: selectedPage,
   });
-  console.log(fundingProductsUuidList);
   const fundingProducts = await Promise.all(
     fundingProductsUuidList.fundingUuidList.map(async (Uuid) => {
       return await getFundingProduct(Uuid);
@@ -101,7 +100,9 @@ export default async function FundingPage({
       <FundingListSection fundingProducts={fundingProducts} />
 
       {/* Pagination */}
-      <Pagenation totalPages={fundingProductsUuidList.totalPage} />
+      <Pagenation
+        totalPages={Math.max(fundingProductsUuidList.totalElements, 1)}
+      />
       <BottomNavbar />
     </div>
   );

@@ -40,7 +40,6 @@ export const getFundingProductsList = async (params: {
   if (page) queryParams.set("page", (page - 1).toString());
   if (size) queryParams.set("size", size.toString());
   if (direction) queryParams.set("direction", direction);
-  console.log(queryParams.toString());
   const response = await fetch(
     `${
       process.env.BASE_API_URL
