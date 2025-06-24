@@ -43,3 +43,6 @@ next-env.d.ts
 #test
 /app/(test)
 /public/data
+
+# .env
+.env
