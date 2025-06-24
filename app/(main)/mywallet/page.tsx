@@ -1,18 +1,5 @@
 "use client";
-import {
-  ArrowLeft,
-  Bell,
-  Home,
-  CreditCard,
-  BarChart3,
-  User,
-  Gem,
-  Trophy,
-  Heart,
-  Gavel,
-  Wallet,
-  ShoppingBag,
-} from "lucide-react";
+import { Gem, Trophy, Heart, Gavel, Wallet, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ReactECharts from "echarts-for-react";
 import Header from "@/components/layout/Header";
