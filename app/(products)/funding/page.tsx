@@ -16,12 +16,18 @@ export default async function FundingPage({
   searchParams: Promise<{
     sort: string;
     main: string;
+    sub: string;
+    search: string;
+    page: number;
   }>;
 }) {
   // URL에서 카테고리 정보 가져오기
   const params = await searchParams;
   const selectedSort = params.sort || "최신순";
   const selectedMainCategory = params.main || "전체";
+  const selectedSubCategory = params.sub || "전체";
+  const selectedSearch = params.search || "";
+  const selectedPage = params.page || 1;
   const filters = ["최신순", "인기순", "가격순"];
 
   const mainCategories = [
@@ -35,8 +41,13 @@ export default async function FundingPage({
       ...(await getSubCategories(selectedMainCategory)),
     ];
   }
-  const fundingProductsUuidList = await getFundingProductsList();
-
+  const fundingProductsUuidList = await getFundingProductsList({
+    main: selectedMainCategory,
+    sub: selectedSubCategory,
+    search: selectedSearch,
+    page: selectedPage,
+  });
+  console.log(fundingProductsUuidList);
   const fundingProducts = await Promise.all(
     fundingProductsUuidList.fundingUuidList.map(async (Uuid) => {
       return await getFundingProduct(Uuid);

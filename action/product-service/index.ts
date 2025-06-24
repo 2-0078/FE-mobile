@@ -22,9 +22,29 @@ export const getSubCategories = async (mainCategoryId: string) => {
   return data.result;
 };
 
-export const getFundingProductsList = async () => {
+export const getFundingProductsList = async (params: {
+  sort?: string;
+  main: string;
+  sub: string;
+  search?: string;
+  page?: number;
+  size?: number;
+  direction?: string;
+}) => {
+  const { sort, main, sub, search, page, size, direction } = params;
+  const queryParams = new URLSearchParams();
+  if (sort) queryParams.set("sortBy", sort);
+  if (main !== "전체") queryParams.set("main", main);
+  if (sub !== "전체") queryParams.set("sub", sub);
+  if (search) queryParams.set("name", search);
+  if (page) queryParams.set("page", (page - 1).toString());
+  if (size) queryParams.set("size", size.toString());
+  if (direction) queryParams.set("direction", direction);
+  console.log(queryParams.toString());
   const response = await fetch(
-    `${process.env.BASE_API_URL}/product-read-service/api/v1/funding/list`,
+    `${
+      process.env.BASE_API_URL
+    }/product-read-service/api/v1/funding/list?${queryParams.toString()}`,
     {
       method: "GET",
       headers: {
