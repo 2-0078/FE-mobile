@@ -99,10 +99,17 @@ export default async function FundingPage({
 
       <FundingListSection fundingProducts={fundingProducts} />
 
+      {fundingProductsUuidList.totalElements == 0 && (
+        <div className="text-center py-12">
+          <div className="text-gray-500 mb-2">검색된 상품이 없습니다</div>
+          <div className="text-sm text-gray-600">
+            다른 카테고리 & 검색어를 입력해보세요
+          </div>
+        </div>
+      )}
+
       {/* Pagination */}
-      <Pagenation
-        totalPages={Math.max(fundingProductsUuidList.totalElements, 1)}
-      />
+      <Pagenation totalPages={fundingProductsUuidList.totalPage} />
       <BottomNavbar />
     </div>
   );

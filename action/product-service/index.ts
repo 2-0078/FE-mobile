@@ -4,6 +4,8 @@ import {
   CategoryType,
   FundingListResponseType,
   FundingProductType,
+  PieceProductListResponseType,
+  PieceProductType,
 } from "@/types/ProductTypes";
 
 export const getMainCategories = async () => {
@@ -68,5 +70,34 @@ export const getFundingProduct = async (id: string) => {
   );
   const data =
     (await response.json()) as CommonResponseType<FundingProductType>;
+  return data.result;
+};
+
+export const getPieceProductsList = async () => {
+  const response = await fetch(
+    `${process.env.BASE_API_URL}/product-read-service/api/v1/piece/list`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  const data =
+    (await response.json()) as CommonResponseType<PieceProductListResponseType>;
+  return data.result;
+};
+
+export const getPieceProducts = async () => {
+  const response = await fetch(
+    `${process.env.BASE_API_URL}/product-read-service/api/v1/piece/list`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  const data = (await response.json()) as CommonResponseType<PieceProductType>;
   return data.result;
 };

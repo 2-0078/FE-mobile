@@ -39,7 +39,11 @@ export default function Pagenation({ totalPages }: { totalPages: number }) {
   const visiblePageNumbers = getVisiblePageNumbers();
 
   return (
-    <div className="flex items-center justify-center gap-4 py-6">
+    <div
+      className={`flex items-center justify-center gap-4 py-6 ${
+        totalPages >= 1 ? "block" : "hidden"
+      }`}
+    >
       <Button
         variant="ghost"
         size="sm"
