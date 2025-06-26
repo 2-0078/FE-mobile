@@ -7,12 +7,16 @@ import {
   Headset,
   HelpCircle,
   FileText,
+  LogIn,
 } from "lucide-react";
 import Header from "@/components/layout/Header";
 import PageWrapper from "@/components/layout/PageWrapper";
 import LogoutButton from "@/components/common/LogoutButton";
-
-export default function OtherPage() {
+import { auth } from "@/auth";
+import { AdapterUser } from "next-auth/adapters";
+import { getMemberProfile } from "@/action/member-service";
+import Link from "next/link";
+export default async function OtherPage() {
   const menuItems = [
     {
       icon: <FileText className="w-5 h-5" />,
@@ -52,27 +56,39 @@ export default function OtherPage() {
     },
   ];
 
+  const session = await auth();
+  const user = session?.user as AdapterUser & {
+    memberUuid: string;
+  };
+  let memberProfile = undefined;
+  if (user) {
+    memberProfile = await getMemberProfile(user.memberUuid);
+  }
+
   return (
     <PageWrapper>
       <Header title="더보기" />
 
       {/* User Section */}
-      <div className="mb-8">
-        <div className="bg-custom-slate border-gray-800 p-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center">
-                <User className="w-6 h-6 text-gray-300" />
+      {user && (
+        <div className="mb-8">
+          <div className="bg-custom-slate border-gray-800 p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center">
+                  <User className="w-6 h-6 text-gray-300" />
+                </div>
+                <div>
+                  <p className="text-white font-medium">
+                    {memberProfile.nickname}님
+                  </p>
+                </div>
               </div>
-              <div>
-                <p className="text-white font-medium">OOO님</p>
-              </div>
+              <ChevronRight className="w-5 h-5 text-gray-400" />
             </div>
-            <ChevronRight className="w-5 h-5 text-gray-400" />
           </div>
         </div>
-      </div>
-
+      )}
       {/* Menu Sections */}
       <div className="space-y-6">
         {/* General Menu */}
@@ -147,8 +163,7 @@ export default function OtherPage() {
             ))}
           </div>
         </div>
-
-        <LogoutButton />
+        {user && <LogoutButton />}
       </div>
     </PageWrapper>
   );
