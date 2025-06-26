@@ -19,6 +19,11 @@ export interface FundingListResponseType extends BasePaginationResponseType {
   fundingUuidList: string[];
 }
 
+export interface PieceProductListResponseType
+  extends BasePaginationResponseType {
+  pieceProductUuidList: string[];
+}
+
 export interface ImageType {
   imageIndex: number;
   imageUrl: string;
@@ -36,6 +41,17 @@ export interface FundingInfoType {
   fundingStatus: string;
 }
 
+export interface PieceInfoType {
+  pieceProductUuid: string;
+  isTrading: boolean | null;
+  tradeQuantity: number;
+  closingPrice: number | null;
+}
+
 export interface FundingProductType extends BaseProductType {
   funding: FundingInfoType;
+}
+
+export interface PieceProductType extends BaseProductType {
+  piece: PieceInfoType;
 }

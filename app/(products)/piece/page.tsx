@@ -2,7 +2,10 @@ import React from "react";
 import BottomNavbar from "@/components/layout/BottomNavbar";
 import Link from "next/link";
 import Image from "next/image";
-import { getMainCategories } from "@/action/product-service";
+import {
+  getMainCategories,
+  getPieceProductsList,
+} from "@/action/product-service";
 import { getSubCategories } from "@/action/product-service";
 import { CategoryType } from "@/types/ProductTypes";
 import CategorySection from "@/components/(products)/CategorySection";
@@ -91,6 +94,8 @@ export default async function PiecePage({
     ];
   }
 
+  const pieceProducts = await getPieceProductsList();
+  console.log(pieceProducts);
   const MiniChart = ({
     data,
     isPositive,

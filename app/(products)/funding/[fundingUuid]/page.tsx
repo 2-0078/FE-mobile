@@ -6,37 +6,25 @@ import { ClockIcon, Puzzle } from "lucide-react";
 import PageWrapper from "@/components/layout/PageWrapper";
 import ProductTitleWrapper from "@/components/layout/ProductTitleWrapper";
 import Image from "next/image";
-// 서버에서 받아올 데이터 타입들
-interface ProductData {
-  koreanTitle: string;
-  englishTitle: string;
-  imageUrl: string;
-  remainingPieces: number;
-  totalPieces: number;
-  currentPrice: number;
-  endDateTime: string; // ISO 문자열로 마감일시
-}
+import { getFundingProduct } from "@/action/product-service";
+import { auth } from "@/auth";
 
-// Mock 데이터들 - 고정된 마감일시 사용 (hydration 안전)
-const productData: ProductData = {
-  koreanTitle: "샤넬 클래식 플랩 백 미디움 블랙 은장",
-  englishTitle: "Chanel Classic Flap Bag Medium Caviar Black A01112",
-  imageUrl:
-    "https://previews.123rf.com/images/adrian1991/adrian19912109/adrian1991210900001/174101000-%EB%B3%84%EC%9D%B4-%EB%B9%9B%EB%82%98%EB%8A%94-%EB%B0%A4-%EB%B9%88%EC%84%BC%ED%8A%B8-%EB%B0%98-%EA%B3%A0%ED%9D%90-%EA%B7%B8%EB%A6%BC.jpg",
-  remainingPieces: 258,
-  totalPieces: 1000,
-  currentPrice: 2000000,
-  // 고정된 미래 날짜 사용 (예: 2025년 7월 1일)
-  endDateTime: "2026-01-01",
-};
-
-export default function FundingPage() {
+export default async function FundingPage({
+  params,
+}: {
+  params: Promise<{ fundingUuid: string }>;
+}) {
+  const session = await auth();
+  console.log(session);
+  const param = await params;
+  const data = await getFundingProduct(param.fundingUuid);
+  console.log(data);
   return (
     <PageWrapper>
       <div className="relative rounded-xl overflow-hidden w-full h-[50vh]">
         <Image
-          src={productData.imageUrl}
-          alt={productData.englishTitle}
+          src={data.images[0].imageUrl}
+          alt={data.productName}
           fill={true}
           className="object-contain"
         />
@@ -44,14 +32,14 @@ export default function FundingPage() {
 
       <div className="mb-12">
         <ProductTitleWrapper className="text-white whitespace-pre-line">
-          {productData.koreanTitle}
+          {data.productName}
         </ProductTitleWrapper>
-        <ProductTitleWrapper className="text-custom-gray-200 whitespace-pre-line font-medium">
-          {productData.englishTitle}
+        <ProductTitleWrapper className="text-custom-gray-200 text-base whitespace-pre-line font-medium">
+          {data.mainCategory.categoryName} &gt; {data.subCategory.categoryName}
         </ProductTitleWrapper>
       </div>
 
-      <CountdownTimer endDateTime={productData.endDateTime} />
+      <CountdownTimer endDateTime={data.funding.fundingDeadline} />
       <div className="flex justify-around gap-x-2">
         <InfoCardLayout
           className="border-white border-1"
@@ -59,7 +47,7 @@ export default function FundingPage() {
           icon={<Puzzle />}
         >
           <span className="text-base font-semibold text-white leading-none">
-            {productData.remainingPieces} / {productData.totalPieces}
+            {data.funding.remainingPieces} / {data.funding.totalPieces}
           </span>
         </InfoCardLayout>
         <InfoCardLayout
@@ -68,7 +56,7 @@ export default function FundingPage() {
           icon={<ClockIcon />}
         >
           <span className="text-base font-semibold text-white leading-none">
-            {productData.currentPrice.toLocaleString()}원
+            {data.funding.fundingAmount.toLocaleString()}원
           </span>
         </InfoCardLayout>
       </div>
@@ -81,18 +69,19 @@ export default function FundingPage() {
           className="mx-auto"
         />
         <p className="text-custom-green text-4xl font-bold">
-          {Number(2500000).toLocaleString()}원
+          {data.aiEstimatedPrice.toLocaleString()}원
         </p>
         <p className="text-white text-base font-medium">AI예측가</p>
       </div>
       <div className="border-custom-green border-[1px] rounded-2xl p-4 w-full">
         <p className="text-xs font-medium">
-          해당 상품은 <span className="font-bold">약 2,500,000원</span>
+          해당 상품은{" "}
+          <span className="font-bold">
+            약 {data.aiEstimatedPrice.toLocaleString()}원
+          </span>
           의 가치가 있는 상품입니다.
           <br />
-          Lorem ipsum dolor sit amet, consectetur elit. Quisque non elit mauris.
-          Cras euismod, Lorem ipsum metus ac finibus finibus, felis dui
-          suscipit....
+          {data.description}
         </p>
       </div>
       <BottomActions />
