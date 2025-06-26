@@ -4,7 +4,10 @@ const withAuthList = ["/cart", "/mypage", "/mywallet"];
 
 export default auth((req) => {
   if (!req.auth && withAuthList.includes(req.nextUrl.pathname)) {
-    const newUrl = new URL("/login", req.nextUrl.origin);
+    const newUrl = new URL(
+      "/login?callbackUrl=" + req.nextUrl.pathname,
+      req.nextUrl.origin
+    );
     return Response.redirect(newUrl);
   }
 });
