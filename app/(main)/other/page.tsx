@@ -7,7 +7,6 @@ import {
   Headset,
   HelpCircle,
   FileText,
-  LogIn,
 } from "lucide-react";
 import Header from "@/components/layout/Header";
 import PageWrapper from "@/components/layout/PageWrapper";
@@ -15,7 +14,6 @@ import LogoutButton from "@/components/common/LogoutButton";
 import { auth } from "@/auth";
 import { AdapterUser } from "next-auth/adapters";
 import { getMemberProfile } from "@/action/member-service";
-import Link from "next/link";
 export default async function OtherPage() {
   const menuItems = [
     {

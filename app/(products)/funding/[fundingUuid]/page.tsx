@@ -7,7 +7,6 @@ import PageWrapper from "@/components/layout/PageWrapper";
 import ProductTitleWrapper from "@/components/layout/ProductTitleWrapper";
 import Image from "next/image";
 import { getFundingProduct } from "@/action/product-service";
-import { auth } from "@/auth";
 import { getRepliesUuid } from "@/action/reply-service";
 
 export default async function FundingPage({
