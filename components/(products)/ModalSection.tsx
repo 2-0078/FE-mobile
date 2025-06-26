@@ -56,7 +56,13 @@ const commentsData = [
   })),
 ];
 
-export default function ModalSection() {
+export default function ModalSection({
+  itemUuid,
+  type,
+}: {
+  itemUuid: string;
+  type: "FUNDING" | "PIECE";
+}) {
   const { currentModal, closeModal } = useModal();
   return (
     <>
