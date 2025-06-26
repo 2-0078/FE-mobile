@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 
 import { signin } from "./action/auth-service";
+import { AdapterUser } from "next-auth/adapters";
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Credentials({
@@ -27,10 +28,28 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           throw new Error("로그인에 실패했습니다.");
         }
         // return user object with their profile data
-        return { ...user, id: credentials.email };
+        return {
+          ...user,
+          memberUuid: user.memberUuid,
+        };
       },
     }),
   ],
+  callbacks: {
+    jwt({ token, user }) {
+      if (user) {
+        // User is available during sign-in
+        token.user = user;
+      }
+      return token;
+    },
+    session({ session, token }) {
+      session.user = token.user as AdapterUser & {
+        memberUuid: string;
+      };
+      return session;
+    },
+  },
   pages: {
     signIn: "/login",
     error: "/error",

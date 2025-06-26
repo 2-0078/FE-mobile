@@ -14,8 +14,7 @@ export default function ItemCardImage({
         src={thumbnail}
         alt="artwork"
         fill={true}
-        objectFit="cover"
-        objectPosition="top"
+        className=" object-cover object-top"
       />
       <div className="absolute top-3 left-4 bg-black/15 backdrop-blur-sm text-xs px-3 py-1 rounded-lg shadow text-white">
         <p className="text-center">

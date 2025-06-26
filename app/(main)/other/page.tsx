@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import Header from "@/components/layout/Header";
 import PageWrapper from "@/components/layout/PageWrapper";
+import LogoutButton from "@/components/common/LogoutButton";
 
 export default function OtherPage() {
   const menuItems = [
@@ -146,6 +147,8 @@ export default function OtherPage() {
             ))}
           </div>
         </div>
+
+        <LogoutButton />
       </div>
     </PageWrapper>
   );
