@@ -42,6 +42,11 @@ jobs:
           echo "BASE_API_URL=${{ secrets.BASE_API_URL }}" >> .env
           echo "AUTH_SECRET=${{ secrets.AUTH_SECRET }}" >> .env
 
+          echo "NEXT_PUBLIC_REGION=${{ secrets.NEXT_PUBLIC_REGION }}" >> .env
+          echo "NEXT_PUBLIC_COGNITO_IDENTITY_POOL_ID=${{ secrets.NEXT_PUBLIC_COGNITO_IDENTITY_POOL_ID }}" >> .env
+          echo "NEXT_PUBLIC_BUCKET_NAME=${{ secrets.NEXT_PUBLIC_BUCKET_NAME }}" >> .env
+          
+
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v5
         with:
