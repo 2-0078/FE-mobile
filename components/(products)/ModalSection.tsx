@@ -63,6 +63,7 @@ export default function ModalSection({
   itemUuid: string;
   type: "FUNDING" | "PIECE";
 }) {
+  console.log(itemUuid, type);
   const { currentModal, closeModal } = useModal();
   return (
     <>
