@@ -37,7 +37,7 @@ export default function LoginPage({
           }
           if (res?.ok) {
             const callbackUrl = (await searchParams).callbackUrl;
-            router.push(callbackUrl || "/");
+            router.push(callbackUrl || "/main");
             router.refresh();
           }
         }}
