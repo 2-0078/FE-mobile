@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 
-const withAuthList = ["/cart", "/mypage"];
+const withAuthList = ["/cart", "/mypage", "/mywallet"];
 
 export default auth((req) => {
   if (!req.auth && withAuthList.includes(req.nextUrl.pathname)) {
