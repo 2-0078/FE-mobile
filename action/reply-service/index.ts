@@ -1,12 +1,21 @@
 "use server";
 
+import { auth } from "@/auth";
+import { CommonResponseType } from "@/types/CommonTypes";
+import { ReplyType } from "@/types/CommunityTypes";
+
 export async function getRepliesUuid(
   type: "FUNDING" | "PIECE",
-  productUuid: string
+  productUuid: string,
+  commentPage: string
 ) {
   console.log(productUuid);
+  const queryParams = new URLSearchParams();
+  queryParams.append("page", (Number(commentPage) - 1).toString());
   const response = await fetch(
-    `${process.env.BASE_API_URL}/reply-service/api/v1/reply/list/${type}/asdasd`,
+    `${
+      process.env.BASE_API_URL
+    }/reply-service/api/v1/reply/list/${type}/asdasd?${queryParams.toString()}`,
     {
       method: "GET",
       headers: {
@@ -14,6 +23,30 @@ export async function getRepliesUuid(
       },
     }
   );
-  const data = await response.json();
-  return data;
+  const data = (await response.json()) as CommonResponseType<
+    {
+      replyUuid: string;
+    }[]
+  >;
+  console.log(data);
+  return data.result;
+}
+
+export async function getReplies(replyUuid: string) {
+  const session = await auth();
+  const token = session?.user?.accessToken || null;
+
+  const response = await fetch(
+    `${process.env.BASE_API_URL}/reply-service/api/v1/reply/community/${replyUuid}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  const data = (await response.json()) as CommonResponseType<ReplyType>;
+  return data.result;
 }
