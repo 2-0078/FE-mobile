@@ -2,7 +2,7 @@ import { Clock, Puzzle } from "lucide-react";
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { formatPrice, getDaysLeft } from "@/lib/utils";
+import { formatPrice, getDaysLeft } from "@/lib/tool";
 import { FundingProductType } from "@/types/ProductTypes";
 
 export function FundingListSection({

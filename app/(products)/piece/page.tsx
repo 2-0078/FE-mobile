@@ -14,7 +14,7 @@ import { Search, TrendingDown, TrendingUp } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Pagenation from "@/components/common/Pagenation";
-import { formatPrice } from "@/lib/utils";
+import { formatPrice } from "@/lib/tool";
 export default async function PiecePage({
   searchParams,
 }: {
