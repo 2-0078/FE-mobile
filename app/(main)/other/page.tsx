@@ -12,7 +12,6 @@ import Header from "@/components/layout/Header";
 import PageWrapper from "@/components/layout/PageWrapper";
 import LogoutButton from "@/components/common/LogoutButton";
 import { auth } from "@/auth";
-import { AdapterUser } from "next-auth/adapters";
 import { getMemberProfile } from "@/action/member-service";
 export default async function OtherPage() {
   const menuItems = [
@@ -55,9 +54,7 @@ export default async function OtherPage() {
   ];
 
   const session = await auth();
-  const user = session?.user as AdapterUser & {
-    memberUuid: string;
-  };
+  const user = session?.user;
   let memberProfile = undefined;
   if (user) {
     memberProfile = await getMemberProfile(user.memberUuid);
@@ -78,7 +75,7 @@ export default async function OtherPage() {
                 </div>
                 <div>
                   <p className="text-white font-medium">
-                    {memberProfile.nickname}님
+                    {memberProfile?.nickname}님
                   </p>
                 </div>
               </div>

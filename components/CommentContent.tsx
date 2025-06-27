@@ -1,24 +1,15 @@
 import { Button } from "@/components/ui/button";
-import { CommentsList } from "./CommentsList";
+import { ReplyType } from "@/types/CommunityTypes";
+import { CommentItem } from "./CommentItem";
 
-interface Comment {
-  id: string;
-  avatar: string;
-  username: string;
-  timestamp: string;
-  content: string;
-}
-
-interface CommentsContentProps {
-  comments: Comment[];
-}
-
-// 이 컴포넌트는 서버 컴포넌트로 유지됩니다
-export function CommentsContent({ comments }: CommentsContentProps) {
+export function CommentsContent({ comments }: { comments: ReplyType[] }) {
   return (
     <>
-      <CommentsList comments={comments} />
-
+      <div className="px-6 space-y-4 pb-10">
+        {comments.map((comment) => (
+          <CommentItem key={comment.replyUuid} {...comment} />
+        ))}
+      </div>
       {/* Bottom Input */}
       <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4">
         <Button className="w-full h-12 bg-black text-white rounded-lg">

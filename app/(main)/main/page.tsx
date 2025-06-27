@@ -7,17 +7,14 @@ import PageWrapper from "@/components/layout/PageWrapper";
 import MainProfile from "@/components/common/MainProfile";
 import { auth } from "@/auth";
 import { getMemberProfile } from "@/action/member-service";
-import { AdapterUser } from "next-auth/adapters";
+import AmmountCard from "@/components/AmmountCard";
 
 export default async function page() {
   const session = await auth();
-  const user = session?.user as AdapterUser & {
-    memberUuid: string;
-  };
+  const user = session?.user;
   let memberProfile = undefined;
   if (user) {
     memberProfile = await getMemberProfile(user.memberUuid);
-    console.log(memberProfile);
   }
   return (
     <PageWrapper>
@@ -38,6 +35,7 @@ export default async function page() {
         Traiding Hub
       </TitleWrapper>
       <Search />
+      {user && <AmmountCard />}
       <div className="grid md:grid-cols-2 xl:grid-cols-3 items-center justify-center self-center gap-y-7 gap-x-4 ">
         <ItemCard />
         <ItemCard />

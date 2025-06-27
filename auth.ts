@@ -3,6 +3,17 @@ import Credentials from "next-auth/providers/credentials";
 
 import { signin } from "./action/auth-service";
 import { AdapterUser } from "next-auth/adapters";
+import { DefaultSession } from "next-auth";
+
+declare module "next-auth" {
+  interface Session {
+    user: {
+      memberUuid: string;
+      accessToken: string;
+    } & DefaultSession["user"];
+  }
+}
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Credentials({
@@ -31,6 +42,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         return {
           ...user,
           memberUuid: user.memberUuid,
+          accessToken: user.accessToken,
         };
       },
     }),
@@ -46,6 +58,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     session({ session, token }) {
       session.user = token.user as AdapterUser & {
         memberUuid: string;
+        accessToken: string;
       };
       return session;
     },

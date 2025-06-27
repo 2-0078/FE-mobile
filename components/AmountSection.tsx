@@ -2,14 +2,37 @@
 
 import { useState } from "react";
 import { NumberPad } from "./NumberPad";
+import { Button } from "@/components/ui/button";
 
-export function AmountSection({ piecePrice }: { piecePrice: number }) {
+export function AmountSection({
+  piecePrice,
+  remainingPieces,
+  depositBalance,
+}: {
+  piecePrice: number;
+  remainingPieces: number;
+  depositBalance: number;
+}) {
   const [amount, setAmount] = useState("");
 
   const handleNumberClick = (num: string) => {
     // 최대 자릿수 제한 (예: 10자리)
     if (amount.length >= 10) return;
-
+    if (Number(amount + num) === 0) {
+      setAmount(num);
+      return;
+    }
+    if (Number(amount + num) * piecePrice > depositBalance) {
+      return;
+    }
+    if (Number(amount + num) > remainingPieces) {
+      setAmount(remainingPieces.toString());
+      return;
+    }
+    if (Number(amount) === 0) {
+      setAmount(num);
+      return;
+    }
     setAmount((prev) => prev + num);
   };
 
@@ -23,6 +46,18 @@ export function AmountSection({ piecePrice }: { piecePrice: number }) {
 
   return (
     <>
+      <div>
+        <p className="flex items-center justify-between mb-2">
+          <span className="text-gray-600 text-sm">예치금 잔액</span>
+          <span className="text-custom-green text-2xl font-bold">
+            {depositBalance.toLocaleString()}원
+          </span>
+        </p>
+        <Button className="w-full h-10 bg-black text-white rounded-full">
+          예치금이 부족하신가요?
+        </Button>
+      </div>
+
       <div className="text-center">
         <p className="text-gray-600 text-xs">매수 총액</p>
         <p className="text-black text-3xl font-semibold mb-4">

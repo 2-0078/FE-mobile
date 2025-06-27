@@ -7,7 +7,6 @@ import PageWrapper from "@/components/layout/PageWrapper";
 import ProductTitleWrapper from "@/components/layout/ProductTitleWrapper";
 import Image from "next/image";
 import { getFundingProduct } from "@/action/product-service";
-import { getRepliesUuid } from "@/action/reply-service";
 
 export default async function FundingPage({
   params,
@@ -16,8 +15,6 @@ export default async function FundingPage({
 }) {
   const param = await params;
   const data = await getFundingProduct(param.fundingUuid);
-  const replies = await getRepliesUuid("PIECE", param.fundingUuid);
-  console.log(replies);
   return (
     <PageWrapper>
       <div className="relative rounded-xl overflow-hidden w-full h-[50vh]">
@@ -84,7 +81,11 @@ export default async function FundingPage({
         </p>
       </div>
       <BottomActions />
-      <ModalSection itemUuid={param.fundingUuid} type="FUNDING" />
+      <ModalSection
+        productData={data}
+        itemUuid={param.fundingUuid}
+        type="FUNDING"
+      />
     </PageWrapper>
   );
 }

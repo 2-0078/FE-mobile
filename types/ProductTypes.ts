@@ -46,6 +46,7 @@ export interface PieceInfoType {
   isTrading: boolean | null;
   tradeQuantity: number;
   closingPrice: number | null;
+  status: string;
 }
 
 export interface FundingProductType extends BaseProductType {

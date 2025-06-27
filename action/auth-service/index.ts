@@ -13,7 +13,6 @@ export const signin = async (email: string, password: string) => {
   );
 
   const res = await response.json();
-  console.log(res);
   return res;
 };
 
