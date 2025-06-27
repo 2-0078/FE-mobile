@@ -21,6 +21,7 @@ export default function ModalSection({
   itemUuid: string;
   type: "FUNDING" | "PIECE";
 }) {
+  console.log(type);
   const commentPage = useSearchParams().get("commentPage") || "1";
   const [replies, setReplies] = useState<ReplyType[]>([]);
   useEffect(() => {
@@ -38,10 +39,8 @@ export default function ModalSection({
         })
       );
       setReplies(replyData);
-      console.log(replyData);
     };
     fetchReplies();
-    console.log(replies);
   }, [itemUuid, commentPage]);
 
   const { currentModal, closeModal } = useModal();

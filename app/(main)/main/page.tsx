@@ -7,6 +7,7 @@ import PageWrapper from "@/components/layout/PageWrapper";
 import MainProfile from "@/components/common/MainProfile";
 import { auth } from "@/auth";
 import { getMemberProfile } from "@/action/member-service";
+import AmmountCard from "@/components/AmmountCard";
 
 export default async function page() {
   const session = await auth();
@@ -14,7 +15,6 @@ export default async function page() {
   let memberProfile = undefined;
   if (user) {
     memberProfile = await getMemberProfile(user.memberUuid);
-    console.log(memberProfile);
   }
   return (
     <PageWrapper>
@@ -35,6 +35,7 @@ export default async function page() {
         Traiding Hub
       </TitleWrapper>
       <Search />
+      {user && <AmmountCard />}
       <div className="grid md:grid-cols-2 xl:grid-cols-3 items-center justify-center self-center gap-y-7 gap-x-4 ">
         <ItemCard />
         <ItemCard />

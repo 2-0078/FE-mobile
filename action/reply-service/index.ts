@@ -28,7 +28,6 @@ export async function getRepliesUuid(
       replyUuid: string;
     }[]
   >;
-  console.log(data);
   return data.result;
 }
 
