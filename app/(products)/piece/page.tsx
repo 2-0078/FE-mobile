@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   getMainCategories,
+  getPieceProducts,
   getPieceProductsList,
 } from "@/action/product-service";
 import { getSubCategories } from "@/action/product-service";
@@ -94,7 +95,14 @@ export default async function PiecePage({
     ];
   }
 
-  const pieceProducts = await getPieceProductsList();
+  const pieceProductUuidList = await getPieceProductsList();
+  console.log(pieceProductUuidList);
+
+  const pieceProducts = await Promise.all(
+    pieceProductUuidList.pieceProductUuidList.map((uuid) =>
+      getPieceProducts(uuid)
+    )
+  );
   console.log(pieceProducts);
   const MiniChart = ({
     data,
@@ -109,19 +117,19 @@ export default async function PiecePage({
 
     const points = data
       .map((value, index) => {
-        const x = (index / (data.length - 1)) * 60;
+        const x = (index / (data.length - 1)) * 40;
         const y = 20 - ((value - min) / range) * 20;
         return `${x},${y}`;
       })
       .join(" ");
 
     return (
-      <svg width="60" height="20" className="flex-shrink-0">
+      <svg width="40" height="20" className="flex-shrink-0">
         <polyline
           points={points}
           fill="none"
           stroke={isPositive ? "#10b981" : "#ef4444"}
-          strokeWidth="1.5"
+          strokeWidth="2"
           className="drop-shadow-sm"
         />
       </svg>
@@ -183,58 +191,62 @@ export default async function PiecePage({
       </div>
 
       <div className="space-y-4 px-4">
-        {products.map((product) => (
+        {pieceProducts.map((product) => (
           <div
-            key={product.id}
+            key={product.piece.pieceProductUuid}
             className="bg-slate-800/50 h-30 rounded-lg px-4 py-2 border border-slate-700/50"
           >
-            <Link href={`/piece/${product.id}`}>
+            <Link href={`/piece/${product.piece.pieceProductUuid}`}>
               <div className="flex items-center gap-3">
-                <div className="w-16 h-24 relative rounded-lg flex items-center justify-center">
+                <div className="min-w-16 h-24 relative rounded-lg flex items-center justify-center">
                   <Image
-                    src="/example.png"
+                    src={product.images[0].imageUrl}
                     alt="example"
-                    fill={true}
+                    width={60}
+                    height={60}
                     className="object-contain mx-auto"
                   />
                 </div>
 
                 <div className="flex-1">
                   <div className="flex items-center justify-between mb-2">
-                    <div>
-                      <p className="text-xs text-slate-400 mb-1">
-                        {product.brand}
+                    <div className="w-1/3">
+                      <p className="text-xs text-slate-400 mb-1 truncate">
+                        {product.mainCategory.categoryName} &gt;{" "}
+                        {product.subCategory.categoryName}
                       </p>
-                      <h3 className="text-sm font-medium text-white truncate">
-                        {product.title}
+                      <h3 className="text-sm font-medium text-white">
+                        {product.productName}
                       </h3>
                     </div>
 
                     <div className="flex items-center gap-2">
+                      {/* 수정필요 */}
                       <MiniChart
-                        data={product.priceHistory}
-                        isPositive={product.dailyChangePercent > 0}
+                        data={[
+                          1400000, 1450000, 1480000, 1520000, 1580000, 1630000,
+                        ]}
+                        isPositive={true}
                       />
                     </div>
-                    <div className="text-right flex-shrink-0 ml-2">
-                      <p className="text-lg font-bold text-white">
-                        {formatPrice(product.currentPrice)}
+                    <div className="text-center flex-shrink-0 ml-2 w-1/4">
+                      <p className="text-base font-bold text-white">
+                        {/* 수정필요 */}
+                        {formatPrice(product.aiEstimatedPrice)}
                       </p>
                       <div
-                        className={`flex items-center gap-1 text-xs ${
-                          product.dailyChangePercent > 0
-                            ? "text-emerald-400"
-                            : "text-red-400"
+                        className={`flex justify-center items-center gap-1 text-xs ${
+                          1 > 0 ? "text-emerald-400" : "text-red-400"
                         }`}
                       >
-                        {product.dailyChangePercent > 0 ? (
+                        {1 > 0 ? (
                           <TrendingUp className="w-3 h-3" />
                         ) : (
                           <TrendingDown className="w-3 h-3" />
                         )}
                         <span>
-                          {product.dailyChangePercent > 0 ? "+" : ""}
-                          {product.dailyChangePercent}%
+                          {1 > 0 ? "+" : ""}
+                          {1}%
                         </span>
                       </div>
                     </div>
@@ -246,7 +258,7 @@ export default async function PiecePage({
         ))}
       </div>
 
-      <Pagenation totalPages={10} />
+      <Pagenation totalPages={pieceProductUuidList.totalPage} />
 
       <BottomNavbar />
     </div>

@@ -12,6 +12,7 @@ export const getMainCategories = async () => {
   const response = await fetch(
     `${process.env.BASE_API_URL}/product-service/api/v1/main-category/list`
   );
+  console.log(response);
   const data = (await response.json()) as CommonResponseType<CategoryType[]>;
   return data.result;
 };
@@ -85,12 +86,13 @@ export const getPieceProductsList = async () => {
   );
   const data =
     (await response.json()) as CommonResponseType<PieceProductListResponseType>;
+  console.log(data);
   return data.result;
 };
 
-export const getPieceProducts = async () => {
+export const getPieceProducts = async (productUuid: string) => {
   const response = await fetch(
-    `${process.env.BASE_API_URL}/product-read-service/api/v1/piece/list`,
+    `${process.env.BASE_API_URL}/product-read-service/api/v1/piece/list/${productUuid}`,
     {
       method: "GET",
       headers: {
