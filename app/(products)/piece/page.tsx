@@ -29,60 +29,6 @@ export default async function PiecePage({
   const selectedMainCategory = params.main || "전체";
 
   const filters = ["최신순", "인기순", "가격순"];
-
-  const products = [
-    {
-      id: "1",
-      image: "/placeholder.svg?height=60&width=60",
-      title: "샤넬 클래식 플랩백",
-      brand: "Chanel",
-      currentPrice: 1630000,
-      dailyChange: 142000,
-      dailyChangePercent: 8.7,
-      priceHistory: [1400000, 1450000, 1480000, 1520000, 1580000, 1630000],
-    },
-    {
-      id: "2",
-      image: "/placeholder.svg?height=60&width=60",
-      title: "롤렉스 서브마리너",
-      brand: "Rolex",
-      currentPrice: 1680000,
-      dailyChange: -39000,
-      dailyChangePercent: -2.3,
-      priceHistory: [1750000, 1720000, 1700000, 1690000, 1680000, 1680000],
-    },
-    {
-      id: "3",
-      image: "/placeholder.svg?height=60&width=60",
-      title: "에르메스 버킨백",
-      brand: "Hermès",
-      currentPrice: 2100000,
-      dailyChange: 158000,
-      dailyChangePercent: 7.7,
-      priceHistory: [1900000, 1950000, 2000000, 2050000, 2080000, 2100000],
-    },
-    {
-      id: "4",
-      image: "/placeholder.svg?height=60&width=60",
-      title: "샤넬 22백팩",
-      brand: "Chanel",
-      currentPrice: 934000,
-      dailyChange: 9000,
-      dailyChangePercent: 1.0,
-      priceHistory: [920000, 925000, 930000, 928000, 932000, 934000],
-    },
-    {
-      id: "5",
-      image: "/placeholder.svg?height=60&width=60",
-      title: "롤렉스 데이토나",
-      brand: "Rolex",
-      currentPrice: 3060000,
-      dailyChange: -140000,
-      dailyChangePercent: -4.4,
-      priceHistory: [3300000, 3250000, 3200000, 3150000, 3100000, 3060000],
-    },
-  ];
-
   const mainCategories = [
     { id: "전체", categoryName: "전체" },
     ...(await getMainCategories()),
@@ -185,7 +131,9 @@ export default async function PiecePage({
       <div className="px-4 mb-4">
         <p className="text-sm text-gray-400">
           총{" "}
-          <span className="text-green-400 font-medium">{products.length}</span>
+          <span className="text-green-400 font-medium">
+            {pieceProductUuidList.totalElements}
+          </span>
           개의 상품
         </p>
       </div>

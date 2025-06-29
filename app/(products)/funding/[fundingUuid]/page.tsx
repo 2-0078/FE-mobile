@@ -19,7 +19,8 @@ export default async function FundingPage({
     <PageWrapper>
       <div className="relative rounded-xl overflow-hidden w-full h-[50vh]">
         <Image
-          src={data.images[0].imageUrl}
+          // src={data.images[0].imageUrl}
+          src="/chatbot.png"
           alt={data.productName}
           fill={true}
           className="object-contain"
@@ -77,7 +78,7 @@ export default async function FundingPage({
           </span>
           의 가치가 있는 상품입니다.
           <br />
-          {data.description}
+          {data.aiEstimatedDescription}
         </p>
       </div>
       <BottomActions />
