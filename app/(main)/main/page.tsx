@@ -8,6 +8,7 @@ import MainProfile from "@/components/common/MainProfile";
 import { auth } from "@/auth";
 import { getMemberProfile } from "@/action/member-service";
 import AmmountCard from "@/components/AmmountCard";
+import PurchaseModalSection from "@/components/(main)/PurchaseModalSection";
 
 export default async function page() {
   const session = await auth();
@@ -45,6 +46,7 @@ export default async function page() {
         <ItemCard />
         <ItemCard />
       </div>
+      <PurchaseModalSection />
     </PageWrapper>
   );
 }
