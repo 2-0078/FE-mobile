@@ -25,13 +25,13 @@ export function FundingListSection({
         return (
           <div
             key={product.funding.fundingUuid}
-            className="bg-slate-800/50 rounded-lg px-4 py-2 border h-30 border-slate-700/50"
+            className="bg-slate-800/50 rounded-lg px-4 py-2 border min-h-30 border-slate-700/50"
           >
             <Link href={`/funding/${product.funding.fundingUuid}`}>
               <div className="flex items-center gap-3 relative">
                 <div className="w-16 h-24 relative rounded-lg flex items-center justify-center">
                   <Image
-                    src="/example.png"
+                    src={product.images[0].imageUrl}
                     alt="example"
                     fill={true}
                     className="object-contain mx-auto"

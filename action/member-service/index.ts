@@ -34,6 +34,5 @@ export async function getMyMoneyInfo() {
     }
   );
   const data = (await response.json()) as CommonResponseType<MyMoneyInfoType[]>;
-  console.log("2", data);
   return data.result;
 }

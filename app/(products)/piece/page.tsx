@@ -21,13 +21,18 @@ export default async function PiecePage({
   searchParams: Promise<{
     sort: string;
     main: string;
+    sub: string;
+    search: string;
+    page: number;
   }>;
 }) {
   // URL에서 카테고리 정보 가져오기
   const params = await searchParams;
   const selectedSort = params.sort || "최신순";
   const selectedMainCategory = params.main || "전체";
-
+  const selectedSubCategory = params.sub || "전체";
+  const search = params.search || "";
+  const page = params.page || 1;
   const filters = ["최신순", "인기순", "가격순"];
   const mainCategories = [
     { id: "전체", categoryName: "전체" },
@@ -41,47 +46,18 @@ export default async function PiecePage({
     ];
   }
 
-  const pieceProductUuidList = await getPieceProductsList();
-  console.log(pieceProductUuidList);
+  const pieceProductUuidList = await getPieceProductsList({
+    main: selectedMainCategory,
+    sub: selectedSubCategory,
+    search: search,
+    page: page,
+  });
 
   const pieceProducts = await Promise.all(
     pieceProductUuidList.pieceProductUuidList.map((uuid) =>
       getPieceProducts(uuid)
     )
   );
-  console.log(pieceProducts);
-  const MiniChart = ({
-    data,
-    isPositive,
-  }: {
-    data: number[];
-    isPositive: boolean;
-  }) => {
-    const max = Math.max(...data);
-    const min = Math.min(...data);
-    const range = max - min;
-
-    const points = data
-      .map((value, index) => {
-        const x = (index / (data.length - 1)) * 40;
-        const y = 20 - ((value - min) / range) * 20;
-        return `${x},${y}`;
-      })
-      .join(" ");
-
-    return (
-      <svg width="40" height="20" className="flex-shrink-0">
-        <polyline
-          points={points}
-          fill="none"
-          stroke={isPositive ? "#10b981" : "#ef4444"}
-          strokeWidth="2"
-          className="drop-shadow-sm"
-        />
-      </svg>
-    );
-  };
-
   return (
     <div className=" pb-20">
       <div className="px-4 py-4 text-center border-b border-gray-800">
@@ -142,11 +118,11 @@ export default async function PiecePage({
         {pieceProducts.map((product) => (
           <div
             key={product.piece.pieceProductUuid}
-            className="bg-slate-800/50 h-30 rounded-lg px-4 py-2 border border-slate-700/50"
+            className="bg-slate-800/50 rounded-lg px-4 py-2 border border-slate-700/50"
           >
             <Link href={`/piece/${product.piece.pieceProductUuid}`}>
               <div className="flex items-center gap-3">
-                <div className="min-w-16 h-24 relative rounded-lg flex items-center justify-center">
+                <div className="min-w-16 h-20 relative rounded-lg flex items-center justify-center">
                   <Image
                     src={product.images[0].imageUrl}
                     alt="example"
@@ -158,7 +134,7 @@ export default async function PiecePage({
 
                 <div className="flex-1">
                   <div className="flex items-center justify-between mb-2">
-                    <div className="w-1/3">
+                    <div className="w-7/12">
                       <p className="text-xs text-slate-400 mb-1 truncate">
                         {product.mainCategory.categoryName} &gt;{" "}
                         {product.subCategory.categoryName}
@@ -167,17 +143,7 @@ export default async function PiecePage({
                         {product.productName}
                       </h3>
                     </div>
-
-                    <div className="flex items-center gap-2">
-                      {/* 수정필요 */}
-                      <MiniChart
-                        data={[
-                          1400000, 1450000, 1480000, 1520000, 1580000, 1630000,
-                        ]}
-                        isPositive={true}
-                      />
-                    </div>
-                    <div className="text-center flex-shrink-0 ml-2 w-1/4">
+                    <div className="text-center ml-2">
                       <p className="text-base font-bold text-white">
                         {/* 수정필요 */}
                         {formatPrice(product.aiEstimatedPrice)}

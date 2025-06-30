@@ -43,7 +43,6 @@ export const chargeMoney = async (amount: number) => {
     orderId: string;
     amount: number;
   }>;
-  console.log(data);
   return data.result;
 };
 

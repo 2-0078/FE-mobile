@@ -1,3 +1,5 @@
+import { UserInfoType } from "./UserTypes";
+
 export interface ReplyType {
   boardType: "FUNDING" | "PIECE";
   boardUuid: string;
@@ -6,4 +8,8 @@ export interface ReplyType {
   mine: boolean;
   replyContent: string;
   replyUuid: string;
+}
+
+export interface ReplyTypeWithPeople extends ReplyType {
+  replyUserInfo: UserInfoType;
 }
