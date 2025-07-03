@@ -12,7 +12,7 @@ export default function PieceProductList({ products }: PieceProductListProps) {
 
   if (top5Products.length === 0) {
     return (
-      <div className="w-full bg-gray-100 rounded-2x flex items-center justify-center">
+      <div className="w-full bg-gray-100 rounded-2xl  flex items-center justify-center">
         <p className="text-gray-500">조각 상품이 없습니다</p>
       </div>
     );
