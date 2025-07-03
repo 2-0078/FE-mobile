@@ -1,29 +1,3 @@
-<<<<<<< HEAD
-"use client";
-import React, { useEffect, useState } from "react";
-import { ModalContainer } from "../ModalContainer";
-import { ModalHeader } from "../ModalHeader";
-import { CommentsContent } from "../CommentContent";
-import { AmountSection } from "../AmountSection";
-import { useModal } from "@/stores/modal-store";
-import { Button } from "../ui/button";
-import { PriceInfo } from "../PriceInfo";
-import { getReplies, getRepliesUuid } from "@/action/reply-service";
-import { useSearchParams } from "next/navigation";
-import { ReplyType } from "@/types/CommunityTypes";
-import { FundingProductType } from "@/types/ProductTypes";
-=======
-'use client';
-import React from 'react';
-import { ModalContainer } from '../ModalContainer';
-import { ModalHeader } from '../ModalHeader';
-import { CommentsContent } from '../CommentContent';
-import { AmountSection } from '../AmountSection';
-import { useModal } from '@/stores/modal-store';
-import { PriceInfo } from '../PriceInfo';
-import { ReplyTypeWithPeople } from '@/types/CommunityTypes';
-import { FundingProductType } from '@/types/ProductTypes';
->>>>>>> feat/productsPage
 
 export default function ModalSection({
   productData,

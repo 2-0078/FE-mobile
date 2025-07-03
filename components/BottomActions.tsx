@@ -1,15 +1,5 @@
 'use client';
 
-<<<<<<< HEAD
-import { Button } from "@/components/ui/button";
-import { Heart, MessageCircle } from "lucide-react";
-import { useModal } from "@/stores/modal-store";
-=======
-import { Button } from '@/components/ui/button';
-import { Heart, MessageCircle } from 'lucide-react';
-import { useModal } from '@/stores/modal-store';
-import { fundingWish } from '@/action/funding-service';
->>>>>>> feat/productsPage
 
 export function BottomActions() {
   const { openModal } = useModal();
@@ -23,15 +13,6 @@ export function BottomActions() {
           size="icon"
           className="w-14 h-14 rounded-full bg-white"
         >
-<<<<<<< HEAD
-          <Heart className="w-6 h-6 text-custom-red fill-custom-red" />
-=======
-          <Heart
-            className={`w-6 h-6 ${
-              isWish ? 'text-custom-red fill-custom-red' : 'text-custom-black'
-            }`}
-          />
->>>>>>> feat/productsPage
         </Button>
         <Button
           variant="ghost"

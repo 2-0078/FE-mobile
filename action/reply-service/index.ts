@@ -49,26 +49,3 @@ export async function getReplies(replyUuid: string) {
   const data = (await response.json()) as CommonResponseType<ReplyType>;
   return data.result;
 }
-<<<<<<< HEAD
-=======
-
-export async function createReply(reply: ReplyType) {
-  const session = await auth();
-  const token = session?.user?.accessToken || null;
-
-  const response = await fetch(
-    `${process.env.BASE_API_URL}/reply-service/api/v1/reply/community`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
-      body: JSON.stringify(reply),
-    }
-  );
-
-  const data = (await response.json()) as CommonResponseType<ReplyType>;
-  return data.result;
-}
->>>>>>> feat/productsPage

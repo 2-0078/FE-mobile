@@ -1,34 +1,3 @@
-<<<<<<< HEAD
-"use client";
-import ReactECharts from "echarts-for-react";
-
-export default function AssetPieChart() {
-  const assetData = [
-    { name: "예치금", value: 5234000, color: "#1e40af", percentage: 45 },
-    { name: "조각", value: 3456000, color: "#0891b2", percentage: 30 },
-    { name: "공모", value: 2345000, color: "#06b6d4", percentage: 20 },
-    { name: "경매", value: 1234000, color: "#67e8f9", percentage: 5 },
-  ];
-
-  const option = {
-    backgroundColor: "transparent",
-
-=======
-'use client';
-import ReactECharts from 'echarts-for-react';
-import { MyMoneyInfoType } from '@/types/UserTypes';
-import { formatPrice } from '@/lib/tool';
-
-export default function AssetPieChart({
-  myMoneyInfo,
-}: {
-  myMoneyInfo: MyMoneyInfoType[];
-}) {
-  const colorList = ['#1e40af', '#0891b2', '#06b6d4', '#67e8f9', '#0ea5e9'];
-
-  const option = {
-    backgroundColor: 'transparent',
->>>>>>> feat/productsPage
     series: [
       {
         name: '자산 분포',

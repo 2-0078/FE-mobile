@@ -36,20 +36,6 @@ export const getFundingProductsList = async (params: {
 }) => {
   const { sort, main, sub, search, page, size, direction } = params;
   const queryParams = new URLSearchParams();
-<<<<<<< HEAD
-  if (sort) queryParams.set("sortBy", sort);
-  if (main !== "전체") queryParams.set("main", main);
-  if (sub !== "전체") queryParams.set("sub", sub);
-  if (search) queryParams.set("name", search);
-  if (page) queryParams.set("page", (page - 1).toString());
-  if (size) queryParams.set("size", size.toString());
-  if (direction) queryParams.set("direction", direction);
-=======
-  if (main !== '전체') queryParams.set('main', main);
-  if (sub !== '전체') queryParams.set('sub', sub);
-  if (search) queryParams.set('name', search);
-  if (page) queryParams.set('page', (page - 1).toString());
->>>>>>> feat/productsPage
   const response = await fetch(
     `${
       process.env.BASE_API_URL
@@ -81,22 +67,6 @@ export const getFundingProduct = async (id: string) => {
   return data.result;
 };
 
-<<<<<<< HEAD
-export const getPieceProductsList = async () => {
-=======
-export const getPieceProductsList = async (params: {
-  main: string;
-  sub: string;
-  search?: string;
-  page?: number;
-}) => {
-  const { main, sub, search, page } = params;
-  const queryParams = new URLSearchParams();
-  if (main !== '전체') queryParams.set('main', main);
-  if (sub !== '전체') queryParams.set('sub', sub);
-  if (search) queryParams.set('name', search);
-  if (page) queryParams.set('page', (page - 1).toString());
->>>>>>> feat/productsPage
   const response = await fetch(
     `${process.env.BASE_API_URL}/product-read-service/api/v1/piece/list`,
     {

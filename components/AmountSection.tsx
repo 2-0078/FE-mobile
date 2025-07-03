@@ -1,17 +1,5 @@
 'use client';
 
-<<<<<<< HEAD
-import { useState } from "react";
-import { NumberPad } from "./NumberPad";
-import { Button } from "@/components/ui/button";
-=======
-import { useEffect, useState } from 'react';
-import { NumberPad } from './NumberPad';
-import { Button } from '@/components/ui/button';
-import { useModal } from '@/stores/modal-store';
-import { getMemberBalance } from '@/action/payment-service';
-import { fundingParticipate } from '@/action/funding-service';
->>>>>>> feat/productsPage
 
 export function AmountSection({
   piecePrice,
@@ -22,21 +10,6 @@ export function AmountSection({
   remainingPieces: number;
   depositBalance: number;
 }) {
-<<<<<<< HEAD
-  const [amount, setAmount] = useState("");
-
-=======
-  const [depositBalance, setDepositBalance] = useState(0);
-  useEffect(() => {
-    const fetchDepositBalance = async () => {
-      const balance = await getMemberBalance();
-      setDepositBalance(balance.amount);
-    };
-    fetchDepositBalance();
-  }, []);
-  const [amount, setAmount] = useState('');
-  const { openModal } = useModal();
->>>>>>> feat/productsPage
   const handleNumberClick = (num: string) => {
     // 최대 자릿수 제한 (예: 10자리)
     if (amount.length >= 10) return;
@@ -75,16 +48,6 @@ export function AmountSection({
             {depositBalance.toLocaleString()}원
           </span>
         </p>
-<<<<<<< HEAD
-        <Button className="w-full h-10 bg-black text-white rounded-full">
-=======
-        <Button
-          className="w-full h-10 bg-black text-white rounded-full"
-          onClick={() => {
-            openModal('purchase');
-          }}
-        >
->>>>>>> feat/productsPage
           예치금이 부족하신가요?
         </Button>
       </div>

@@ -1,25 +1,3 @@
-<<<<<<< HEAD
-import React from "react";
-import { Button } from "./ui/button";
-import { getMemberBalance } from "@/action/payment-service";
-=======
-'use client';
-import React, { useEffect, useState } from 'react';
-import { Button } from './ui/button';
-import { getMemberBalance } from '@/action/payment-service';
-import { useModal } from '@/stores/modal-store';
-
-export default function AmmountCard() {
-  const [balance, setBalance] = useState(0);
-  useEffect(() => {
-    const fetchBalance = async () => {
-      const balance = await getMemberBalance();
-      setBalance(balance.amount);
-    };
-    fetchBalance();
-  }, []);
-  const { openModal } = useModal();
->>>>>>> feat/productsPage
 
 export default async function AmmountCard() {
   const balance = await getMemberBalance();
@@ -33,16 +11,6 @@ export default async function AmmountCard() {
       </div>
 
       <div className="grid grid-cols-2 gap-3">
-<<<<<<< HEAD
-        <Button className=" bg-custom-light-blue">충전하기</Button>
-=======
-        <Button
-          className=" bg-custom-light-blue"
-          onClick={() => openModal('purchase')}
-        >
-          충전하기
-        </Button>
->>>>>>> feat/productsPage
         <Button className="bg-custom-light-blue">출금하기</Button>
       </div>
     </div>

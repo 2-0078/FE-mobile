@@ -1,8 +1,5 @@
-<<<<<<< HEAD
-=======
 import { UserInfoType } from './UserTypes';
 
->>>>>>> feat/productsPage
 export interface ReplyType {
   boardType: 'FUNDING' | 'PIECE';
   boardUuid: string;

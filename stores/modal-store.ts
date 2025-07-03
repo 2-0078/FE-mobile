@@ -2,11 +2,6 @@ import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
 // 모달 타입 정의
-<<<<<<< HEAD
-export type ModalType = "comments" | "details" | null;
-=======
-export type ModalType = 'comments' | 'details' | 'purchase' | null;
->>>>>>> feat/productsPage
 
 // 모달 상태 인터페이스
 interface ModalState {
