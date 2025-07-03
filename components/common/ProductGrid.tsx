@@ -1,10 +1,9 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import { getFundingProductsList, getFundingProduct, getPieceProductsList, getPieceProducts } from '@/action/product-service';
 import FundingSwiper from './FundingSwiper';
 import PieceProductList from './PieceProductList';
-import ProductGridSkeleton from './ProductGridSkeleton';
 
-async function ProductGridContent() {
+export default async function ProductGrid() {
   const [fundingProductsList, pieceProductsList] = await Promise.all([
     getFundingProductsList({ page: 1, size: 10 }),
     getPieceProductsList()
@@ -42,7 +41,7 @@ async function ProductGridContent() {
     <div className="space-y-8">
       {/* 공모 상품 섹션 */}
       <div className="space-y-4">
-        <h2 className="text-2xl font-bold text-white">공모</h2>
+        <h2 className="text-2xl font-bold text-gray-900">공모</h2>
         <div className="rounded-2xl">
           <FundingSwiper products={validFundingProducts} />
         </div>
@@ -54,13 +53,5 @@ async function ProductGridContent() {
         <PieceProductList products={validPieceProducts} />
       </div>
     </div>
-  );
-}
-
-export default function ProductGrid() {
-  return (
-    <Suspense fallback={<ProductGridSkeleton />}>
-      <ProductGridContent />
-    </Suspense>
   );
 } 
