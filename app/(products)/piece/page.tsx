@@ -2,10 +2,25 @@ import React from 'react';
 import BottomNavbar from '@/components/layout/BottomNavbar';
 import Link from 'next/link';
 import Image from 'next/image';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { TrendingUp, TrendingDown } from 'lucide-react';
 import {
   getMainCategories,
   getPieceProducts,
   getPieceProductsList,
+  getSubCategories,
+} from '@/action/product-service';
+import { CategoryType } from '@/types/ProductTypes';
+import CategorySection from '@/components/(products)/CategorySection';
+import Search from '@/components/common/Search';
+import Pagenation from '@/components/common/Pagenation';
+
+// 가격 포맷팅 함수
+const formatPrice = (price: number) => {
+  return new Intl.NumberFormat('ko-KR').format(price);
+};
+
 export default async function PiecePage({
   searchParams,
 }: {
@@ -16,6 +31,11 @@ export default async function PiecePage({
 }) {
   // URL에서 카테고리 정보 가져오기
   const params = await searchParams;
+  const selectedMainCategory = params.main || '전체';
+  const selectedSort = params.sort || '최신순';
+  
+  const filters = ['최신순', '인기순', '가격순', '변동률순'];
+  
   const mainCategories = [
     { id: '전체', categoryName: '전체' },
     ...(await getMainCategories()),
@@ -37,6 +57,7 @@ export default async function PiecePage({
     )
   );
   console.log(pieceProducts);
+  
   const MiniChart = ({
     data,
     isPositive,
@@ -117,7 +138,7 @@ export default async function PiecePage({
       {/* Product Count */}
       <div className="px-4 mb-4">
         <p className="text-sm text-gray-400">
-          개의 상품
+          {pieceProducts.length}개의 상품
         </p>
       </div>
 

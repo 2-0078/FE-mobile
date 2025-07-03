@@ -67,6 +67,7 @@ export const getFundingProduct = async (id: string) => {
   return data.result;
 };
 
+export const getPieceProductsList = async () => {
   const response = await fetch(
     `${process.env.BASE_API_URL}/product-read-service/api/v1/piece/list`,
     {

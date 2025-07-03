@@ -1,3 +1,11 @@
+import React from 'react';
+import { Button } from '@/components/ui/button';
+import { Gem, Trophy, Heart, Gavel, Wallet, ShoppingBag } from 'lucide-react';
+import Header from '@/components/layout/Header';
+import AmmountCard from '@/components/AmmountCard';
+import AssetPieChart from '@/components/(main)/AssetPieChart';
+
+export default function MyWalletPage() {
   return (
     <div className="pb-24 px-4 space-y-4">
       <Header className="px-4 py-2 mt-4" title="내 자산" />
