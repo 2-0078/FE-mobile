@@ -29,48 +29,36 @@ export default function FundingSwiper({ products }: FundingSwiperProps) {
     );
   }
 
-  if (products.length === 1) {
-    return (
-      <div className="w-full">
-        <FundingItemCard product={products[0]} />
-      </div>
-    );
-  }
-
   return (
-    <div className="relative w-full">
-      <div className="overflow-hidden">
-        <div 
-          className="flex transition-transform duration-500 ease-in-out"
-          style={{ 
-            transform: `translateX(-${currentIndex * 100}%)`,
-            width: `${products.length * 100}%`
-          }}
-        >
-          {products.map((product) => (
-            <div 
-              key={product.productUuid} 
-              className="w-full"
-              style={{ width: `${100 / products.length}%` }}
-            >
-              <FundingItemCard product={product} />
-            </div>
-          ))}
-        </div>
+    <div className="relative w-full overflow-hidden">
+      <div className="flex">
+        {products.map((product, index) => (
+          <div 
+            key={product.productUuid} 
+            className="w-full flex-shrink-0 transition-transform duration-500 ease-in-out"
+            style={{ 
+              transform: `translateX(-${currentIndex * 100}%)`
+            }}
+          >
+            <FundingItemCard product={product} />
+          </div>
+        ))}
       </div>
       
       {/* 인디케이터 */}
-      <div className="flex justify-center mt-4 space-x-2">
-        {products.map((_, index) => (
-          <button
-            key={index}
-            className={`w-3 h-3 rounded-full transition-colors ${
-              index === currentIndex ? 'bg-blue-600' : 'bg-gray-300'
-            }`}
-            onClick={() => setCurrentIndex(index)}
-          />
-        ))}
-      </div>
+      {products.length > 1 && (
+        <div className="flex justify-center mt-4 space-x-2">
+          {products.map((_, index) => (
+            <button
+              key={index}
+              className={`w-2 h-2 rounded-full transition-colors ${
+                index === currentIndex ? 'bg-blue-600' : 'bg-gray-300'
+              }`}
+              onClick={() => setCurrentIndex(index)}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 } 
