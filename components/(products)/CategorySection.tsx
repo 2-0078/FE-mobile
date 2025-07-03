@@ -1,7 +1,7 @@
-"use client";
-import { useRouter, useSearchParams } from "next/navigation";
-import React from "react";
-import { CategoryType } from "@/types/ProductTypes";
+'use client';
+import { useRouter, useSearchParams } from 'next/navigation';
+import React from 'react';
+import { CategoryType } from '@/types/ProductTypes';
 
 export default function CategorySection({
   mainCategories,
@@ -11,45 +11,45 @@ export default function CategorySection({
   subCategories: CategoryType[];
 }) {
   const searchParams = useSearchParams();
-  const selectedMainCategory = searchParams.get("main") || "전체";
-  const selectedSubCategory = searchParams.get("sub") || "전체";
+  const selectedMainCategory = searchParams.get('main') || '전체';
+  const selectedSubCategory = searchParams.get('sub') || '전체';
   const router = useRouter();
 
   // URL 파라미터 업데이트 함수
   const updateSearchParams = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
 
-    if (value === "" || value === "전체") {
+    if (value === '' || value === '전체') {
       params.delete(key);
     } else {
       params.set(key, value);
     }
 
     // 메인 카테고리 변경 시 서브 카테고리와 페이지 초기화
-    if (key === "main") {
-      params.delete("search");
-      params.delete("sub");
-      params.delete("page");
+    if (key === 'main') {
+      params.delete('search');
+      params.delete('sub');
+      params.delete('page');
     }
 
     // 서브 카테고리 변경 시 페이지 초기화
-    if (key === "sub") {
-      params.delete("search");
-      params.delete("page");
+    if (key === 'sub') {
+      params.delete('search');
+      params.delete('page');
     }
 
     router.replace(`?${params.toString()}`);
   };
   const handleMainCategoryChange = (category: string) => {
-    updateSearchParams("main", category);
+    updateSearchParams('main', category);
   };
 
   const handleSubCategoryChange = (subCategory: string) => {
     // 같은 서브카테고리 클릭 시 토글
     if (selectedSubCategory === subCategory) {
-      updateSearchParams("sub", "");
+      updateSearchParams('sub', '');
     } else {
-      updateSearchParams("sub", subCategory);
+      updateSearchParams('sub', subCategory);
     }
   };
 
@@ -59,7 +59,7 @@ export default function CategorySection({
         <div
           className="flex gap-2 overflow-x-auto scrollbar-hide"
           style={{
-            scrollbarWidth: "none",
+            scrollbarWidth: 'none',
           }}
         >
           {mainCategories.map((category) => (
@@ -68,8 +68,8 @@ export default function CategorySection({
               onClick={() => handleMainCategoryChange(category.id)}
               className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
                 selectedMainCategory == category.id
-                  ? "bg-custom-green text-gray-900"
-                  : "bg-slate-800/50 text-gray-300 "
+                  ? 'bg-custom-green text-gray-900'
+                  : 'bg-slate-800/50 text-gray-300 '
               }`}
             >
               {category.categoryName}
@@ -77,12 +77,12 @@ export default function CategorySection({
           ))}
         </div>
       </div>
-      {selectedMainCategory !== "전체" && subCategories.length > 0 && (
+      {selectedMainCategory !== '전체' && subCategories.length > 0 && (
         <div className="px-4 pb-4">
           <div
             className="flex gap-2 overflow-x-auto scrollbar-hide"
             style={{
-              scrollbarWidth: "none",
+              scrollbarWidth: 'none',
             }}
           >
             {subCategories.map((subCategory) => (
@@ -91,8 +91,8 @@ export default function CategorySection({
                 onClick={() => handleSubCategoryChange(subCategory.id)}
                 className={`px-3 py-2 rounded-lg text-xs whitespace-nowrap transition-all ${
                   selectedSubCategory == subCategory.id
-                    ? "bg-custom-green text-gray-900 font-medium"
-                    : "bg-slate-800/50 text-gray-400  "
+                    ? 'bg-custom-green text-gray-900 font-medium'
+                    : 'bg-slate-800/50 text-gray-400  '
                 }`}
               >
                 {subCategory.categoryName}

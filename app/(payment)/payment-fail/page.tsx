@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { useSearchParams, useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button"; // 프로젝트의 Button 컴포넌트 경로
+import { useSearchParams, useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button'; // 프로젝트의 Button 컴포넌트 경로
 
 export default function PaymentFailPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
   // URL 쿼리로부터 에러 메시지와 코드를 가져옵니다.
-  const errorMessage = searchParams.get("message");
-  const errorCode = searchParams.get("code");
+  const errorMessage = searchParams.get('message');
+  const errorCode = searchParams.get('code');
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-8 text-center bg-gray-50">
@@ -39,7 +39,7 @@ export default function PaymentFailPage() {
         <div className="mt-8 text-left bg-red-50 p-4 rounded-lg">
           <p className="font-semibold text-red-800">실패 사유:</p>
           <p className="text-red-700">
-            {errorMessage || "알 수 없는 오류가 발생했습니다."}
+            {errorMessage || '알 수 없는 오류가 발생했습니다.'}
           </p>
           {errorCode && (
             <p className="text-xs text-red-600 mt-2">에러코드: {errorCode}</p>
@@ -55,7 +55,7 @@ export default function PaymentFailPage() {
             다시 시도
           </Button>
           <Button
-            onClick={() => router.push("/")} // 메인 페이지로 이동
+            onClick={() => router.push('/')} // 메인 페이지로 이동
             className="w-full sm:w-auto px-6 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300"
           >
             홈으로 가기

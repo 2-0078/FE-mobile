@@ -1,7 +1,7 @@
-import React from "react";
-import ProductTitleWrapper from "@/components/layout/ProductTitleWrapper";
-import RemainingPieces from "@/components/common/RemainingPieces";
-import Price from "@/components/layout/Price";
+import React from 'react';
+import ProductTitleWrapper from '@/components/layout/ProductTitleWrapper';
+import RemainingPieces from '@/components/common/RemainingPieces';
+import Price from '@/components/layout/Price';
 export default function ItemCardInfo() {
   return (
     <div className="p-4">

@@ -1,7 +1,7 @@
-import { UserInfoType } from "./UserTypes";
+import { UserInfoType } from './UserTypes';
 
 export interface ReplyType {
-  boardType: "FUNDING" | "PIECE";
+  boardType: 'FUNDING' | 'PIECE';
   boardUuid: string;
   createdAt: string;
   memberUuid: string;

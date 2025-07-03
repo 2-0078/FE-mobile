@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils";
-import React from "react";
+import { cn } from '@/lib/utils';
+import React from 'react';
 
 export default function ProductTitleWrapper({
   children,
@@ -9,7 +9,7 @@ export default function ProductTitleWrapper({
   className?: string;
 }) {
   return (
-    <h3 className={cn("font-semibold text-lg text-black truncate", className)}>
+    <h3 className={cn('font-semibold text-lg text-black truncate', className)}>
       {children}
     </h3>
   );

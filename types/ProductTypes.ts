@@ -1,4 +1,4 @@
-import { BasePaginationResponseType } from "./CommonTypes";
+import { BasePaginationResponseType } from './CommonTypes';
 
 export interface CategoryType {
   id: string;

@@ -1,6 +1,6 @@
-"use server";
-import { CommonResponseType } from "@/types/CommonTypes";
-import { auth } from "@/auth";
+'use server';
+import { CommonResponseType } from '@/types/CommonTypes';
+import { auth } from '@/auth';
 
 export const getMemberBalance = async () => {
   const session = await auth();
@@ -8,10 +8,10 @@ export const getMemberBalance = async () => {
   const response = await fetch(
     `${process.env.BASE_API_URL}/payment-service/api/v1/money`,
     {
-      method: "GET",
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
       },
     }
   );
@@ -27,10 +27,10 @@ export const chargeMoney = async (amount: number) => {
   const response = await fetch(
     `${process.env.BASE_API_URL}/payment-service/api/v1/payment/create`,
     {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify({
         amount: Number(amount),
@@ -56,13 +56,13 @@ export const confirmPayment = async (
   const response = await fetch(
     `${process.env.BASE_API_URL}/payment-service/api/v1/payment/confirm`,
     {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify({
-        paymentType: "CARD",
+        paymentType: 'CARD',
         orderId,
         paymentKey,
         amount: Number(amount),

@@ -1,16 +1,16 @@
-import NextAuth from "next-auth";
-import Credentials from "next-auth/providers/credentials";
+import NextAuth from 'next-auth';
+import Credentials from 'next-auth/providers/credentials';
 
-import { signin } from "./action/auth-service";
-import { AdapterUser } from "next-auth/adapters";
-import { DefaultSession } from "next-auth";
+import { signin } from './action/auth-service';
+import { AdapterUser } from 'next-auth/adapters';
+import { DefaultSession } from 'next-auth';
 
-declare module "next-auth" {
+declare module 'next-auth' {
   interface Session {
     user: {
       memberUuid: string;
       accessToken: string;
-    } & DefaultSession["user"];
+    } & DefaultSession['user'];
   }
 }
 
@@ -18,8 +18,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Credentials({
       credentials: {
-        email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" },
+        email: { label: 'Email', type: 'email' },
+        password: { label: 'Password', type: 'password' },
       },
       authorize: async (credentials) => {
         let user = null;
@@ -36,7 +36,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         }
 
         if (!user) {
-          throw new Error("로그인에 실패했습니다.");
+          throw new Error('로그인에 실패했습니다.');
         }
         // return user object with their profile data
         return {
@@ -64,7 +64,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
   },
   pages: {
-    signIn: "/login",
-    error: "/error",
+    signIn: '/login',
+    error: '/error',
   },
 });

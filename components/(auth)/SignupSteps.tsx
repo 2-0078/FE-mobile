@@ -1,20 +1,20 @@
-"use client";
-import React from "react";
-import { useRouter } from "next/navigation";
-import { signup } from "@/action/auth-service";
-import { useFunnel } from "@/action/funnel";
+'use client';
+import React from 'react';
+import { useRouter } from 'next/navigation';
+import { signup } from '@/action/auth-service';
+import { useFunnel } from '@/action/funnel';
 
-import Stepper from "./Stepper";
-import SignupInfoSection from "./SignupInfoSection";
+import Stepper from './Stepper';
+import SignupInfoSection from './SignupInfoSection';
 
-import { FileTextIcon, CreditCardIcon, UserPenIcon } from "lucide-react";
-import PhonenumberSection from "./PhonenumberSection";
-import NicknameSection from "./NicknameSection";
+import { FileTextIcon, CreditCardIcon, UserPenIcon } from 'lucide-react';
+import PhonenumberSection from './PhonenumberSection';
+import NicknameSection from './NicknameSection';
 
 export default function SignupSteps() {
   const router = useRouter();
   const { Funnel, Step, setStep, formData, setFormData, currentStep } =
-    useFunnel("step1");
+    useFunnel('step1');
 
   const handleNext = (data: Record<string, string>, step: string) => {
     setStep(step);
@@ -25,8 +25,8 @@ export default function SignupSteps() {
     setFormData(signupData);
     const res = await signup(signupData);
     if (res.isSuccess) {
-      alert("회원가입 성공");
-      router.push("/login");
+      alert('회원가입 성공');
+      router.push('/login');
     } else {
       alert(res.message);
     }
@@ -35,7 +35,7 @@ export default function SignupSteps() {
   return (
     <form>
       <Stepper
-        totalSteps={["step1", "step2", "step3"]}
+        totalSteps={['step1', 'step2', 'step3']}
         icons={[
           <FileTextIcon className="w-4 h-4" key="step1" />,
           <CreditCardIcon className="w-4 h-4" key="step2" />,
@@ -48,7 +48,7 @@ export default function SignupSteps() {
         <Step name="step1">
           <SignupInfoSection
             onNext={(data: { email: string; password: string }) => {
-              handleNext(data, "step2");
+              handleNext(data, 'step2');
             }}
           />
         </Step>
@@ -60,7 +60,7 @@ export default function SignupSteps() {
               birthdate: string;
               gender: string;
             }) => {
-              handleNext(data, "step3");
+              handleNext(data, 'step3');
             }}
           />
         </Step>

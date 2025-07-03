@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
-import ReactECharts from "echarts-for-react";
-import * as echarts from "echarts";
+import React, { useEffect, useState } from 'react';
+import ReactECharts from 'echarts-for-react';
+import * as echarts from 'echarts';
 
 // Define the types for better type checking
 type EChartsOption = echarts.EChartsOption;
@@ -22,8 +22,8 @@ interface SplitData {
   volumes: [number, number, 1 | -1][];
 }
 
-const upColor = "#00da3c";
-const downColor = "#ec0000";
+const upColor = '#00da3c';
+const downColor = '#ec0000';
 
 function splitData(rawData: RawDataItem[]): SplitData {
   const categoryData: string[] = [];
@@ -65,7 +65,7 @@ export default function StockChart() {
       try {
         setLoading(true);
         // public 폴더의 데이터는 '/데이터경로'로 바로 접근합니다.
-        const response = await fetch("/data/stock-DJI.json");
+        const response = await fetch('/data/stock-DJI.json');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -76,36 +76,36 @@ export default function StockChart() {
           animation: false,
           legend: {
             bottom: 10,
-            left: "center",
-            data: ["Dow-Jones index"],
+            left: 'center',
+            data: ['Dow-Jones index'],
           },
           tooltip: {
-            trigger: "axis",
+            trigger: 'axis',
             axisPointer: {
-              type: "cross",
+              type: 'cross',
             },
             borderWidth: 1,
-            borderColor: "#ccc",
+            borderColor: '#ccc',
             padding: 10,
             textStyle: {
-              color: "#000",
+              color: '#000',
             },
             position: function (pos, params, el, elRect, size) {
               const obj: Record<string, number> = {
                 top: 10,
               };
-              obj[["left", "right"][+(pos[0] < size.viewSize[0] / 2)]] = 30;
+              obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 30;
               return obj;
             },
           },
           axisPointer: {
             link: [
               {
-                xAxisIndex: "all",
+                xAxisIndex: 'all',
               },
             ],
             label: {
-              backgroundColor: "#777",
+              backgroundColor: '#777',
             },
           },
           // toolbox: {
@@ -142,32 +142,32 @@ export default function StockChart() {
           },
           grid: [
             {
-              left: "10%",
-              right: "8%",
-              height: "50%",
+              left: '10%',
+              right: '8%',
+              height: '50%',
             },
             {
-              left: "10%",
-              right: "8%",
-              top: "63%",
-              height: "16%",
+              left: '10%',
+              right: '8%',
+              top: '63%',
+              height: '16%',
             },
           ],
           xAxis: [
             {
-              type: "category",
+              type: 'category',
               data: data.categoryData,
               boundaryGap: false,
               axisLine: { onZero: false },
               splitLine: { show: false },
-              min: "dataMin",
-              max: "dataMax",
+              min: 'dataMin',
+              max: 'dataMax',
               axisPointer: {
                 z: 100,
               },
             },
             {
-              type: "category",
+              type: 'category',
               gridIndex: 1,
               data: data.categoryData,
               boundaryGap: false,
@@ -175,8 +175,8 @@ export default function StockChart() {
               axisTick: { show: false },
               splitLine: { show: false },
               axisLabel: { show: false },
-              min: "dataMin",
-              max: "dataMax",
+              min: 'dataMin',
+              max: 'dataMax',
             },
           ],
           yAxis: [
@@ -198,7 +198,7 @@ export default function StockChart() {
           ],
           dataZoom: [
             {
-              type: "inside",
+              type: 'inside',
               xAxisIndex: [0, 1],
               start: 98,
               end: 100,
@@ -206,16 +206,16 @@ export default function StockChart() {
             {
               show: true,
               xAxisIndex: [0, 1],
-              type: "slider",
-              top: "85%",
+              type: 'slider',
+              top: '85%',
               start: 98,
               end: 100,
             },
           ],
           series: [
             {
-              name: "Dow-Jones index",
-              type: "candlestick",
+              name: 'Dow-Jones index',
+              type: 'candlestick',
               data: data.values,
               itemStyle: {
                 color: upColor,
@@ -225,8 +225,8 @@ export default function StockChart() {
               },
             },
             {
-              name: "구매량",
-              type: "bar",
+              name: '구매량',
+              type: 'bar',
               xAxisIndex: 1,
               yAxisIndex: 1,
               data: data.volumes,
@@ -236,8 +236,8 @@ export default function StockChart() {
         setOption(chartOption);
         setLoading(false);
       } catch (err) {
-        console.error("주식 데이터를 불러오는데 실패했습니다:", err);
-        setError("차트 데이터를 불러오는데 실패했습니다.");
+        console.error('주식 데이터를 불러오는데 실패했습니다:', err);
+        setError('차트 데이터를 불러오는데 실패했습니다.');
         setLoading(false);
       }
     };
@@ -254,11 +254,11 @@ export default function StockChart() {
   }
 
   return (
-    <div style={{ width: "100%", height: "800px" }}>
+    <div style={{ width: '100%', height: '800px' }}>
       {option && (
         <ReactECharts
           option={option}
-          style={{ height: "100%", width: "100%" }}
+          style={{ height: '100%', width: '100%' }}
         />
       )}
     </div>

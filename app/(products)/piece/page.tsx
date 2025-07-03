@@ -1,20 +1,20 @@
-import React from "react";
-import BottomNavbar from "@/components/layout/BottomNavbar";
-import Link from "next/link";
-import Image from "next/image";
+import React from 'react';
+import BottomNavbar from '@/components/layout/BottomNavbar';
+import Link from 'next/link';
+import Image from 'next/image';
 import {
   getMainCategories,
   getPieceProducts,
   getPieceProductsList,
-} from "@/action/product-service";
-import { getSubCategories } from "@/action/product-service";
-import { CategoryType } from "@/types/ProductTypes";
-import CategorySection from "@/components/(products)/CategorySection";
-import { Search, TrendingDown, TrendingUp } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import Pagenation from "@/components/common/Pagenation";
-import { formatPrice } from "@/lib/tool";
+} from '@/action/product-service';
+import { getSubCategories } from '@/action/product-service';
+import { CategoryType } from '@/types/ProductTypes';
+import CategorySection from '@/components/(products)/CategorySection';
+import { Search, TrendingDown, TrendingUp } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import Pagenation from '@/components/common/Pagenation';
+import { formatPrice } from '@/lib/tool';
 export default async function PiecePage({
   searchParams,
 }: {
@@ -28,20 +28,20 @@ export default async function PiecePage({
 }) {
   // URL에서 카테고리 정보 가져오기
   const params = await searchParams;
-  const selectedSort = params.sort || "최신순";
-  const selectedMainCategory = params.main || "전체";
-  const selectedSubCategory = params.sub || "전체";
-  const search = params.search || "";
+  const selectedSort = params.sort || '최신순';
+  const selectedMainCategory = params.main || '전체';
+  const selectedSubCategory = params.sub || '전체';
+  const search = params.search || '';
   const page = params.page || 1;
-  const filters = ["최신순", "인기순", "가격순"];
+  const filters = ['최신순', '인기순', '가격순'];
   const mainCategories = [
-    { id: "전체", categoryName: "전체" },
+    { id: '전체', categoryName: '전체' },
     ...(await getMainCategories()),
   ];
   let subCategories: CategoryType[] = [];
-  if (selectedMainCategory != "전체") {
+  if (selectedMainCategory != '전체') {
     subCategories = [
-      { id: "전체", categoryName: "전체" },
+      { id: '전체', categoryName: '전체' },
       ...(await getSubCategories(selectedMainCategory)),
     ];
   }
@@ -92,8 +92,8 @@ export default async function PiecePage({
                 key={filter}
                 className={`px-3 py-1 rounded-full text-xs transition-all ${
                   selectedSort === filter
-                    ? "bg-gray-700 text-green-400"
-                    : "text-gray-400"
+                    ? 'bg-gray-700 text-green-400'
+                    : 'text-gray-400'
                 }`}
               >
                 {filter}
@@ -106,7 +106,7 @@ export default async function PiecePage({
       {/* Product Count */}
       <div className="px-4 mb-4">
         <p className="text-sm text-gray-400">
-          총{" "}
+          총{' '}
           <span className="text-green-400 font-medium">
             {pieceProductUuidList.totalElements}
           </span>
@@ -136,7 +136,7 @@ export default async function PiecePage({
                   <div className="flex items-center justify-between mb-2">
                     <div className="w-7/12">
                       <p className="text-xs text-slate-400 mb-1 truncate">
-                        {product.mainCategory.categoryName} &gt;{" "}
+                        {product.mainCategory.categoryName} &gt;{' '}
                         {product.subCategory.categoryName}
                       </p>
                       <h3 className="text-sm font-medium text-white">
@@ -150,7 +150,7 @@ export default async function PiecePage({
                       </p>
                       <div
                         className={`flex justify-center items-center gap-1 text-xs ${
-                          1 > 0 ? "text-emerald-400" : "text-red-400"
+                          1 > 0 ? 'text-emerald-400' : 'text-red-400'
                         }`}
                       >
                         {1 > 0 ? (
@@ -159,7 +159,7 @@ export default async function PiecePage({
                           <TrendingDown className="w-3 h-3" />
                         )}
                         <span>
-                          {1 > 0 ? "+" : ""}
+                          {1 > 0 ? '+' : ''}
                           {1}%
                         </span>
                       </div>

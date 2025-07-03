@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 import {
   TrendingUp,
   TrendingDown,
@@ -10,26 +10,26 @@ import {
   ShoppingCart,
   Gavel,
   Users,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import Image from 'next/image';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 
 export default function SculptureTradingPlatform() {
-  const [selectedTimeframe, setSelectedTimeframe] = useState("1D");
-  const [activeInfoTab, setActiveInfoTab] = useState("orderbook");
+  const [selectedTimeframe, setSelectedTimeframe] = useState('1D');
+  const [activeInfoTab, setActiveInfoTab] = useState('orderbook');
   const [buyPrice, setBuyPrice] = useState(2850000);
   const [sellPrice, setSellPrice] = useState(2850000);
   const [buyQuantity, setBuyQuantity] = useState(1);
@@ -37,8 +37,8 @@ export default function SculptureTradingPlatform() {
   const [ownedQuantity] = useState(3); // 보유 수량 (실제로는 API에서 가져올 데이터)
 
   const sculptureData = {
-    name: "Venus de Milo Replica",
-    artist: "Classical Greek Style",
+    name: 'Venus de Milo Replica',
+    artist: 'Classical Greek Style',
     currentPrice: 2850000,
     change: 156000,
     changePercent: 5.8,
@@ -68,11 +68,11 @@ export default function SculptureTradingPlatform() {
   // 가격 증가/감소
   const adjustPrice = (
     currentPrice: number,
-    direction: "up" | "down"
+    direction: 'up' | 'down'
   ): number => {
     const tickSize = getTickSize(currentPrice);
     const newPrice =
-      direction === "up" ? currentPrice + tickSize : currentPrice - tickSize;
+      direction === 'up' ? currentPrice + tickSize : currentPrice - tickSize;
     return Math.max(0, adjustToTickSize(newPrice));
   };
 
@@ -81,7 +81,7 @@ export default function SculptureTradingPlatform() {
     value: string,
     setPriceFunc: (price: number) => void
   ) => {
-    const numValue = Number.parseInt(value.replace(/,/g, ""));
+    const numValue = Number.parseInt(value.replace(/,/g, ''));
     if (!isNaN(numValue)) {
       const adjustedPrice = adjustToTickSize(numValue);
       setPriceFunc(adjustedPrice);
@@ -108,29 +108,29 @@ export default function SculptureTradingPlatform() {
   const communityPosts = [
     {
       id: 1,
-      user: "ArtCollector92",
-      content: "Venus de Milo showing strong support at 2.8M level",
+      user: 'ArtCollector92',
+      content: 'Venus de Milo showing strong support at 2.8M level',
       likes: 24,
-      time: "2m",
+      time: '2m',
     },
     {
       id: 2,
-      user: "SculptureExpert",
-      content: "Market sentiment looking bullish for classical pieces",
+      user: 'SculptureExpert',
+      content: 'Market sentiment looking bullish for classical pieces',
       likes: 18,
-      time: "5m",
+      time: '5m',
     },
     {
       id: 3,
-      user: "InvestorPro",
-      content: "Volume spike indicates institutional interest",
+      user: 'InvestorPro',
+      content: 'Volume spike indicates institutional interest',
       likes: 31,
-      time: "8m",
+      time: '8m',
     },
   ];
 
   const formatPrice = (price: number) => {
-    return new Intl.NumberFormat("ko-KR").format(price);
+    return new Intl.NumberFormat('ko-KR').format(price);
   };
 
   const formatChange = (change: number, percent: number) => {
@@ -138,7 +138,7 @@ export default function SculptureTradingPlatform() {
     return (
       <span
         className={`flex items-center gap-1 ${
-          isPositive ? "text-green-400" : "text-red-400"
+          isPositive ? 'text-green-400' : 'text-red-400'
         }`}
       >
         {isPositive ? (
@@ -200,17 +200,17 @@ export default function SculptureTradingPlatform() {
                 </Button>
               </div>
               <div className="flex gap-1">
-                {["30M", "1H", "1D", "1W", "1M", "1Y"].map((timeframe) => (
+                {['30M', '1H', '1D', '1W', '1M', '1Y'].map((timeframe) => (
                   <Button
                     key={timeframe}
                     variant={
-                      selectedTimeframe === timeframe ? "default" : "ghost"
+                      selectedTimeframe === timeframe ? 'default' : 'ghost'
                     }
                     size="sm"
                     className={`text-xs px-2 py-1 ${
                       selectedTimeframe === timeframe
-                        ? "bg-blue-600 text-white"
-                        : "text-gray-400 hover:text-white"
+                        ? 'bg-blue-600 text-white'
+                        : 'text-gray-400 hover:text-white'
                     }`}
                     onClick={() => setSelectedTimeframe(timeframe)}
                   >
@@ -376,9 +376,9 @@ export default function SculptureTradingPlatform() {
                     최근 입찰 내역
                   </div>
                   {[
-                    { user: "Collector123", amount: 2850000, time: "1분 전" },
-                    { user: "ArtLover", amount: 2800000, time: "5분 전" },
-                    { user: "InvestorPro", amount: 2750000, time: "12분 전" },
+                    { user: 'Collector123', amount: 2850000, time: '1분 전' },
+                    { user: 'ArtLover', amount: 2800000, time: '5분 전' },
+                    { user: 'InvestorPro', amount: 2750000, time: '12분 전' },
                   ].map((bid, index) => (
                     <div
                       key={index}
@@ -426,7 +426,7 @@ export default function SculptureTradingPlatform() {
                       variant="outline"
                       size="sm"
                       className="px-3 border-gray-600 text-gray-400 hover:text-white bg-transparent"
-                      onClick={() => setBuyPrice(adjustPrice(buyPrice, "down"))}
+                      onClick={() => setBuyPrice(adjustPrice(buyPrice, 'down'))}
                     >
                       -
                     </Button>
@@ -443,7 +443,7 @@ export default function SculptureTradingPlatform() {
                       variant="outline"
                       size="sm"
                       className="px-3 border-gray-600 text-gray-400 hover:text-white bg-transparent"
-                      onClick={() => setBuyPrice(adjustPrice(buyPrice, "up"))}
+                      onClick={() => setBuyPrice(adjustPrice(buyPrice, 'up'))}
                     >
                       +
                     </Button>
@@ -536,7 +536,7 @@ export default function SculptureTradingPlatform() {
                       size="sm"
                       className="px-3 border-gray-600 text-gray-400 hover:text-white bg-transparent"
                       onClick={() =>
-                        setSellPrice(adjustPrice(sellPrice, "down"))
+                        setSellPrice(adjustPrice(sellPrice, 'down'))
                       }
                     >
                       -
@@ -554,7 +554,7 @@ export default function SculptureTradingPlatform() {
                       variant="outline"
                       size="sm"
                       className="px-3 border-gray-600 text-gray-400 hover:text-white bg-transparent"
-                      onClick={() => setSellPrice(adjustPrice(sellPrice, "up"))}
+                      onClick={() => setSellPrice(adjustPrice(sellPrice, 'up'))}
                     >
                       +
                     </Button>
