@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 export default function Stepper({
   totalSteps,
@@ -27,8 +27,8 @@ export default function Stepper({
                 className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors delay-300 duration-500 ease-in-out
                 ${
                   index + 1 <= steps
-                    ? 'bg-custom-green/80 text-white'
-                    : 'bg-custom-gray-300 text-black'
+                    ? "bg-custom-green/80 text-white"
+                    : "bg-custom-gray-300 text-black"
                 }`}
               >
                 {icons[index]}
@@ -40,7 +40,7 @@ export default function Stepper({
                 <div
                   className="absolute top-1/2 h-0.5 bg-custom-green/80 -translate-y-1/2 origin-left transition-all duration-300 ease-out"
                   style={{
-                    width: index + 1 < steps ? '100%' : '0%',
+                    width: index + 1 < steps ? "100%" : "0%",
                   }}
                 ></div>
               </div>
@@ -54,7 +54,7 @@ export default function Stepper({
             key={index}
             className={`transition-colors w-10 text-xs delay-300 duration-500 ease-in-out
             ${
-              index + 1 <= steps ? 'text-custom-green ' : 'text-custom-gray-300'
+              index + 1 <= steps ? "text-custom-green " : "text-custom-gray-300"
             }`}
           >
             {totalSteps[index]}

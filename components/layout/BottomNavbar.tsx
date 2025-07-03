@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import React from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import React from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
-import CardIcon from '@/repo/ui/Icons/CardIcon';
-import HomeIcon from '@/repo/ui/Icons/HomeIcon';
-import MyPageIcon from '@/repo/ui/Icons/MyPageIcon';
-import OtherIcon from '@/repo/ui/Icons/OtherIcon';
-import { Puzzle } from 'lucide-react';
+import CardIcon from "@/repo/ui/Icons/CardIcon";
+import HomeIcon from "@/repo/ui/Icons/HomeIcon";
+import MyPageIcon from "@/repo/ui/Icons/MyPageIcon";
+import OtherIcon from "@/repo/ui/Icons/OtherIcon";
+import { Puzzle } from "lucide-react";
 export default function BottomNavbar() {
   const pathname = usePathname();
 
@@ -17,16 +17,16 @@ export default function BottomNavbar() {
       <ul className="flex flex-1 justify-between max-w-[480px] mx-auto items-center">
         <li>
           <Link href="/main" className="relative">
-            <HomeIcon isActive={pathname === '/main'} />
-            {pathname === '/main' && (
+            <HomeIcon isActive={pathname === "/main"} />
+            {pathname === "/main" && (
               <div className="absolute left-1/2 -translate-x-1/2 -bottom-3 w-1.5 h-1.5 rounded-full bg-white" />
             )}
           </Link>
         </li>
         <li>
           <Link href="/funding" className="relative">
-            <CardIcon isActive={pathname === '/funding'} />
-            {pathname === '/funding' && (
+            <CardIcon isActive={pathname === "/funding"} />
+            {pathname === "/funding" && (
               <div className="absolute left-1/2 -translate-x-1/2 -bottom-3 w-1.5 h-1.5 rounded-full bg-white" />
             )}
           </Link>
@@ -37,9 +37,9 @@ export default function BottomNavbar() {
             <Link href="/piece">
               <Puzzle
                 className={`${
-                  pathname === '/piece'
-                    ? 'fill-white stroke-white'
-                    : 'stroke-white'
+                  pathname === "/piece"
+                    ? "fill-white stroke-white"
+                    : "stroke-white"
                 }`}
               />
             </Link>
@@ -48,8 +48,8 @@ export default function BottomNavbar() {
         {/* Profile */}
         <li>
           <Link href="/mywallet" className="relative">
-            <MyPageIcon isActive={pathname === '/mywallet'} />
-            {pathname === '/mywallet' && (
+            <MyPageIcon isActive={pathname === "/mywallet"} />
+            {pathname === "/mywallet" && (
               <div className="absolute left-1/2 -translate-x-1/2 -bottom-3 w-1.5 h-1.5 rounded-full bg-white" />
             )}
           </Link>
@@ -58,8 +58,8 @@ export default function BottomNavbar() {
         {/* Stats */}
         <li>
           <Link href="/other" className="relative">
-            <OtherIcon isActive={pathname === '/other'} />
-            {pathname === '/other' && (
+            <OtherIcon isActive={pathname === "/other"} />
+            {pathname === "/other" && (
               <div className="absolute left-1/2 -translate-x-1/2 -bottom-3 w-1.5 h-1.5 rounded-full bg-white" />
             )}
           </Link>

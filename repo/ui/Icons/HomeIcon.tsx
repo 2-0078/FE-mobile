@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 export default function HomeIcon({ isActive = false }: { isActive?: boolean }) {
   return (
@@ -15,7 +15,7 @@ export default function HomeIcon({ isActive = false }: { isActive?: boolean }) {
       {/* 집 모양에 마스크를 적용함 */}
       <path
         d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z"
-        className={`${isActive ? 'fill-white' : 'fill-custom-gray-300'}`}
+        className={`${isActive ? "fill-white" : "fill-custom-gray-300"}`}
         mask="url(#house-mask)"
       />
     </svg>

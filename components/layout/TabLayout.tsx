@@ -1,5 +1,5 @@
-'use client';
-import React, { useState } from 'react';
+"use client";
+import React, { useState } from "react";
 
 export default function TabLayout({
   tabs,
@@ -17,13 +17,13 @@ export default function TabLayout({
       <div
         className="flex flex-nowrap overflow-x-auto border-b border-custom-gray-300 px-4"
         style={{
-          scrollbarWidth: 'none',
+          scrollbarWidth: "none",
         }}
       >
         {tabs.map((tab, idx) => (
           <button
             key={tab + idx}
-            className={`py-2 w-[20vw] text-center ${selectedTab === idx ? 'text-white border-b-2 border-white' : 'text-custom-gray-200'}`}
+            className={`py-2 w-[20vw] text-center ${selectedTab === idx ? "text-white border-b-2 border-white" : "text-custom-gray-200"}`}
             onClick={() => onSelect(idx)}
           >
             {tab}

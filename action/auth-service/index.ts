@@ -1,13 +1,13 @@
-'use server';
+"use server";
 
 export const signin = async (email: string, password: string) => {
   const response = await fetch(
     `${process.env.BASE_API_URL}/auth-service/api/v1/login`,
     {
-      method: 'POST',
+      method: "POST",
       body: JSON.stringify({ email, password }),
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     }
   );
@@ -25,10 +25,10 @@ export const signup = async (data: any) => {
   const response = await fetch(
     `${process.env.BASE_API_URL}/auth-service/api/v1/signup`,
     {
-      method: 'POST',
+      method: "POST",
       body: JSON.stringify(data),
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     }
   );

@@ -1,5 +1,5 @@
-import React from 'react';
-import StockItem from './StockItem';
+import React from "react";
+import StockItem from "./StockItem";
 
 export default function StockItemSection() {
   return (

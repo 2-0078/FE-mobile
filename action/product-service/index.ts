@@ -1,17 +1,18 @@
-'use server';
-import { CommonResponseType } from '@/types/CommonTypes';
+"use server";
+import { CommonResponseType } from "@/types/CommonTypes";
 import {
   CategoryType,
   FundingListResponseType,
   FundingProductType,
   PieceProductListResponseType,
   PieceProductType,
-} from '@/types/ProductTypes';
+} from "@/types/ProductTypes";
 
 export const getMainCategories = async () => {
   const response = await fetch(
     `${process.env.BASE_API_URL}/product-service/api/v1/main-category/list`
   );
+  console.log(response);
   const data = (await response.json()) as CommonResponseType<CategoryType[]>;
   return data.result;
 };
@@ -25,25 +26,31 @@ export const getSubCategories = async (mainCategoryId: string) => {
 };
 
 export const getFundingProductsList = async (params: {
+  sort?: string;
   main: string;
   sub: string;
   search?: string;
   page?: number;
+  size?: number;
+  direction?: string;
 }) => {
-  const { main, sub, search, page } = params;
+  const { sort, main, sub, search, page, size, direction } = params;
   const queryParams = new URLSearchParams();
-  if (main !== '전체') queryParams.set('main', main);
-  if (sub !== '전체') queryParams.set('sub', sub);
-  if (search) queryParams.set('name', search);
-  if (page) queryParams.set('page', (page - 1).toString());
+  if (sort) queryParams.set("sortBy", sort);
+  if (main !== "전체") queryParams.set("main", main);
+  if (sub !== "전체") queryParams.set("sub", sub);
+  if (search) queryParams.set("name", search);
+  if (page) queryParams.set("page", (page - 1).toString());
+  if (size) queryParams.set("size", size.toString());
+  if (direction) queryParams.set("direction", direction);
   const response = await fetch(
     `${
       process.env.BASE_API_URL
     }/product-read-service/api/v1/funding/list?${queryParams.toString()}`,
     {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     }
   );
@@ -56,9 +63,9 @@ export const getFundingProduct = async (id: string) => {
   const response = await fetch(
     `${process.env.BASE_API_URL}/product-read-service/api/v1/funding/list/${id}`,
     {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     }
   );
@@ -67,26 +74,13 @@ export const getFundingProduct = async (id: string) => {
   return data.result;
 };
 
-export const getPieceProductsList = async (params: {
-  main: string;
-  sub: string;
-  search?: string;
-  page?: number;
-}) => {
-  const { main, sub, search, page } = params;
-  const queryParams = new URLSearchParams();
-  if (main !== '전체') queryParams.set('main', main);
-  if (sub !== '전체') queryParams.set('sub', sub);
-  if (search) queryParams.set('name', search);
-  if (page) queryParams.set('page', (page - 1).toString());
+export const getPieceProductsList = async () => {
   const response = await fetch(
-    `${
-      process.env.BASE_API_URL
-    }/product-read-service/api/v1/piece/list?${queryParams.toString()}`,
+    `${process.env.BASE_API_URL}/product-read-service/api/v1/piece/list`,
     {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     }
   );
@@ -100,9 +94,9 @@ export const getPieceProducts = async (productUuid: string) => {
   const response = await fetch(
     `${process.env.BASE_API_URL}/product-read-service/api/v1/piece/list/${productUuid}`,
     {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     }
   );
