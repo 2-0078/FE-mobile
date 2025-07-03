@@ -1,3 +1,17 @@
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { FundingProductType } from '@/types/ProductTypes';
+import { ReplyType } from '@/types/CommunityTypes';
+import { getRepliesUuid, getReplies } from '@/action/reply-service';
+import { useModal } from '@/stores/modal-store';
+import { ModalContainer } from '@/components/ModalContainer';
+import { ModalHeader } from '@/components/ModalHeader';
+import { CommentContent as CommentsContent } from '@/components/CommentContent';
+import { PriceInfo } from '@/components/PriceInfo';
+import { AmountSection } from '@/components/AmountSection';
 
 export default function ModalSection({
   productData,

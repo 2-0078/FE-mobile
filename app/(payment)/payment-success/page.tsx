@@ -13,7 +13,7 @@ export default function PaymentSuccessPage() {
       const paymentKey = searchParams.get('paymentKey') || '';
       const orderId = searchParams.get('orderId') || '';
       const amount = searchParams.get('amount') || '0';
-      const result = await confirmPayment(orderId, paymentKey, Number(amount));
+      const result = await confirmPayment({ orderId, paymentKey, amount: Number(amount) });
 
       if (result) {
         setMessage(`결제가 성공적으로 완료되었습니다. 주문번호: ${result}`);

@@ -1,3 +1,25 @@
+import React from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { Puzzle, Clock } from 'lucide-react';
+import { FundingProductType } from '@/types/ProductTypes';
+
+// 유틸리티 함수들
+const getDaysLeft = (deadline: string) => {
+  const now = new Date();
+  const end = new Date(deadline);
+  const diff = end.getTime() - now.getTime();
+  
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  
+  return { days, hours, minutes };
+};
+
+const formatPrice = (price: number) => {
+  return new Intl.NumberFormat('ko-KR').format(price);
+};
 
 export function FundingListSection({
   fundingProducts,
