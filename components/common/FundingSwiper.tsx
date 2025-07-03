@@ -29,10 +29,6 @@ export default function FundingSwiper({ products }: FundingSwiperProps) {
     );
   }
 
-  // gap을 포함한 이동 거리 계산 (gap-4 = 1rem = 16px)
-  const gap = 16; // 1rem
-  const moveDistance = currentIndex * (100 + gap);
-
   return (
     <div className="relative w-full overflow-hidden">
       <div className="flex gap-4">
@@ -41,7 +37,7 @@ export default function FundingSwiper({ products }: FundingSwiperProps) {
             key={product.productUuid} 
             className="w-full flex-shrink-0 transition-transform duration-500 ease-in-out"
             style={{ 
-              transform: `translateX(-${moveDistance}%)`
+              transform: `translateX(-${currentIndex * 104}%)`
             }}
           >
             <FundingItemCard product={product} />
