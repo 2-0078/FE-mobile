@@ -2,8 +2,9 @@
 
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button'; // 프로젝트의 Button 컴포넌트 경로
+import { Suspense } from 'react';
 
-export default function PaymentFailPage() {
+function PaymentFailContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -63,5 +64,13 @@ export default function PaymentFailPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function PaymentFailPage() {
+  return (
+    <Suspense fallback={<div>로딩 중...</div>}>
+      <PaymentFailContent />
+    </Suspense>
   );
 }

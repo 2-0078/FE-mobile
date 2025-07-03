@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import Header from '@/components/layout/Header';
 import PageWrapper from '@/components/layout/PageWrapper';
 import TabLayout from '@/components/layout/TabLayout';
@@ -10,7 +11,13 @@ import ClockIcon from '@/repo/ui/Icons/ClockIcon';
 function ArtworkCard({ imageUrl, title }: { imageUrl: string; title: string }) {
   return (
     <div className="relative">
-      <img src={imageUrl} alt={title} className="w-full h-64 object-cover rounded-lg" />
+      <Image 
+        src={imageUrl} 
+        alt={title} 
+        width={400}
+        height={256}
+        className="w-full h-64 object-cover rounded-lg" 
+      />
       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
         <h2 className="text-white text-lg font-semibold">{title}</h2>
       </div>

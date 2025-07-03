@@ -2,9 +2,9 @@
 
 import { confirmPayment } from '@/action/payment-service';
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 
-export default function PaymentSuccessPage() {
+function PaymentSuccessContent() {
   const searchParams = useSearchParams();
   const [message, setMessage] = useState('결제를 처리하고 있습니다...');
 
@@ -32,5 +32,13 @@ export default function PaymentSuccessPage() {
       <h1>결제 상태</h1>
       <p>{message}</p>
     </div>
+  );
+}
+
+export default function PaymentSuccessPage() {
+  return (
+    <Suspense fallback={<div>로딩 중...</div>}>
+      <PaymentSuccessContent />
+    </Suspense>
   );
 }

@@ -6,7 +6,7 @@ import { useModal } from '@/stores/modal-store';
 import { NumberPad } from '../NumberPad';
 import { Button } from '../ui/button';
 // ANONYMOUS는 더 이상 필요하지 않을 수 있습니다. 고객의 실제 키를 사용하게 됩니다.
-import { loadTossPayments } from '@tosspayments/tosspayments-sdk';
+// import { loadTossPayments } from '@tosspayments/tosspayments-sdk';
 // import { chargeMoney } from '@/action/payment-service';
 
 export default function PurchaseModalSection() {
@@ -37,13 +37,14 @@ export default function PurchaseModalSection() {
   const handleCharge = async () => {
     // const result = await chargeMoney(Number(amount));
     // 아래는 실제 결제 연동 로직 예시입니다. 백엔드 연동 필요 시 chargeMoney 구현 필요
-    const tossPayments = await loadTossPayments(
-      'test_ck_D5GePWvyJnrK0W0k6q8gLzN97Eoq'
-    );
+    // const tossPayments = await loadTossPayments(
+    //   'test_ck_D5GePWvyJnrK0W0k6q8gLzN97Eoq'
+    // );
     // const payment = tossPayments.payment({ customerKey: result.customerKey });
     // 결제 요청 예시 (실제 연동 시 아래 코드 사용)
     // await payment.requestPayment({ ... });
     // 현재는 결제창을 띄우지 않습니다.
+    console.log('충전 금액:', Number(amount));
   };
 
   return (
