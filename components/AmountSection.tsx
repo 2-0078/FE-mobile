@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { NumberPad } from "./NumberPad";
-import { Button } from "@/components/ui/button";
-import { useModal } from "@/stores/modal-store";
-import { getMemberBalance } from "@/action/payment-service";
-import { fundingParticipate } from "@/action/funding-service";
+import { useEffect, useState } from 'react';
+import { NumberPad } from './NumberPad';
+import { Button } from '@/components/ui/button';
+import { useModal } from '@/stores/modal-store';
+import { getMemberBalance } from '@/action/payment-service';
+import { fundingParticipate } from '@/action/funding-service';
 
 export function AmountSection({
   piecePrice,
@@ -24,7 +24,7 @@ export function AmountSection({
     };
     fetchDepositBalance();
   }, []);
-  const [amount, setAmount] = useState("");
+  const [amount, setAmount] = useState('');
   const { openModal } = useModal();
   const handleNumberClick = (num: string) => {
     // 최대 자릿수 제한 (예: 10자리)
@@ -52,7 +52,7 @@ export function AmountSection({
   };
 
   const handleClear = () => {
-    setAmount("");
+    setAmount('');
   };
 
   const handleParticipate = async () => {
@@ -72,7 +72,7 @@ export function AmountSection({
         <Button
           className="w-full h-10 bg-black text-white rounded-full"
           onClick={() => {
-            openModal("purchase");
+            openModal('purchase');
           }}
         >
           예치금이 부족하신가요?

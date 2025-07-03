@@ -1,7 +1,7 @@
-import React from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { LogIn } from "lucide-react";
+import React from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { LogIn } from 'lucide-react';
 
 export default function MainProfile({
   isLoggedIn,
@@ -18,7 +18,7 @@ export default function MainProfile({
         <div className="flex items-center space-x-3">
           <div className="relative w-12 h-12 rounded-full overflow-hidden">
             <Image
-              src={userImageUrl || "/chatbot.png"}
+              src={userImageUrl || '/chatbot.png'}
               alt="프로필 이미지"
               fill={true}
               className="object-cover"

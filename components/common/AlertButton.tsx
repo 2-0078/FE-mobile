@@ -1,5 +1,5 @@
-import React from "react";
-import AlertIcon from "@/repo/ui/Icons/AlertIcon";
+import React from 'react';
+import AlertIcon from '@/repo/ui/Icons/AlertIcon';
 
 export default function AlertButton({
   isActive = false,

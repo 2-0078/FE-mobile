@@ -1,16 +1,16 @@
-"use server";
+'use server';
 
-import { auth } from "@/auth";
-import { CommonResponseType } from "@/types/CommonTypes";
-import { UserInfoType, MyMoneyInfoType } from "@/types/UserTypes";
+import { auth } from '@/auth';
+import { CommonResponseType } from '@/types/CommonTypes';
+import { UserInfoType, MyMoneyInfoType } from '@/types/UserTypes';
 
 export async function getMemberProfile(memberUuid: string) {
   const response = await fetch(
     `${process.env.BASE_API_URL}/member-service/api/v1/profile-image?memberUuid=${memberUuid}`,
     {
-      method: "GET",
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     }
   );
@@ -21,15 +21,15 @@ export async function getMemberProfile(memberUuid: string) {
 export async function getMyMoneyInfo() {
   const session = await auth();
   if (!session) {
-    throw new Error("Unauthorized");
+    throw new Error('Unauthorized');
   }
   const response = await fetch(
     `${process.env.BASE_API_URL}/batch-service/api/v1/money`,
     {
-      method: "GET",
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${session.user.accessToken}`,
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session.user.accessToken}`,
       },
     }
   );

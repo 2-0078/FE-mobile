@@ -1,8 +1,8 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import { Button } from "./ui/button";
-import { getMemberBalance } from "@/action/payment-service";
-import { useModal } from "@/stores/modal-store";
+'use client';
+import React, { useEffect, useState } from 'react';
+import { Button } from './ui/button';
+import { getMemberBalance } from '@/action/payment-service';
+import { useModal } from '@/stores/modal-store';
 
 export default function AmmountCard() {
   const [balance, setBalance] = useState(0);
@@ -27,7 +27,7 @@ export default function AmmountCard() {
       <div className="grid grid-cols-2 gap-3">
         <Button
           className=" bg-custom-light-blue"
-          onClick={() => openModal("purchase")}
+          onClick={() => openModal('purchase')}
         >
           충전하기
         </Button>

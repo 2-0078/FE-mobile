@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { Heart, MessageCircle } from "lucide-react";
-import { useModal } from "@/stores/modal-store";
-import { fundingWish } from "@/action/funding-service";
+import { Button } from '@/components/ui/button';
+import { Heart, MessageCircle } from 'lucide-react';
+import { useModal } from '@/stores/modal-store';
+import { fundingWish } from '@/action/funding-service';
 
 export function BottomActions({
   isWish,
@@ -32,7 +32,7 @@ export function BottomActions({
         >
           <Heart
             className={`w-6 h-6 ${
-              isWish ? "text-custom-red fill-custom-red" : "text-custom-black"
+              isWish ? 'text-custom-red fill-custom-red' : 'text-custom-black'
             }`}
           />
         </Button>
@@ -40,13 +40,13 @@ export function BottomActions({
           variant="ghost"
           size="icon"
           className="w-14 h-14 rounded-full border-2 border-custom-green bg-transparent"
-          onClick={() => openModal("comments")}
+          onClick={() => openModal('comments')}
         >
           <MessageCircle className="w-6 h-6 text-custom-green" />
         </Button>
         <Button
           className="flex-1 h-14 rounded-full bg-custom-green text-black text-lg font-bold"
-          onClick={() => openModal("details")}
+          onClick={() => openModal('details')}
         >
           참여하기
         </Button>

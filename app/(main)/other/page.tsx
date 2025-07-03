@@ -7,49 +7,49 @@ import {
   Headset,
   HelpCircle,
   FileText,
-} from "lucide-react";
-import Header from "@/components/layout/Header";
-import PageWrapper from "@/components/layout/PageWrapper";
-import LogoutButton from "@/components/common/LogoutButton";
-import { auth } from "@/auth";
-import { getMemberProfile } from "@/action/member-service";
+} from 'lucide-react';
+import Header from '@/components/layout/Header';
+import PageWrapper from '@/components/layout/PageWrapper';
+import LogoutButton from '@/components/common/LogoutButton';
+import { auth } from '@/auth';
+import { getMemberProfile } from '@/action/member-service';
 export default async function OtherPage() {
   const menuItems = [
     {
       icon: <FileText className="w-5 h-5" />,
-      title: "공지사항",
-      subtitle: "새로운 소식을 확인하세요",
+      title: '공지사항',
+      subtitle: '새로운 소식을 확인하세요',
     },
     {
       icon: <PartyPopper className="w-5 h-5" />,
-      title: "이벤트",
-      subtitle: "진행중인 이벤트",
+      title: '이벤트',
+      subtitle: '진행중인 이벤트',
     },
     {
       icon: <HelpCircle className="w-5 h-5" />,
-      title: "자주하는 질문",
-      subtitle: "궁금한 점을 해결하세요",
+      title: '자주하는 질문',
+      subtitle: '궁금한 점을 해결하세요',
     },
   ];
 
   const productItems = [
     {
       icon: <HandCoins className="w-5 h-5" />,
-      title: "상품 판매하기",
-      subtitle: "내 상품을 등록해보세요",
+      title: '상품 판매하기',
+      subtitle: '내 상품을 등록해보세요',
     },
     {
       icon: <Package className="w-5 h-5" />,
-      title: "등록 상품 조회하기",
-      subtitle: "판매중인 상품 관리",
+      title: '등록 상품 조회하기',
+      subtitle: '판매중인 상품 관리',
     },
   ];
 
   const supportItems = [
     {
       icon: <Headset className="w-5 h-5" />,
-      title: "문의하기",
-      subtitle: "고객센터 연결",
+      title: '문의하기',
+      subtitle: '고객센터 연결',
     },
   ];
 

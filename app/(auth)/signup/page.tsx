@@ -1,6 +1,6 @@
-import Header from "@/components/layout/Header";
-import PageWrapper from "@/components/layout/PageWrapper";
-import SignupSteps from "@/components/(auth)/SignupSteps";
+import Header from '@/components/layout/Header';
+import PageWrapper from '@/components/layout/PageWrapper';
+import SignupSteps from '@/components/(auth)/SignupSteps';
 
 export default function SignupPage() {
   return (

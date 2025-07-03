@@ -1,8 +1,8 @@
-"use client";
-import React, { useState } from "react";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
+'use client';
+import React, { useState } from 'react';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
 
 export default function PhonenumberSection({
   onNext,
@@ -14,11 +14,11 @@ export default function PhonenumberSection({
     gender: string;
   }) => void;
 }) {
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [name, setName] = useState("");
-  const [birthdate, setBirthdate] = useState("");
-  const [gender, setGender] = useState("");
-  const [verificationCode, setVerificationCode] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [name, setName] = useState('');
+  const [birthdate, setBirthdate] = useState('');
+  const [gender, setGender] = useState('');
+  const [verificationCode, setVerificationCode] = useState('');
   const [isVerificationSent, setIsVerificationSent] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
 

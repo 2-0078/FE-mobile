@@ -1,5 +1,5 @@
-import { ReplyTypeWithPeople } from "@/types/CommunityTypes";
-import Image from "next/image";
+import { ReplyTypeWithPeople } from '@/types/CommunityTypes';
+import Image from 'next/image';
 
 export function CommentItem({
   createdAt,
@@ -13,7 +13,7 @@ export function CommentItem({
       <div className="w-10 h-10 rounded-full flex items-center justify-center text-lg">
         {
           <Image
-            src={replyUserInfo.profileImageUrl || "/chatbot.png"}
+            src={replyUserInfo.profileImageUrl || '/chatbot.png'}
             alt="avatar"
             width={40}
             height={40}

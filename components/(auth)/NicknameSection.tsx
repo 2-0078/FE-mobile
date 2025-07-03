@@ -1,15 +1,15 @@
-"use client";
-import React, { useState } from "react";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
+'use client';
+import React, { useState } from 'react';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
 
 export default function NicknameSection({
   onNext,
 }: {
   onNext: (data: { nickname: string }) => void;
 }) {
-  const [nickname, setNickname] = useState("");
+  const [nickname, setNickname] = useState('');
 
   return (
     <div className="max-w-md mx-auto">

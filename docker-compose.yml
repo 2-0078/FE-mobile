@@ -1,11 +1,11 @@
-version: "3.8"
+version: '3.8'
 
 services:
   frontend:
     container_name: frontend-mobile
     image: ${DOCKER_USERNAME}/frontend-mobile:latest
     ports:
-      - "3000:3000"
+      - '3000:3000'
     env_file:
       - .env
     restart: always

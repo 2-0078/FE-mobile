@@ -1,17 +1,17 @@
-import { CountdownTimer } from "@/components/CountdownTimer";
-import { BottomActions } from "@/components/BottomActions";
-import ModalSection from "@/components/(products)/ModalSection";
-import InfoCardLayout from "@/components/layout/InfoCardLayout";
-import { ClockIcon, Puzzle } from "lucide-react";
-import PageWrapper from "@/components/layout/PageWrapper";
-import ProductTitleWrapper from "@/components/layout/ProductTitleWrapper";
-import Image from "next/image";
-import { getFundingProduct } from "@/action/product-service";
-import PurchaseModalSection from "@/components/(main)/PurchaseModalSection";
-import { getFundingWish } from "@/action/funding-service";
-import { getReplies, getRepliesUuid } from "@/action/reply-service";
-import { getMemberProfile } from "@/action/member-service";
-import { ReplyTypeWithPeople } from "@/types/CommunityTypes";
+import { CountdownTimer } from '@/components/CountdownTimer';
+import { BottomActions } from '@/components/BottomActions';
+import ModalSection from '@/components/(products)/ModalSection';
+import InfoCardLayout from '@/components/layout/InfoCardLayout';
+import { ClockIcon, Puzzle } from 'lucide-react';
+import PageWrapper from '@/components/layout/PageWrapper';
+import ProductTitleWrapper from '@/components/layout/ProductTitleWrapper';
+import Image from 'next/image';
+import { getFundingProduct } from '@/action/product-service';
+import PurchaseModalSection from '@/components/(main)/PurchaseModalSection';
+import { getFundingWish } from '@/action/funding-service';
+import { getReplies, getRepliesUuid } from '@/action/reply-service';
+import { getMemberProfile } from '@/action/member-service';
+import { ReplyTypeWithPeople } from '@/types/CommunityTypes';
 
 export default async function FundingPage({
   params,
@@ -21,11 +21,11 @@ export default async function FundingPage({
   searchParams: Promise<{ commentPage: string }>;
 }) {
   const param = await params;
-  const commentPage = (await searchParams).commentPage || "1";
+  const commentPage = (await searchParams).commentPage || '1';
   const fundingProductData = await getFundingProduct(param.fundingUuid);
   const iswish = await getFundingWish(param.fundingUuid);
   const replyUuidList = await getRepliesUuid(
-    "PIECE",
+    'PIECE',
     param.fundingUuid,
     commentPage
   );
@@ -53,7 +53,7 @@ export default async function FundingPage({
           {fundingProductData.productName}
         </ProductTitleWrapper>
         <ProductTitleWrapper className="text-custom-gray-200 text-base whitespace-pre-line font-medium">
-          {fundingProductData.mainCategory.categoryName} &gt;{" "}
+          {fundingProductData.mainCategory.categoryName} &gt;{' '}
           {fundingProductData.subCategory.categoryName}
         </ProductTitleWrapper>
       </div>
@@ -68,7 +68,7 @@ export default async function FundingPage({
           icon={<Puzzle />}
         >
           <span className="text-base font-semibold text-white leading-none">
-            {fundingProductData.funding.remainingPieces} /{" "}
+            {fundingProductData.funding.remainingPieces} /{' '}
             {fundingProductData.funding.totalPieces}
           </span>
         </InfoCardLayout>
@@ -97,7 +97,7 @@ export default async function FundingPage({
       </div>
       <div className="border-custom-green border-[1px] rounded-2xl p-4 w-full">
         <p className="text-xs font-medium">
-          해당 상품은{" "}
+          해당 상품은{' '}
           <span className="font-bold">
             약 {fundingProductData.aiEstimatedPrice.toLocaleString()}원
           </span>

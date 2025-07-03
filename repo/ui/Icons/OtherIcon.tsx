@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 export default function OtherIcon({
   isActive = false,
@@ -16,7 +16,7 @@ export default function OtherIcon({
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={isActive ? "stroke-white" : "stroke-custom-gray-300"}
+      className={isActive ? 'stroke-white' : 'stroke-custom-gray-300'}
     >
       <circle cx="12" cy="12" r="1" />
       <circle cx="19" cy="12" r="1" />

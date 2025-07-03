@@ -1,13 +1,13 @@
-"use client";
-import React from "react";
-import { ModalContainer } from "../ModalContainer";
-import { ModalHeader } from "../ModalHeader";
-import { CommentsContent } from "../CommentContent";
-import { AmountSection } from "../AmountSection";
-import { useModal } from "@/stores/modal-store";
-import { PriceInfo } from "../PriceInfo";
-import { ReplyTypeWithPeople } from "@/types/CommunityTypes";
-import { FundingProductType } from "@/types/ProductTypes";
+'use client';
+import React from 'react';
+import { ModalContainer } from '../ModalContainer';
+import { ModalHeader } from '../ModalHeader';
+import { CommentsContent } from '../CommentContent';
+import { AmountSection } from '../AmountSection';
+import { useModal } from '@/stores/modal-store';
+import { PriceInfo } from '../PriceInfo';
+import { ReplyTypeWithPeople } from '@/types/CommunityTypes';
+import { FundingProductType } from '@/types/ProductTypes';
 
 export default function ModalSection({
   productData,
@@ -22,7 +22,7 @@ export default function ModalSection({
   return (
     <>
       <ModalContainer
-        isOpen={currentModal === "comments"}
+        isOpen={currentModal === 'comments'}
         onClose={() => closeModal()}
       >
         {(handleClose: () => void) => (
@@ -44,7 +44,7 @@ export default function ModalSection({
       </ModalContainer>
 
       <ModalContainer
-        isOpen={currentModal === "details"}
+        isOpen={currentModal === 'details'}
         onClose={() => closeModal()}
       >
         {(handleClose: () => void) => (

@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState, useEffect, type ReactNode } from "react";
+import { useState, useEffect, type ReactNode } from 'react';
 
 interface ModalContainerProps {
   children: ReactNode | ((handleClose: () => void) => ReactNode);
@@ -20,7 +20,7 @@ export function ModalContainer({
   useEffect(() => {
     if (isOpen) {
       // 뒤쪽 페이지 스크롤 비활성화
-      document.body.style.overflow = "hidden";
+      document.body.style.overflow = 'hidden';
 
       // 컴포넌트가 마운트된 후 애니메이션 시작
       setTimeout(() => {
@@ -30,7 +30,7 @@ export function ModalContainer({
 
     return () => {
       if (!isOpen) {
-        document.body.style.overflow = "unset";
+        document.body.style.overflow = 'unset';
       }
     };
   }, [isOpen]);
@@ -38,7 +38,7 @@ export function ModalContainer({
   const handleClose = () => {
     setIsClosing(true);
     setTimeout(() => {
-      document.body.style.overflow = "unset";
+      document.body.style.overflow = 'unset';
       setIsVisible(false);
       setIsClosing(false);
       onClose?.();
@@ -52,16 +52,16 @@ export function ModalContainer({
       className={`fixed inset-0 z-50 transform transition-transform duration-300 ease-in-out ${
         withAnimation
           ? isClosing
-            ? "translate-y-full"
+            ? 'translate-y-full'
             : isVisible
-            ? "translate-y-0"
-            : "translate-y-full"
-          : ""
+              ? 'translate-y-0'
+              : 'translate-y-full'
+          : ''
       }`}
     >
       <div className="h-full overflow-y-auto">
         <div className="min-h-full bg-white">
-          {typeof children === "function" ? children(handleClose) : children}
+          {typeof children === 'function' ? children(handleClose) : children}
         </div>
       </div>
     </div>

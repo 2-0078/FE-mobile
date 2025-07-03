@@ -1,6 +1,6 @@
-"use server";
-import { auth } from "@/auth";
-import { CommonResponseType } from "@/types/CommonTypes";
+'use server';
+import { auth } from '@/auth';
+import { CommonResponseType } from '@/types/CommonTypes';
 
 export const fundingParticipate = async (
   fundingUuid: string,
@@ -12,10 +12,10 @@ export const fundingParticipate = async (
   const response = await fetch(
     `${process.env.BASE_API_URL}/funding-service/api/v1/participation`,
     {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify({ fundingUuid, quantity }),
     }
@@ -32,10 +32,10 @@ export const getFundingWish = async (fundingUuid: string) => {
   const response = await fetch(
     `${process.env.BASE_API_URL}/funding-service/api/v1/funding/wish/${fundingUuid}`,
     {
-      method: "GET",
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
       },
     }
   );
@@ -50,10 +50,10 @@ export const fundingWish = async (fundingUuid: string) => {
   const response = await fetch(
     `${process.env.BASE_API_URL}/funding-service/api/v1/funding/wish`,
     {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
       },
     }
   );
