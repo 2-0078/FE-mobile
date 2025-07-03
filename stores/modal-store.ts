@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
 // 모달 타입 정의
-type ModalType = 'comments' | 'details' | null;
+type ModalType = 'comments' | 'details' | 'purchase' | null;
 
 // 모달 상태 인터페이스
 interface ModalState {

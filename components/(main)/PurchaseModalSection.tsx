@@ -7,7 +7,7 @@ import { NumberPad } from '../NumberPad';
 import { Button } from '../ui/button';
 // ANONYMOUS는 더 이상 필요하지 않을 수 있습니다. 고객의 실제 키를 사용하게 됩니다.
 import { loadTossPayments } from '@tosspayments/tosspayments-sdk';
-import { chargeMoney } from '@/action/payment-service';
+// import { chargeMoney } from '@/action/payment-service';
 
 export default function PurchaseModalSection() {
   const { currentModal, closeModal } = useModal();
@@ -35,36 +35,15 @@ export default function PurchaseModalSection() {
   };
 
   const handleCharge = async () => {
-    const result = await chargeMoney(Number(amount));
-
-    // 1. 토스 페이먼츠 객체 로드
+    // const result = await chargeMoney(Number(amount));
+    // 아래는 실제 결제 연동 로직 예시입니다. 백엔드 연동 필요 시 chargeMoney 구현 필요
     const tossPayments = await loadTossPayments(
       'test_ck_D5GePWvyJnrK0W0k6q8gLzN97Eoq'
     );
-    const payment = tossPayments.payment({ customerKey: result.customerKey });
-
-    // 2. 결제 요청
-    // `chargeMoney` 와 같은 백엔드 함수는 결제 '승인' 단계에서 호출해야 합니다.
-    // 여기서는 결제창을 띄우는 역할만 합니다.
-    try {
-      await payment.requestPayment({
-        // '카드', '가상계좌' 등 결제 수단 선택
-        method: 'CARD',
-        amount: {
-          value: Number(result.amount),
-          currency: 'KRW',
-        },
-        orderId: result.orderId, // 주문 ID: 고유한 값으로 생성해야 합니다.
-        orderName: `예치금 ${Number(amount).toLocaleString()}원 충전`, // 주문명
-        customerName: '김토스',
-        successUrl: `${window.location.origin}/payment-success`, // 결제 성공 시 리디렉션될 URL
-        failUrl: `${window.location.origin}/payment-fail`, // 결제 실패 시 리디렉션될 URL
-      });
-    } catch (error) {
-      // 결제 창을 띄우는 데 실패한 경우 (예: 네트워크 오류, 잘못된 설정 등)
-      console.error('결제 요청에 실패했습니다:', error);
-      alert('결제 요청 중 오류가 발생했습니다. 다시 시도해주세요.');
-    }
+    // const payment = tossPayments.payment({ customerKey: result.customerKey });
+    // 결제 요청 예시 (실제 연동 시 아래 코드 사용)
+    // await payment.requestPayment({ ... });
+    // 현재는 결제창을 띄우지 않습니다.
   };
 
   return (
