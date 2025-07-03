@@ -1,8 +1,26 @@
+<<<<<<< HEAD
 import { Button } from "@/components/ui/button";
 import { ReplyType } from "@/types/CommunityTypes";
 import { CommentItem } from "./CommentItem";
 
 export function CommentsContent({ comments }: { comments: ReplyType[] }) {
+=======
+import { Button } from '@/components/ui/button';
+import { ReplyTypeWithPeople } from '@/types/CommunityTypes';
+import { CommentItem } from './CommentItem';
+import { Textarea } from './ui/textarea';
+import { useState } from 'react';
+
+export function CommentsContent({
+  comments,
+}: {
+  comments: ReplyTypeWithPeople[];
+}) {
+  const [comment, setComment] = useState('');
+  const handleComment = () => {
+    console.log(comment);
+  };
+>>>>>>> feat/productsPage
   return (
     <>
       <div className="px-6 space-y-4 pb-10">

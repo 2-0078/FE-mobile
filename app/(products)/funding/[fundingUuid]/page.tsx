@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { CountdownTimer } from "@/components/CountdownTimer";
 import { BottomActions } from "@/components/BottomActions";
 import ModalSection from "@/components/(products)/ModalSection";
@@ -7,6 +8,22 @@ import PageWrapper from "@/components/layout/PageWrapper";
 import ProductTitleWrapper from "@/components/layout/ProductTitleWrapper";
 import Image from "next/image";
 import { getFundingProduct } from "@/action/product-service";
+=======
+import { CountdownTimer } from '@/components/CountdownTimer';
+import { BottomActions } from '@/components/BottomActions';
+import ModalSection from '@/components/(products)/ModalSection';
+import InfoCardLayout from '@/components/layout/InfoCardLayout';
+import { ClockIcon, Puzzle } from 'lucide-react';
+import PageWrapper from '@/components/layout/PageWrapper';
+import ProductTitleWrapper from '@/components/layout/ProductTitleWrapper';
+import Image from 'next/image';
+import { getFundingProduct } from '@/action/product-service';
+import PurchaseModalSection from '@/components/(main)/PurchaseModalSection';
+import { getFundingWish } from '@/action/funding-service';
+import { getReplies, getRepliesUuid } from '@/action/reply-service';
+import { getMemberProfile } from '@/action/member-service';
+import { ReplyTypeWithPeople } from '@/types/CommunityTypes';
+>>>>>>> feat/productsPage
 
 export default async function FundingPage({
   params,
@@ -14,7 +31,26 @@ export default async function FundingPage({
   params: Promise<{ fundingUuid: string }>;
 }) {
   const param = await params;
+<<<<<<< HEAD
   const data = await getFundingProduct(param.fundingUuid);
+=======
+  const commentPage = (await searchParams).commentPage || '1';
+  const fundingProductData = await getFundingProduct(param.fundingUuid);
+  const iswish = await getFundingWish(param.fundingUuid);
+  const replyUuidList = await getRepliesUuid(
+    'PIECE',
+    param.fundingUuid,
+    commentPage
+  );
+  const replyData = await Promise.all(
+    replyUuidList.map(async (reply) => {
+      const replyData = await getReplies(reply.replyUuid);
+      const replyUserInfo = await getMemberProfile(replyData.memberUuid);
+      return { ...replyData, replyUserInfo } as ReplyTypeWithPeople;
+    })
+  );
+  console.log(iswish);
+>>>>>>> feat/productsPage
   return (
     <PageWrapper>
       <div className="relative rounded-xl overflow-hidden w-full h-[50vh]">
@@ -31,7 +67,12 @@ export default async function FundingPage({
           {data.productName}
         </ProductTitleWrapper>
         <ProductTitleWrapper className="text-custom-gray-200 text-base whitespace-pre-line font-medium">
+<<<<<<< HEAD
           {data.mainCategory.categoryName} &gt; {data.subCategory.categoryName}
+=======
+          {fundingProductData.mainCategory.categoryName} &gt;{' '}
+          {fundingProductData.subCategory.categoryName}
+>>>>>>> feat/productsPage
         </ProductTitleWrapper>
       </div>
 
@@ -43,7 +84,12 @@ export default async function FundingPage({
           icon={<Puzzle />}
         >
           <span className="text-base font-semibold text-white leading-none">
+<<<<<<< HEAD
             {data.funding.remainingPieces} / {data.funding.totalPieces}
+=======
+            {fundingProductData.funding.remainingPieces} /{' '}
+            {fundingProductData.funding.totalPieces}
+>>>>>>> feat/productsPage
           </span>
         </InfoCardLayout>
         <InfoCardLayout
@@ -71,7 +117,7 @@ export default async function FundingPage({
       </div>
       <div className="border-custom-green border-[1px] rounded-2xl p-4 w-full">
         <p className="text-xs font-medium">
-          해당 상품은{" "}
+          해당 상품은{' '}
           <span className="font-bold">
             약 {data.aiEstimatedPrice.toLocaleString()}원
           </span>

@@ -1,8 +1,12 @@
-import { create } from "zustand";
-import { devtools } from "zustand/middleware";
+import { create } from 'zustand';
+import { devtools } from 'zustand/middleware';
 
 // 모달 타입 정의
+<<<<<<< HEAD
 export type ModalType = "comments" | "details" | null;
+=======
+export type ModalType = 'comments' | 'details' | 'purchase' | null;
+>>>>>>> feat/productsPage
 
 // 모달 상태 인터페이스
 interface ModalState {
@@ -60,7 +64,7 @@ export const useModalStore = create<ModalState>()(
       },
     }),
     {
-      name: "modal-store", // devtools에서 보여질 이름
+      name: 'modal-store', // devtools에서 보여질 이름
     }
   )
 );

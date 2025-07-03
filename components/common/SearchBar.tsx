@@ -1,21 +1,21 @@
-"use client";
-import { Search } from "lucide-react";
-import React, { useState } from "react";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
-import { redirect } from "next/navigation";
-import { useSearchParams } from "next/navigation";
+'use client';
+import { Search } from 'lucide-react';
+import React, { useState } from 'react';
+import { Input } from '../ui/input';
+import { Button } from '../ui/button';
+import { redirect } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 
 export default function SearchBar() {
   const searchParams = useSearchParams();
-  const [searchValue, setSearchValue] = useState("");
+  const [searchValue, setSearchValue] = useState('');
 
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const params = new URLSearchParams(searchParams.toString());
     const next = searchValue;
-    params.set("search", next);
-    setSearchValue("");
+    params.set('search', next);
+    setSearchValue('');
     redirect(`/funding?${params.toString()}`);
   };
 

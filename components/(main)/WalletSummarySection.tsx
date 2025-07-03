@@ -1,8 +1,8 @@
-import React from "react";
-import InfoCardLayout from "../layout/InfoCardLayout";
-import WalletIcon from "@/repo/ui/Icons/WalletIcon";
-import Price from "../layout/Price";
-import MoneyIcon from "@/repo/ui/Icons/MoneyIcon";
+import React from 'react';
+import InfoCardLayout from '../layout/InfoCardLayout';
+import WalletIcon from '@/repo/ui/Icons/WalletIcon';
+import Price from '../layout/Price';
+import MoneyIcon from '@/repo/ui/Icons/MoneyIcon';
 
 export default function WalletSummarySection() {
   return (

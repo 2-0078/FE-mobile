@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 "use client";
 import ReactECharts from "echarts-for-react";
 
@@ -12,14 +13,30 @@ export default function AssetPieChart() {
   const option = {
     backgroundColor: "transparent",
 
+=======
+'use client';
+import ReactECharts from 'echarts-for-react';
+import { MyMoneyInfoType } from '@/types/UserTypes';
+import { formatPrice } from '@/lib/tool';
+
+export default function AssetPieChart({
+  myMoneyInfo,
+}: {
+  myMoneyInfo: MyMoneyInfoType[];
+}) {
+  const colorList = ['#1e40af', '#0891b2', '#06b6d4', '#67e8f9', '#0ea5e9'];
+
+  const option = {
+    backgroundColor: 'transparent',
+>>>>>>> feat/productsPage
     series: [
       {
-        name: "자산 분포",
-        type: "pie",
+        name: '자산 분포',
+        type: 'pie',
         avoidLabelOverlap: false,
         itemStyle: {
           borderRadius: 4,
-          borderColor: "#1f2937",
+          borderColor: '#1f2937',
           borderWidth: 2,
         },
         label: {
@@ -46,8 +63,8 @@ export default function AssetPieChart() {
         {/* ECharts Pie Chart */}
         <ReactECharts
           option={option}
-          style={{ height: "100%", width: "60%" }}
-          opts={{ renderer: "svg" }}
+          style={{ height: '100%', width: '60%' }}
+          opts={{ renderer: 'svg' }}
         />
         {/* Legend */}
         <div className="flex-1 space-y-3">

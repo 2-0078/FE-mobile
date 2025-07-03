@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React from "react";
 import AlertButton from "@/components/common/AlertButton";
 import ItemCard from "@/components/common/ItemCard";
@@ -8,6 +9,19 @@ import MainProfile from "@/components/common/MainProfile";
 import { auth } from "@/auth";
 import { getMemberProfile } from "@/action/member-service";
 import AmmountCard from "@/components/AmmountCard";
+=======
+import React from 'react';
+import AlertButton from '@/components/common/AlertButton';
+import ItemCard from '@/components/common/ItemCard';
+import Search from '@/components/common/Search';
+import TitleWrapper from '@/components/layout/TitleWrapper';
+import PageWrapper from '@/components/layout/PageWrapper';
+import MainProfile from '@/components/common/MainProfile';
+import { auth } from '@/auth';
+import { getMemberProfile } from '@/action/member-service';
+import AmmountCard from '@/components/AmmountCard';
+import PurchaseModalSection from '@/components/(main)/PurchaseModalSection';
+>>>>>>> feat/productsPage
 
 export default async function page() {
   const session = await auth();
@@ -27,7 +41,7 @@ export default async function page() {
         <AlertButton isActive={false} />
       </header>
       <TitleWrapper>
-        투자는{" "}
+        투자는{' '}
         <span className="text-custom-green font-medium wrap-break-word">
           Piece of Cake
         </span>
