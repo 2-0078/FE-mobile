@@ -1,9 +1,9 @@
-import { Clock, Puzzle } from "lucide-react";
-import React from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { formatPrice, getDaysLeft } from "@/lib/utils";
-import { FundingProductType } from "@/types/ProductTypes";
+import { Clock, Puzzle } from 'lucide-react';
+import React from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { formatPrice, getDaysLeft } from '@/lib/tool';
+import { FundingProductType } from '@/types/ProductTypes';
 
 export function FundingListSection({
   fundingProducts,
@@ -25,13 +25,13 @@ export function FundingListSection({
         return (
           <div
             key={product.funding.fundingUuid}
-            className="bg-slate-800/50 rounded-lg px-4 py-2 border h-30 border-slate-700/50"
+            className="bg-slate-800/50 rounded-lg px-4 py-2 border min-h-30 border-slate-700/50"
           >
             <Link href={`/funding/${product.funding.fundingUuid}`}>
               <div className="flex items-center gap-3 relative">
                 <div className="w-16 h-24 relative rounded-lg flex items-center justify-center">
                   <Image
-                    src="/example.png"
+                    src={product.images[0].imageUrl}
                     alt="example"
                     fill={true}
                     className="object-contain mx-auto"
@@ -42,7 +42,7 @@ export function FundingListSection({
                   <div className="flex items-start justify-between mb-1">
                     <div>
                       <p className="text-xs text-slate-400 mb-1">
-                        {product.mainCategory.categoryName} &gt;{" "}
+                        {product.mainCategory.categoryName} &gt;{' '}
                         {product.subCategory.categoryName}
                       </p>
                       <h3 className="text-sm font-medium text-white">
@@ -79,21 +79,21 @@ export function FundingListSection({
                     <div className="flex items-center gap-1 text-slate-300">
                       <Clock
                         className={`w-3 h-3 ${
-                          isExpired ? "text-custom-red" : ""
+                          isExpired ? 'text-custom-red' : ''
                         }`}
                       />
                       <span
                         className={`${
-                          isExpired ? "text-custom-light-red" : ""
+                          isExpired ? 'text-custom-light-red' : ''
                         }`}
                       >
                         {isDaysLeft
                           ? `${daysLeft.days}일 뒤 종료`
                           : isHourLeft
-                          ? `${daysLeft.hours}시간 뒤 종료`
-                          : isExpired
-                          ? "종료까지 5분미만"
-                          : `${daysLeft.minutes}분 뒤 종료`}
+                            ? `${daysLeft.hours}시간 뒤 종료`
+                            : isExpired
+                              ? '종료까지 5분미만'
+                              : `${daysLeft.minutes}분 뒤 종료`}
                       </span>
                     </div>
                   </div>

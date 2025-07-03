@@ -1,5 +1,5 @@
-import React from "react";
-import { cn } from "@/lib/utils";
+import React from 'react';
+import { cn } from '@/lib/utils';
 
 export default function InfoCardLayout({
   className,
@@ -15,7 +15,7 @@ export default function InfoCardLayout({
   return (
     <div
       className={cn(
-        "flex h-14 w-full items-center px-4 py-1.5 space-x-2 rounded-full bg-custom-slate",
+        'flex h-14 w-full items-center px-4 py-1.5 space-x-2 rounded-full bg-custom-slate',
         className
       )}
     >

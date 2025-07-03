@@ -1,20 +1,31 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { NumberPad } from "./NumberPad";
-import { Button } from "@/components/ui/button";
+import { useEffect, useState } from 'react';
+import { NumberPad } from './NumberPad';
+import { Button } from '@/components/ui/button';
+import { useModal } from '@/stores/modal-store';
+import { getMemberBalance } from '@/action/payment-service';
+import { fundingParticipate } from '@/action/funding-service';
 
 export function AmountSection({
   piecePrice,
   remainingPieces,
-  depositBalance,
+  itemUuid,
 }: {
   piecePrice: number;
   remainingPieces: number;
-  depositBalance: number;
+  itemUuid: string;
 }) {
-  const [amount, setAmount] = useState("");
-
+  const [depositBalance, setDepositBalance] = useState(0);
+  useEffect(() => {
+    const fetchDepositBalance = async () => {
+      const balance = await getMemberBalance();
+      setDepositBalance(balance.amount);
+    };
+    fetchDepositBalance();
+  }, []);
+  const [amount, setAmount] = useState('');
+  const { openModal } = useModal();
   const handleNumberClick = (num: string) => {
     // 최대 자릿수 제한 (예: 10자리)
     if (amount.length >= 10) return;
@@ -41,7 +52,12 @@ export function AmountSection({
   };
 
   const handleClear = () => {
-    setAmount("");
+    setAmount('');
+  };
+
+  const handleParticipate = async () => {
+    const result = await fundingParticipate(itemUuid, Number(amount));
+    console.log(result);
   };
 
   return (
@@ -53,7 +69,12 @@ export function AmountSection({
             {depositBalance.toLocaleString()}원
           </span>
         </p>
-        <Button className="w-full h-10 bg-black text-white rounded-full">
+        <Button
+          className="w-full h-10 bg-black text-white rounded-full"
+          onClick={() => {
+            openModal('purchase');
+          }}
+        >
           예치금이 부족하신가요?
         </Button>
       </div>
@@ -78,6 +99,16 @@ export function AmountSection({
         onDelete={handleDelete}
         onClear={handleClear}
       />
+      <div className="sticky bottom-0 bg-white p-4">
+        <Button
+          className="w-full h-14 bg-custom-green text-black text-lg font-bold rounded-full"
+          onClick={() => {
+            handleParticipate();
+          }}
+        >
+          매수하기
+        </Button>
+      </div>
     </>
   );
 }

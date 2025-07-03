@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { ChevronDown } from "lucide-react";
+import { Button } from '@/components/ui/button';
+import { ChevronDown } from 'lucide-react';
 
 interface ModalHeaderProps {
   onClose?: () => void;

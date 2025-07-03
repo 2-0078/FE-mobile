@@ -1,25 +1,24 @@
-"use server";
+'use server';
 
-import { auth } from "@/auth";
-import { CommonResponseType } from "@/types/CommonTypes";
-import { ReplyType } from "@/types/CommunityTypes";
+import { auth } from '@/auth';
+import { CommonResponseType } from '@/types/CommonTypes';
+import { ReplyType } from '@/types/CommunityTypes';
 
 export async function getRepliesUuid(
-  type: "FUNDING" | "PIECE",
+  type: 'FUNDING' | 'PIECE',
   productUuid: string,
   commentPage: string
 ) {
-  console.log(productUuid);
   const queryParams = new URLSearchParams();
-  queryParams.append("page", (Number(commentPage) - 1).toString());
+  queryParams.append('page', (Number(commentPage) - 1).toString());
   const response = await fetch(
     `${
       process.env.BASE_API_URL
-    }/reply-service/api/v1/reply/list/${type}/asdasd?${queryParams.toString()}`,
+    }/reply-service/api/v1/reply/list/${type}/${productUuid}?${queryParams.toString()}`,
     {
-      method: "GET",
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     }
   );
@@ -38,11 +37,31 @@ export async function getReplies(replyUuid: string) {
   const response = await fetch(
     `${process.env.BASE_API_URL}/reply-service/api/v1/reply/community/${replyUuid}`,
     {
-      method: "GET",
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
       },
+    }
+  );
+
+  const data = (await response.json()) as CommonResponseType<ReplyType>;
+  return data.result;
+}
+
+export async function createReply(reply: ReplyType) {
+  const session = await auth();
+  const token = session?.user?.accessToken || null;
+
+  const response = await fetch(
+    `${process.env.BASE_API_URL}/reply-service/api/v1/reply/community`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify(reply),
     }
   );
 

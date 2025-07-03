@@ -1,10 +1,13 @@
-import { Gem, Trophy, Heart, Gavel, Wallet, ShoppingBag } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import Header from "@/components/layout/Header";
-import AssetPieChart from "@/components/(main)/AssetPieChart";
-import AmmountCard from "@/components/AmmountCard";
+import { Gem, Trophy, Heart, Gavel, Wallet, ShoppingBag } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import Header from '@/components/layout/Header';
+import AssetPieChart from '@/components/(main)/AssetPieChart';
+import AmmountCard from '@/components/AmmountCard';
+import { getMyMoneyInfo } from '@/action/member-service';
 
 export default async function AssetManagementPage() {
+  const myMoneyInfo = await getMyMoneyInfo();
+  console.log('1', myMoneyInfo);
   return (
     <div className="pb-24 px-4 space-y-4">
       <Header className="px-4 py-2 mt-4" title="내 자산" />
@@ -12,7 +15,7 @@ export default async function AssetManagementPage() {
       <AmmountCard />
 
       {/* Asset Pie Chart */}
-      <AssetPieChart />
+      <AssetPieChart myMoneyInfo={myMoneyInfo} />
 
       {/* Menu Buttons */}
       <div className="grid grid-cols-2 gap-3">
