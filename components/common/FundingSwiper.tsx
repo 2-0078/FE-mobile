@@ -31,10 +31,15 @@ export default function FundingSwiper({ products }: FundingSwiperProps) {
 
   return (
     <div className="relative w-full overflow-hidden">
-      <div className="flex transition-transform duration-500 ease-in-out"
-           style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
+      <div 
+        className="flex transition-transform duration-500 ease-in-out"
+        style={{ 
+          transform: `translateX(-${currentIndex * 100}%)`,
+          width: `${products.length * 100}%`
+        }}
+      >
         {products.map((product, index) => (
-          <div key={product.productUuid} className="w-full flex-shrink-0">
+          <div key={product.productUuid} className="w-full flex-shrink-0" style={{ width: `${100 / products.length}%` }}>
             <FundingItemCard product={product} />
           </div>
         ))}

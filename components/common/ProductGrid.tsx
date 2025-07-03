@@ -1,5 +1,3 @@
-'use client';
-
 import React, { Suspense } from 'react';
 import { getFundingProductsList, getFundingProduct, getPieceProductsList, getPieceProducts } from '@/action/product-service';
 import FundingSwiper from './FundingSwiper';
@@ -45,7 +43,7 @@ async function ProductGridContent() {
       {/* 공모 상품 섹션 */}
       <div className="space-y-4">
         <h2 className="text-2xl font-bold text-gray-900">공모</h2>
-        <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl p-6">
+        <div className="rounded-2xl p-6">
           <FundingSwiper products={validFundingProducts} />
         </div>
       </div>
@@ -53,7 +51,7 @@ async function ProductGridContent() {
       {/* 조각 상품 섹션 */}
       <div className="space-y-4">
         <h2 className="text-2xl font-bold text-gray-900">조각 상품 TOP 5</h2>
-        <div className="bg-gradient-to-r from-green-500 to-teal-600 rounded-2xl p-6">
+        <div className="rounded-2xl p-6">
           <PieceProductList products={validPieceProducts} />
         </div>
       </div>
