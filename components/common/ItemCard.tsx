@@ -1,6 +1,6 @@
-import React from 'react';
-import ItemCardInfo from '@/components/common/ItemCardInfo';
-import ItemCardImage from '@/components/common/ItemCardImage';
+import React from "react";
+import ItemCardInfo from "@/components/common/ItemCardInfo";
+import ItemCardImage from "@/components/common/ItemCardImage";
 
 export default function ItemCard() {
   return (

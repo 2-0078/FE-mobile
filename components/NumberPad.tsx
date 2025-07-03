@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { Delete, RotateCcw } from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import { Delete, RotateCcw } from "lucide-react";
 
 interface NumberPadProps {
   onNumberClick: (num: string) => void;
@@ -21,21 +21,21 @@ export function NumberPad({
         <Button
           variant="ghost"
           className="w-14 h-14 rounded-full bg-black  text-white text-xl font-bold"
-          onClick={() => onNumberClick('1')}
+          onClick={() => onNumberClick("1")}
         >
           1
         </Button>
         <Button
           variant="ghost"
           className="w-14 h-14 rounded-full bg-black  text-white text-xl font-bold"
-          onClick={() => onNumberClick('2')}
+          onClick={() => onNumberClick("2")}
         >
           2
         </Button>
         <Button
           variant="ghost"
           className="w-14 h-14 rounded-full bg-black  text-white text-xl font-bold"
-          onClick={() => onNumberClick('3')}
+          onClick={() => onNumberClick("3")}
         >
           3
         </Button>
@@ -51,28 +51,28 @@ export function NumberPad({
         <Button
           variant="ghost"
           className="w-14 h-14 rounded-full bg-black  text-white text-xl font-bold"
-          onClick={() => onNumberClick('4')}
+          onClick={() => onNumberClick("4")}
         >
           4
         </Button>
         <Button
           variant="ghost"
           className="w-14 h-14 rounded-full bg-black  text-white text-xl font-bold"
-          onClick={() => onNumberClick('5')}
+          onClick={() => onNumberClick("5")}
         >
           5
         </Button>
         <Button
           variant="ghost"
           className="w-14 h-14 rounded-full bg-black  text-white text-xl font-bold"
-          onClick={() => onNumberClick('6')}
+          onClick={() => onNumberClick("6")}
         >
           6
         </Button>
         <Button
           variant="ghost"
           className="w-14 h-14 rounded-full bg-black  text-white text-xl font-bold"
-          onClick={() => onNumberClick('7')}
+          onClick={() => onNumberClick("7")}
         >
           7
         </Button>
@@ -81,21 +81,21 @@ export function NumberPad({
         <Button
           variant="ghost"
           className="w-14 h-14 rounded-full bg-black  text-white text-xl font-bold"
-          onClick={() => onNumberClick('8')}
+          onClick={() => onNumberClick("8")}
         >
           8
         </Button>
         <Button
           variant="ghost"
           className="w-14 h-14 rounded-full bg-black  text-white text-xl font-bold"
-          onClick={() => onNumberClick('9')}
+          onClick={() => onNumberClick("9")}
         >
           9
         </Button>
         <Button
           variant="ghost"
           className="w-14 h-14 rounded-full bg-black  text-white text-xl font-bold"
-          onClick={() => onNumberClick('0')}
+          onClick={() => onNumberClick("0")}
         >
           0
         </Button>

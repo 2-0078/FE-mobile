@@ -1,15 +1,15 @@
-'use client';
-import React from 'react';
-import { Button } from '../ui/button';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { useRouter, useSearchParams } from 'next/navigation';
+"use client";
+import React from "react";
+import { Button } from "../ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
 export default function Pagenation({ totalPages }: { totalPages: number }) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const currentPage = Number(searchParams.get('page')) || 1;
+  const currentPage = Number(searchParams.get("page")) || 1;
   const handlePageChange = (page: number) => {
     const params = new URLSearchParams(searchParams);
-    params.set('page', page.toString());
+    params.set("page", page.toString());
     router.push(`?${params.toString()}`);
   };
 
@@ -41,7 +41,7 @@ export default function Pagenation({ totalPages }: { totalPages: number }) {
   return (
     <div
       className={`flex items-center justify-center gap-4 py-6 ${
-        totalPages >= 1 ? 'block' : 'hidden'
+        totalPages >= 1 ? "block" : "hidden"
       }`}
     >
       <Button
@@ -62,8 +62,8 @@ export default function Pagenation({ totalPages }: { totalPages: number }) {
             <button
               className={`w-8 h-8 rounded-full text-sm ${
                 page === currentPage
-                  ? 'bg-green-500 text-white'
-                  : 'text-gray-400  '
+                  ? "bg-green-500 text-white"
+                  : "text-gray-400  "
               }`}
               onClick={() => handlePageChange(page as number)}
             >

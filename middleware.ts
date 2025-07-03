@@ -1,11 +1,11 @@
-import { auth } from '@/auth';
+import { auth } from "@/auth";
 
-const withAuthList = ['/cart', '/mypage', '/mywallet'];
+const withAuthList = ["/cart", "/mypage", "/mywallet"];
 
 export default auth((req) => {
   if (!req.auth && withAuthList.includes(req.nextUrl.pathname)) {
     const newUrl = new URL(
-      '/login?callbackUrl=' + req.nextUrl.pathname,
+      "/login?callbackUrl=" + req.nextUrl.pathname,
       req.nextUrl.origin
     );
     return Response.redirect(newUrl);
@@ -13,5 +13,5 @@ export default auth((req) => {
 });
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|fonts|images).*)'],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|fonts|images).*)"],
 };

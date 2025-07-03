@@ -1,6 +1,6 @@
-'use client';
-import React, { ReactElement, ReactNode } from 'react';
-import { create } from 'zustand';
+"use client";
+import React, { ReactElement, ReactNode } from "react";
+import { create } from "zustand";
 
 export interface StepProps {
   name: string;
@@ -20,7 +20,7 @@ interface FunnelState {
 }
 
 const useFunnelStore = create<FunnelState>((set) => ({
-  currentStep: 'step1',
+  currentStep: "step1",
   setStep: (step) => set({ currentStep: step }),
   formData: {},
   setFormData: (data) => set({ formData: data }),

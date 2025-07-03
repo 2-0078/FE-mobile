@@ -1,35 +1,35 @@
-'use client';
-import ReactECharts from 'echarts-for-react';
-import { MyMoneyInfoType } from '@/types/UserTypes';
-import { formatPrice } from '@/lib/tool';
+"use client";
+import ReactECharts from "echarts-for-react";
 
-export default function AssetPieChart({
-  myMoneyInfo,
-}: {
-  myMoneyInfo: MyMoneyInfoType[];
-}) {
-  const colorList = ['#1e40af', '#0891b2', '#06b6d4', '#67e8f9', '#0ea5e9'];
+export default function AssetPieChart() {
+  const assetData = [
+    { name: "예치금", value: 5234000, color: "#1e40af", percentage: 45 },
+    { name: "조각", value: 3456000, color: "#0891b2", percentage: 30 },
+    { name: "공모", value: 2345000, color: "#06b6d4", percentage: 20 },
+    { name: "경매", value: 1234000, color: "#67e8f9", percentage: 5 },
+  ];
 
   const option = {
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
+
     series: [
       {
-        name: '자산 분포',
-        type: 'pie',
+        name: "자산 분포",
+        type: "pie",
         avoidLabelOverlap: false,
         itemStyle: {
           borderRadius: 4,
-          borderColor: '#1f2937',
+          borderColor: "#1f2937",
           borderWidth: 2,
         },
         label: {
           show: false,
         },
-        data: myMoneyInfo.map((item, index) => ({
-          value: item.amount,
-          name: item.category,
+        data: assetData.map((item) => ({
+          value: item.value,
+          name: item.name,
           itemStyle: {
-            color: colorList[index],
+            color: item.color,
           },
         })),
       },
@@ -46,23 +46,23 @@ export default function AssetPieChart({
         {/* ECharts Pie Chart */}
         <ReactECharts
           option={option}
-          style={{ height: '100%', width: '60%' }}
-          opts={{ renderer: 'svg' }}
+          style={{ height: "100%", width: "60%" }}
+          opts={{ renderer: "svg" }}
         />
         {/* Legend */}
         <div className="flex-1 space-y-3">
-          {myMoneyInfo.map((item, index) => (
+          {assetData.map((item, index) => (
             <div key={index} className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <div
                   className="w-3 h-3 rounded-full"
-                  style={{ backgroundColor: colorList[index] }}
+                  style={{ backgroundColor: item.color }}
                 />
-                <span className="text-gray-300 text-sm">{item.category}</span>
+                <span className="text-gray-300 text-sm">{item.name}</span>
               </div>
               <div className="text-right">
                 <p className="text-white text-sm font-medium">
-                  {formatPrice(item.amount)}
+                  ₩{(item.value / 10000).toFixed(0)}만원
                 </p>
               </div>
             </div>

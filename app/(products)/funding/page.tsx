@@ -1,15 +1,15 @@
-import BottomNavbar from '@/components/layout/BottomNavbar';
-import CategorySection from '@/components/(products)/CategorySection';
+import BottomNavbar from "@/components/layout/BottomNavbar";
+import CategorySection from "@/components/(products)/CategorySection";
 import {
   getFundingProductsList,
   getMainCategories,
   getSubCategories,
   getFundingProduct,
-} from '@/action/product-service';
-import { CategoryType } from '@/types/ProductTypes';
-import Pagenation from '@/components/common/Pagenation';
-import { FundingListSection } from '@/components/(products)/FundingListSection';
-import SearchBar from '@/components/common/SearchBar';
+} from "@/action/product-service";
+import { CategoryType } from "@/types/ProductTypes";
+import Pagenation from "@/components/common/Pagenation";
+import { FundingListSection } from "@/components/(products)/FundingListSection";
+import SearchBar from "@/components/common/SearchBar";
 export default async function FundingPage({
   searchParams,
 }: {
@@ -23,21 +23,21 @@ export default async function FundingPage({
 }) {
   // URL에서 카테고리 정보 가져오기
   const params = await searchParams;
-  const selectedSort = params.sort || '최신순';
-  const selectedMainCategory = params.main || '전체';
-  const selectedSubCategory = params.sub || '전체';
-  const selectedSearch = params.search || '';
+  const selectedSort = params.sort || "최신순";
+  const selectedMainCategory = params.main || "전체";
+  const selectedSubCategory = params.sub || "전체";
+  const selectedSearch = params.search || "";
   const selectedPage = params.page || 1;
-  const filters = ['최신순', '인기순', '가격순'];
+  const filters = ["최신순", "인기순", "가격순"];
 
   const mainCategories = [
-    { id: '전체', categoryName: '전체' },
+    { id: "전체", categoryName: "전체" },
     ...(await getMainCategories()),
   ];
   let subCategories: CategoryType[] = [];
-  if (selectedMainCategory != '전체') {
+  if (selectedMainCategory != "전체") {
     subCategories = [
-      { id: '전체', categoryName: '전체' },
+      { id: "전체", categoryName: "전체" },
       ...(await getSubCategories(selectedMainCategory)),
     ];
   }
@@ -75,8 +75,8 @@ export default async function FundingPage({
                 key={filter}
                 className={`px-3 py-1 rounded-full text-xs transition-all ${
                   selectedSort === filter
-                    ? 'bg-gray-700 text-green-400'
-                    : 'text-gray-400'
+                    ? "bg-gray-700 text-green-400"
+                    : "text-gray-400"
                 }`}
               >
                 {filter}
@@ -89,7 +89,7 @@ export default async function FundingPage({
       {/* Product Count */}
       <div className="px-4 mb-4">
         <p className="text-sm text-gray-400">
-          총{' '}
+          총{" "}
           <span className="text-green-400 font-medium">
             {fundingProductsUuidList.totalElements}
           </span>

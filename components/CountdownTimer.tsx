@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 interface CountdownTimerProps {
   endDateTime: string | Date; // 마감일시 (ISO 문자열 또는 Date 객체)
@@ -101,8 +101,8 @@ export function CountdownTimer({
     <div className="border border-custom-gray-100 rounded-full px-6 py-4 flex items-center justify-between h-10">
       <span className="text-base">마감까지</span>
       <div className="text-custom-green text-base font-bold">
-        {timeLeft.days}d : {timeLeft.hours}h : {timeLeft.minutes}m :{' '}
-        {String(timeLeft.seconds).padStart(2, '0')}s
+        {timeLeft.days}d : {timeLeft.hours}h : {timeLeft.minutes}m :{" "}
+        {String(timeLeft.seconds).padStart(2, "0")}s
       </div>
     </div>
   );

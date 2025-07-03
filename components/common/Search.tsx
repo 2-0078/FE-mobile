@@ -1,4 +1,4 @@
-import SearchIcon from '@/repo/ui/Icons/SearchIcon';
+import SearchIcon from "@/repo/ui/Icons/SearchIcon";
 
 const Search = () => (
   <div className="flex items-center bg-custom-slate rounded-3xl px-1 py-1 w-full">

@@ -1,9 +1,9 @@
-'use client';
-import { EyeOff, Eye } from 'lucide-react';
-import React, { useState } from 'react';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import { Label } from '../ui/label';
+"use client";
+import { EyeOff, Eye } from "lucide-react";
+import React, { useState } from "react";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 
 export default function SignupInfoSection({
   onNext,
@@ -11,8 +11,8 @@ export default function SignupInfoSection({
   onNext: (data: { email: string; password: string }) => void;
 }) {
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState('ronaldosilva@gmail.com');
-  const [password, setPassword] = useState('password123');
+  const [email, setEmail] = useState("ronaldosilva@gmail.com");
+  const [password, setPassword] = useState("password123");
   return (
     <>
       <div className="space-y-6">
@@ -42,7 +42,7 @@ export default function SignupInfoSection({
           <div className="relative">
             <Input
               id="password"
-              type={showPassword ? 'text' : 'password'}
+              type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="border border-custom-gray-300 rounded-full px-6 py-4 pr-14 placeholder:text-custom-gray-200 focus:border-custom-green focus:ring-0 h-14"

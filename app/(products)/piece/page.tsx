@@ -1,63 +1,141 @@
-import React from 'react';
-import BottomNavbar from '@/components/layout/BottomNavbar';
-import Link from 'next/link';
-import Image from 'next/image';
+import React from "react";
+import BottomNavbar from "@/components/layout/BottomNavbar";
+import Link from "next/link";
+import Image from "next/image";
 import {
   getMainCategories,
   getPieceProducts,
   getPieceProductsList,
-} from '@/action/product-service';
-import { getSubCategories } from '@/action/product-service';
-import { CategoryType } from '@/types/ProductTypes';
-import CategorySection from '@/components/(products)/CategorySection';
-import { Search, TrendingDown, TrendingUp } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import Pagenation from '@/components/common/Pagenation';
-import { formatPrice } from '@/lib/tool';
+} from "@/action/product-service";
+import { getSubCategories } from "@/action/product-service";
+import { CategoryType } from "@/types/ProductTypes";
+import CategorySection from "@/components/(products)/CategorySection";
+import { Search, TrendingDown, TrendingUp } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import Pagenation from "@/components/common/Pagenation";
+import { formatPrice } from "@/lib/utils";
 export default async function PiecePage({
   searchParams,
 }: {
   searchParams: Promise<{
     sort: string;
     main: string;
-    sub: string;
-    search: string;
-    page: number;
   }>;
 }) {
   // URL에서 카테고리 정보 가져오기
   const params = await searchParams;
-  const selectedSort = params.sort || '최신순';
-  const selectedMainCategory = params.main || '전체';
-  const selectedSubCategory = params.sub || '전체';
-  const search = params.search || '';
-  const page = params.page || 1;
-  const filters = ['최신순', '인기순', '가격순'];
+  const selectedSort = params.sort || "최신순";
+  const selectedMainCategory = params.main || "전체";
+
+  const filters = ["최신순", "인기순", "가격순"];
+
+  const products = [
+    {
+      id: "1",
+      image: "/placeholder.svg?height=60&width=60",
+      title: "샤넬 클래식 플랩백",
+      brand: "Chanel",
+      currentPrice: 1630000,
+      dailyChange: 142000,
+      dailyChangePercent: 8.7,
+      priceHistory: [1400000, 1450000, 1480000, 1520000, 1580000, 1630000],
+    },
+    {
+      id: "2",
+      image: "/placeholder.svg?height=60&width=60",
+      title: "롤렉스 서브마리너",
+      brand: "Rolex",
+      currentPrice: 1680000,
+      dailyChange: -39000,
+      dailyChangePercent: -2.3,
+      priceHistory: [1750000, 1720000, 1700000, 1690000, 1680000, 1680000],
+    },
+    {
+      id: "3",
+      image: "/placeholder.svg?height=60&width=60",
+      title: "에르메스 버킨백",
+      brand: "Hermès",
+      currentPrice: 2100000,
+      dailyChange: 158000,
+      dailyChangePercent: 7.7,
+      priceHistory: [1900000, 1950000, 2000000, 2050000, 2080000, 2100000],
+    },
+    {
+      id: "4",
+      image: "/placeholder.svg?height=60&width=60",
+      title: "샤넬 22백팩",
+      brand: "Chanel",
+      currentPrice: 934000,
+      dailyChange: 9000,
+      dailyChangePercent: 1.0,
+      priceHistory: [920000, 925000, 930000, 928000, 932000, 934000],
+    },
+    {
+      id: "5",
+      image: "/placeholder.svg?height=60&width=60",
+      title: "롤렉스 데이토나",
+      brand: "Rolex",
+      currentPrice: 3060000,
+      dailyChange: -140000,
+      dailyChangePercent: -4.4,
+      priceHistory: [3300000, 3250000, 3200000, 3150000, 3100000, 3060000],
+    },
+  ];
+
   const mainCategories = [
-    { id: '전체', categoryName: '전체' },
+    { id: "전체", categoryName: "전체" },
     ...(await getMainCategories()),
   ];
   let subCategories: CategoryType[] = [];
-  if (selectedMainCategory != '전체') {
+  if (selectedMainCategory != "전체") {
     subCategories = [
-      { id: '전체', categoryName: '전체' },
+      { id: "전체", categoryName: "전체" },
       ...(await getSubCategories(selectedMainCategory)),
     ];
   }
 
-  const pieceProductUuidList = await getPieceProductsList({
-    main: selectedMainCategory,
-    sub: selectedSubCategory,
-    search: search,
-    page: page,
-  });
+  const pieceProductUuidList = await getPieceProductsList();
+  console.log(pieceProductUuidList);
 
   const pieceProducts = await Promise.all(
     pieceProductUuidList.pieceProductUuidList.map((uuid) =>
       getPieceProducts(uuid)
     )
   );
+  console.log(pieceProducts);
+  const MiniChart = ({
+    data,
+    isPositive,
+  }: {
+    data: number[];
+    isPositive: boolean;
+  }) => {
+    const max = Math.max(...data);
+    const min = Math.min(...data);
+    const range = max - min;
+
+    const points = data
+      .map((value, index) => {
+        const x = (index / (data.length - 1)) * 40;
+        const y = 20 - ((value - min) / range) * 20;
+        return `${x},${y}`;
+      })
+      .join(" ");
+
+    return (
+      <svg width="40" height="20" className="flex-shrink-0">
+        <polyline
+          points={points}
+          fill="none"
+          stroke={isPositive ? "#10b981" : "#ef4444"}
+          strokeWidth="2"
+          className="drop-shadow-sm"
+        />
+      </svg>
+    );
+  };
+
   return (
     <div className=" pb-20">
       <div className="px-4 py-4 text-center border-b border-gray-800">
@@ -92,8 +170,8 @@ export default async function PiecePage({
                 key={filter}
                 className={`px-3 py-1 rounded-full text-xs transition-all ${
                   selectedSort === filter
-                    ? 'bg-gray-700 text-green-400'
-                    : 'text-gray-400'
+                    ? "bg-gray-700 text-green-400"
+                    : "text-gray-400"
                 }`}
               >
                 {filter}
@@ -106,10 +184,8 @@ export default async function PiecePage({
       {/* Product Count */}
       <div className="px-4 mb-4">
         <p className="text-sm text-gray-400">
-          총{' '}
-          <span className="text-green-400 font-medium">
-            {pieceProductUuidList.totalElements}
-          </span>
+          총{" "}
+          <span className="text-green-400 font-medium">{products.length}</span>
           개의 상품
         </p>
       </div>
@@ -118,11 +194,11 @@ export default async function PiecePage({
         {pieceProducts.map((product) => (
           <div
             key={product.piece.pieceProductUuid}
-            className="bg-slate-800/50 rounded-lg px-4 py-2 border border-slate-700/50"
+            className="bg-slate-800/50 h-30 rounded-lg px-4 py-2 border border-slate-700/50"
           >
             <Link href={`/piece/${product.piece.pieceProductUuid}`}>
               <div className="flex items-center gap-3">
-                <div className="min-w-16 h-20 relative rounded-lg flex items-center justify-center">
+                <div className="min-w-16 h-24 relative rounded-lg flex items-center justify-center">
                   <Image
                     src={product.images[0].imageUrl}
                     alt="example"
@@ -134,23 +210,33 @@ export default async function PiecePage({
 
                 <div className="flex-1">
                   <div className="flex items-center justify-between mb-2">
-                    <div className="w-7/12">
+                    <div className="w-1/3">
                       <p className="text-xs text-slate-400 mb-1 truncate">
-                        {product.mainCategory.categoryName} &gt;{' '}
+                        {product.mainCategory.categoryName} &gt;{" "}
                         {product.subCategory.categoryName}
                       </p>
                       <h3 className="text-sm font-medium text-white">
                         {product.productName}
                       </h3>
                     </div>
-                    <div className="text-center ml-2">
+
+                    <div className="flex items-center gap-2">
+                      {/* 수정필요 */}
+                      <MiniChart
+                        data={[
+                          1400000, 1450000, 1480000, 1520000, 1580000, 1630000,
+                        ]}
+                        isPositive={true}
+                      />
+                    </div>
+                    <div className="text-center flex-shrink-0 ml-2 w-1/4">
                       <p className="text-base font-bold text-white">
                         {/* 수정필요 */}
                         {formatPrice(product.aiEstimatedPrice)}
                       </p>
                       <div
                         className={`flex justify-center items-center gap-1 text-xs ${
-                          1 > 0 ? 'text-emerald-400' : 'text-red-400'
+                          1 > 0 ? "text-emerald-400" : "text-red-400"
                         }`}
                       >
                         {1 > 0 ? (
@@ -159,7 +245,7 @@ export default async function PiecePage({
                           <TrendingDown className="w-3 h-3" />
                         )}
                         <span>
-                          {1 > 0 ? '+' : ''}
+                          {1 > 0 ? "+" : ""}
                           {1}%
                         </span>
                       </div>
