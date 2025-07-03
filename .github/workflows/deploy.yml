@@ -41,6 +41,7 @@ jobs:
           echo "DOCKER_PASSWORD=${{ secrets.DOCKER_PASSWORD }}" >> .env
           echo "BASE_API_URL=${{ secrets.BASE_API_URL }}" >> .env
           echo "AUTH_SECRET=${{ secrets.AUTH_SECRET }}" >> .env
+          echo "NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}" >> .env
 
           echo "NEXT_PUBLIC_REGION=${{ secrets.NEXT_PUBLIC_REGION }}" >> .env
           echo "NEXT_PUBLIC_COGNITO_IDENTITY_POOL_ID=${{ secrets.NEXT_PUBLIC_COGNITO_IDENTITY_POOL_ID }}" >> .env
