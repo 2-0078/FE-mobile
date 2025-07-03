@@ -1,3 +1,25 @@
+import React from 'react';
+import ReactECharts from 'echarts-for-react';
+
+interface AssetData {
+  name: string;
+  value: number;
+  color: string;
+}
+
+export default function AssetPieChart() {
+  const assetData: AssetData[] = [
+    { name: '주식', value: 5000000, color: '#10b981' },
+    { name: '부동산', value: 3000000, color: '#3b82f6' },
+    { name: '채권', value: 2000000, color: '#f59e0b' },
+    { name: '현금', value: 1000000, color: '#ef4444' },
+  ];
+
+  const option = {
+    tooltip: {
+      trigger: 'item',
+      formatter: '{a} <br/>{b}: {c} ({d}%)',
+    },
     series: [
       {
         name: '자산 분포',
