@@ -9,7 +9,7 @@ export default function PageWrapper({
   className?: string;
 }) {
   return (
-    <main className={cn('px-6 pt-6 space-y-5 pb-24', className)}>
+    <main className={cn('px-5 pt-6 space-y-5 pb-24', className)}>
       {children}
     </main>
   );

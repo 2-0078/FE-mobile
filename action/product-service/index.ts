@@ -27,8 +27,8 @@ export const getSubCategories = async (mainCategoryId: string) => {
 
 export const getFundingProductsList = async (params: {
   sort?: string;
-  main: string;
-  sub: string;
+  main?: string;
+  sub?: string;
   search?: string;
   page?: number;
   size?: number;
@@ -36,6 +36,15 @@ export const getFundingProductsList = async (params: {
 }) => {
   const { sort, main, sub, search, page, size, direction } = params;
   const queryParams = new URLSearchParams();
+  
+  if (sort) queryParams.append('sort', sort);
+  if (main) queryParams.append('main', main);
+  if (sub) queryParams.append('sub', sub);
+  if (search) queryParams.append('search', search);
+  if (page) queryParams.append('page', page.toString());
+  if (size) queryParams.append('size', size.toString());
+  if (direction) queryParams.append('direction', direction);
+  
   const response = await fetch(
     `${
       process.env.BASE_API_URL

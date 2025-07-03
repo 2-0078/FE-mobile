@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { getMemberBalance } from '@/action/payment-service';
 
-export default function AmmountCard() {
+export default function AmmountCard({ user }: { user: boolean }) {
   const [balance, setBalance] = useState<{ amount: number } | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -33,6 +33,10 @@ export default function AmmountCard() {
         </div>
       </div>
     );
+  }
+
+  if (!user) {
+    return null;
   }
 
   return (

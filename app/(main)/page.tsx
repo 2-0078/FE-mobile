@@ -1,51 +1,45 @@
-import React from 'react';
-import AlertButton from '@/components/common/AlertButton';
-import ItemCard from '@/components/common/ItemCard';
+import React, { Suspense } from 'react';
 import Search from '@/components/common/Search';
 import TitleWrapper from '@/components/layout/TitleWrapper';
 import PageWrapper from '@/components/layout/PageWrapper';
-import MainProfile from '@/components/common/MainProfile';
+import HeaderLayout from '@/components/layout/HeaderLayout';
+import ProductGrid from '@/components/common/ProductGrid';
+import ProductGridSkeleton from '@/components/common/ProductGridSkeleton';
 import { auth } from '@/auth';
 import { getMemberProfile } from '@/action/member-service';
 import AmmountCard from '@/components/AmmountCard';
 
-
 export default async function page() {
   const session = await auth();
-  const user = session?.user;
+  const isAuth = !!session?.user;
   let memberProfile = undefined;
-  if (user) {
-    memberProfile = await getMemberProfile(user.memberUuid);
+  
+  if (isAuth) {
+    memberProfile = await getMemberProfile(session.user.memberUuid);
   }
+  
   return (
-    <PageWrapper>
-      <header className="flex items-center justify-between">
-        <MainProfile
-          isLoggedIn={user ? true : false}
-          userName={memberProfile?.nickname || undefined}
-          userImageUrl={memberProfile?.profileImageUrl || undefined}
-        />
-        <AlertButton isActive={false} />
-      </header>
-      <TitleWrapper>
-        투자는{' '}
-        <span className="text-custom-green font-medium wrap-break-word">
-          Piece of Cake
-        </span>
-        <br />
-        Traiding Hub
-      </TitleWrapper>
-      <Search />
-      {user && <AmmountCard />}
-      <div className="grid md:grid-cols-2 xl:grid-cols-3 items-center justify-center self-center gap-y-7 gap-x-4 ">
-        <ItemCard />
-        <ItemCard />
-        <ItemCard />
-        <ItemCard />
-        <ItemCard />
-        <ItemCard />
-        <ItemCard />
-      </div>
-    </PageWrapper>
+    <>
+      <HeaderLayout
+        isLoggedIn={isAuth}
+        userName={memberProfile?.nickname || undefined}
+        userImageUrl={memberProfile?.profileImageUrl || undefined}
+      />
+      <PageWrapper>
+        <TitleWrapper>
+          투자는{' '}
+          <span className="text-custom-green font-medium wrap-break-word">
+            Piece of Cake
+          </span>
+          <br />
+          Traiding Hub
+        </TitleWrapper>
+        <Search />
+        <AmmountCard user={isAuth}/>
+        <Suspense fallback={<ProductGridSkeleton />}>
+          <ProductGrid />
+        </Suspense>
+      </PageWrapper>
+    </>
   );
 }
