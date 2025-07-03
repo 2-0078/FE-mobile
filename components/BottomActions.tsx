@@ -1,5 +1,9 @@
 'use client';
 
+import React from 'react';
+import { Button } from '@/components/ui/button';
+import { MessageCircle } from 'lucide-react';
+import { useModal } from '@/stores/modal-store';
 
 export function BottomActions() {
   const { openModal } = useModal();

@@ -1,5 +1,8 @@
 'use client';
 
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { NumberPad } from '@/components/NumberPad';
 
 export function AmountSection({
   piecePrice,
@@ -10,6 +13,8 @@ export function AmountSection({
   remainingPieces: number;
   depositBalance: number;
 }) {
+  const [amount, setAmount] = useState('');
+
   const handleNumberClick = (num: string) => {
     // 최대 자릿수 제한 (예: 10자리)
     if (amount.length >= 10) return;
@@ -48,6 +53,7 @@ export function AmountSection({
             {depositBalance.toLocaleString()}원
           </span>
         </p>
+        <Button variant="outline" className="w-full">
           예치금이 부족하신가요?
         </Button>
       </div>

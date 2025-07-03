@@ -1,3 +1,7 @@
+'use server';
+
+import { auth } from '@/auth';
+import { CommonResponseType } from '@/types/CommonTypes';
 
 export const getMemberBalance = async () => {
   const session = await auth();

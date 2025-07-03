@@ -1,3 +1,13 @@
+import React from 'react';
+import { Button } from '@/components/ui/button';
+import { CommentItem } from '@/components/CommentItem';
+import { ReplyType } from '@/types/CommunityTypes';
+
+interface CommentContentProps {
+  comments: ReplyType[];
+}
+
+export function CommentContent({ comments }: CommentContentProps) {
   return (
     <>
       <div className="px-6 space-y-4 pb-10">

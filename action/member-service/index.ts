@@ -1,5 +1,7 @@
 'use server';
 
+import { CommonResponseType } from '@/types/CommonTypes';
+import { UserInfoType } from '@/types/UserTypes';
 
 export async function getMemberProfile(memberUuid: string) {
   const response = await fetch(

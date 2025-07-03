@@ -1,3 +1,9 @@
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
+import { ReplyType } from '@/types/CommunityTypes';
+import { getMemberProfile } from '@/action/member-service';
 
 export function CommentItem({
   createdAt,
@@ -22,6 +28,7 @@ export function CommentItem({
       <div className="w-10 h-10 rounded-full flex items-center justify-center text-lg">
         {
           <Image
+            src={avatar}
             alt="avatar"
             width={40}
             height={40}
