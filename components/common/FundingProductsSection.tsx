@@ -11,7 +11,7 @@ export default function FundingProductsSection({
 }: FundingProductsSectionProps) {
   return (
     <div className="space-y-4">
-      <h2 className="text-2xl font-bold text-gray-900">공모</h2>
+      <h2 className="text-2xl font-bold text-custom-green">HOT FUNDINGS</h2>
       <FundingSwiper products={products} />
     </div>
   );

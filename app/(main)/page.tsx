@@ -1,6 +1,6 @@
 import React from 'react';
 import Search from '@/components/common/Search';
-import TitleWrapper from '@/components/layout/TitleWrapper';
+import { TypingTitleWrapper } from '@/components/layout/TitleWrapper';
 import PageWrapper from '@/components/layout/PageWrapper';
 import HeaderLayout from '@/components/layout/HeaderLayout';
 import FundingProductsSection from '@/components/common/FundingProductsSection';
@@ -33,14 +33,14 @@ export default async function page() {
         userImageUrl={memberProfile?.profileImageUrl || undefined}
       />
       <PageWrapper>
-        <TitleWrapper>
-          투자는{' '}
-          <span className="text-custom-green font-medium wrap-break-word">
-            Piece of Cake
-          </span>
-          <br />
-          Traiding Hub
-        </TitleWrapper>
+        <div className="space-y-2">
+          <TypingTitleWrapper
+            text="투자는 Piece of Cake"
+            speed={80}
+            delay={500}
+          />
+          <TypingTitleWrapper text="Trading Hub" speed={80} delay={2000} />
+        </div>
         <Search />
         <AmmountCard user={isAuth} />
         <div className="space-y-8">

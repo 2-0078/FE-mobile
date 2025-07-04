@@ -14,7 +14,7 @@ export default function FundingSwiper({ products }: FundingSwiperProps) {
   const [startX, setStartX] = useState(0);
   const [currentX, setCurrentX] = useState(0);
   const [translateX, setTranslateX] = useState(0);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLUListElement>(null);
 
   useEffect(() => {
     if (products.length <= 1) return;
@@ -127,7 +127,7 @@ export default function FundingSwiper({ products }: FundingSwiperProps) {
 
   return (
     <div className="relative w-full overflow-hidden">
-      <div
+      <ul
         ref={containerRef}
         className="flex gap-[16px] cursor-grab active:cursor-grabbing"
         onTouchStart={handleTouchStart}
@@ -140,7 +140,7 @@ export default function FundingSwiper({ products }: FundingSwiperProps) {
         style={{ userSelect: 'none' }}
       >
         {products.map((product, index) => (
-          <div
+          <li
             key={product.productUuid}
             className="w-full flex-shrink-0 transition-transform duration-500 ease-in-out"
             style={{
@@ -150,9 +150,9 @@ export default function FundingSwiper({ products }: FundingSwiperProps) {
             }}
           >
             <FundingItemCard product={product} />
-          </div>
+          </li>
         ))}
-      </div>
+      </ul>
 
       {/* 인디케이터 */}
       {products.length > 1 && (
