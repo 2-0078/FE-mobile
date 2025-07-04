@@ -114,6 +114,7 @@ export default function FundingSwiper({ products }: FundingSwiperProps) {
     );
   }
 
+  // 스와이프 중일 때는 실시간 translateX 적용, 아닐 때는 currentIndex 기반 계산
   const currentTranslateX = isDragging 
     ? translateX 
     : -currentIndex * (100 + 4); // 4%는 gap-4의 대략적인 퍼센트
@@ -137,7 +138,9 @@ export default function FundingSwiper({ products }: FundingSwiperProps) {
             key={product.productUuid} 
             className="w-full flex-shrink-0 transition-transform duration-500 ease-in-out"
             style={{ 
-              transform: `translateX(calc(-${currentIndex * 100}% + ${isDragging ? translateX : 0}px))`
+              transform: isDragging 
+                ? `translateX(calc(-${currentIndex * 100}% + ${translateX}px))`
+                : `translateX(calc(-${currentIndex * 100}%))`
             }}
           >
             <FundingItemCard product={product} />
