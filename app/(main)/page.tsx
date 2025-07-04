@@ -5,72 +5,24 @@ import PageWrapper from '@/components/layout/PageWrapper';
 import HeaderLayout from '@/components/layout/HeaderLayout';
 import FundingProductsSection from '@/components/common/FundingProductsSection';
 import PieceProductsSection from '@/components/common/PieceProductsSection';
-import { auth } from '@/auth';
-import { getMemberProfile } from '@/action/member-service';
-import {
-  getFundingProductsList,
-  getFundingProduct,
-  getPieceProductsList,
-  getPieceProducts,
-} from '@/action/product-service';
+import { AuthService } from '@/services/AuthService';
+import { ProductService } from '@/services/ProductService';
 import AmmountCard from '@/components/AmmountCard';
 
 export default async function page() {
-  const session = await auth();
-  const isAuth = !!session?.user;
-  let memberProfile = undefined;
+  // AuthService를 사용하여 사용자 정보 가져오기
+  const { isAuthenticated, profile } = await AuthService.getCurrentUser();
 
-  if (isAuth) {
-    memberProfile = await getMemberProfile(session.user.memberUuid);
-  }
-
-  // 상품 데이터 가져오기
-  const [fundingProductsList, pieceProductsList] = await Promise.all([
-    getFundingProductsList({ page: 1, size: 10 }),
-    getPieceProductsList(),
-  ]);
-
-  // 각 상품의 상세 정보 가져오기
-  const [fundingProducts, pieceProducts] = await Promise.all([
-    Promise.all(
-      fundingProductsList.fundingUuidList.map(async (fundingUuid: string) => {
-        try {
-          return await getFundingProduct(fundingUuid);
-        } catch (error) {
-          console.error(
-            `Failed to fetch funding product ${fundingUuid}:`,
-            error
-          );
-          return null;
-        }
-      })
-    ),
-    Promise.all(
-      pieceProductsList.pieceProductUuidList.map(async (pieceUuid: string) => {
-        try {
-          return await getPieceProducts(pieceUuid);
-        } catch (error) {
-          console.error(`Failed to fetch piece product ${pieceUuid}:`, error);
-          return null;
-        }
-      })
-    ),
-  ]);
-
-  // null 값 필터링
-  const validFundingProducts = fundingProducts.filter(
-    (product) => product !== null
-  );
-  const validPieceProducts = pieceProducts.filter(
-    (product) => product !== null
-  );
+  // ProductService를 사용하여 상품 데이터 가져오기
+  const { fundingProducts, pieceProducts } =
+    await ProductService.getMainPageProducts();
 
   return (
     <>
       <HeaderLayout
-        isLoggedIn={isAuth}
-        userName={memberProfile?.nickname || undefined}
-        userImageUrl={memberProfile?.profileImageUrl || undefined}
+        isLoggedIn={isAuthenticated}
+        userName={profile?.nickname || undefined}
+        userImageUrl={profile?.profileImageUrl || undefined}
       />
       <PageWrapper>
         <TitleWrapper>
@@ -82,10 +34,10 @@ export default async function page() {
           Traiding Hub
         </TitleWrapper>
         <Search />
-        <AmmountCard user={isAuth} />
+        <AmmountCard user={isAuthenticated} />
         <div className="space-y-8">
-          <FundingProductsSection products={validFundingProducts} />
-          <PieceProductsSection products={validPieceProducts} />
+          <FundingProductsSection products={fundingProducts} />
+          <PieceProductsSection products={pieceProducts} />
         </div>
       </PageWrapper>
     </>
