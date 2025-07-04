@@ -3,7 +3,8 @@ import Search from '@/components/common/Search';
 import TitleWrapper from '@/components/layout/TitleWrapper';
 import PageWrapper from '@/components/layout/PageWrapper';
 import HeaderLayout from '@/components/layout/HeaderLayout';
-import ProductGrid from '@/components/common/ProductGrid';
+import FundingProductsSection from '@/components/common/FundingProductsSection';
+import PieceProductsSection from '@/components/common/PieceProductsSection';
 import ProductGridSkeleton from '@/components/common/ProductGridSkeleton';
 import { auth } from '@/auth';
 import { getMemberProfile } from '@/action/member-service';
@@ -83,12 +84,14 @@ export default async function page() {
         </TitleWrapper>
         <Search />
         <AmmountCard user={isAuth} />
-        <Suspense fallback={<ProductGridSkeleton />}>
-          <ProductGrid
-            fundingProducts={validFundingProducts}
-            pieceProducts={validPieceProducts}
-          />
-        </Suspense>
+        <div className="space-y-8">
+          <Suspense fallback={<ProductGridSkeleton />}>
+            <FundingProductsSection products={validFundingProducts} />
+          </Suspense>
+          <Suspense fallback={<ProductGridSkeleton />}>
+            <PieceProductsSection products={validPieceProducts} />
+          </Suspense>
+        </div>
       </PageWrapper>
     </>
   );
