@@ -7,17 +7,64 @@ import ProductGrid from '@/components/common/ProductGrid';
 import ProductGridSkeleton from '@/components/common/ProductGridSkeleton';
 import { auth } from '@/auth';
 import { getMemberProfile } from '@/action/member-service';
+import {
+  getFundingProductsList,
+  getFundingProduct,
+  getPieceProductsList,
+  getPieceProducts,
+} from '@/action/product-service';
 import AmmountCard from '@/components/AmmountCard';
 
 export default async function page() {
   const session = await auth();
   const isAuth = !!session?.user;
   let memberProfile = undefined;
-  
+
   if (isAuth) {
     memberProfile = await getMemberProfile(session.user.memberUuid);
   }
-  
+
+  // 상품 데이터 가져오기
+  const [fundingProductsList, pieceProductsList] = await Promise.all([
+    getFundingProductsList({ page: 1, size: 10 }),
+    getPieceProductsList(),
+  ]);
+
+  // 각 상품의 상세 정보 가져오기
+  const [fundingProducts, pieceProducts] = await Promise.all([
+    Promise.all(
+      fundingProductsList.fundingUuidList.map(async (fundingUuid: string) => {
+        try {
+          return await getFundingProduct(fundingUuid);
+        } catch (error) {
+          console.error(
+            `Failed to fetch funding product ${fundingUuid}:`,
+            error
+          );
+          return null;
+        }
+      })
+    ),
+    Promise.all(
+      pieceProductsList.pieceProductUuidList.map(async (pieceUuid: string) => {
+        try {
+          return await getPieceProducts(pieceUuid);
+        } catch (error) {
+          console.error(`Failed to fetch piece product ${pieceUuid}:`, error);
+          return null;
+        }
+      })
+    ),
+  ]);
+
+  // null 값 필터링
+  const validFundingProducts = fundingProducts.filter(
+    (product) => product !== null
+  );
+  const validPieceProducts = pieceProducts.filter(
+    (product) => product !== null
+  );
+
   return (
     <>
       <HeaderLayout
@@ -35,9 +82,12 @@ export default async function page() {
           Traiding Hub
         </TitleWrapper>
         <Search />
-        <AmmountCard user={isAuth}/>
+        <AmmountCard user={isAuth} />
         <Suspense fallback={<ProductGridSkeleton />}>
-          <ProductGrid />
+          <ProductGrid
+            fundingProducts={validFundingProducts}
+            pieceProducts={validPieceProducts}
+          />
         </Suspense>
       </PageWrapper>
     </>
