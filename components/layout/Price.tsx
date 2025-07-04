@@ -8,11 +8,16 @@ export default function Price({
   className?: string;
 }) {
   return (
-    <span className={cn('text-xl font-bold text-black mt-2', className)}>
-      {price.toLocaleString('ko-KR', {
-        style: 'currency',
-        currency: 'KRW',
-      })}
-    </span>
+    <div
+      className={cn(
+        'w-full flex justify-end text-xl font-bold text-black mt-2',
+        className
+      )}
+    >
+      <p>
+        {price.toLocaleString()}
+        <span className="text-sm text-gray-500 pl-1">원</span>
+      </p>
+    </div>
   );
 }

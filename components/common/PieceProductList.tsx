@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { PieceProductType } from '@/types/ProductTypes';
 import PieceItemCard from './PieceItemCard';
@@ -25,4 +27,4 @@ export default function PieceProductList({ products }: PieceProductListProps) {
       ))}
     </div>
   );
-} 
+}

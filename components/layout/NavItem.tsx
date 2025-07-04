@@ -2,11 +2,10 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { LucideIcon } from 'lucide-react';
-import { NavItem as NavItemType } from '@/lib/nav-data';
+import type { NavItem } from '@/lib/nav-data';
 
 interface NavItemProps {
-  item: NavItemType;
+  item: NavItem;
   isActive: boolean;
 }
 
@@ -20,9 +19,7 @@ export default function NavItem({ item, isActive }: NavItemProps) {
           <Link href={href} aria-label={label}>
             <Icon
               className={`${
-                isActive
-                  ? 'fill-white stroke-white'
-                  : 'stroke-white'
+                isActive ? 'fill-white stroke-white' : 'stroke-white'
               }`}
             />
           </Link>
@@ -32,13 +29,13 @@ export default function NavItem({ item, isActive }: NavItemProps) {
   }
 
   return (
-    <li>
+    <li className="w-fit flex justify-center items-center">
       <Link href={href} className="relative" aria-label={label}>
         <Icon isActive={isActive} />
         {isActive && (
-          <div className="absolute left-1/2 -translate-x-1/2 -bottom-3 w-1.5 h-1.5 rounded-full bg-white" />
+          <div className="absolute left-0 right-0 mx-auto -bottom-3 w-1.5 h-1.5 rounded-full bg-custom-green" />
         )}
       </Link>
     </li>
   );
-} 
+}

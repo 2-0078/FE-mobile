@@ -2,7 +2,6 @@ import React from 'react';
 import { FundingProductType } from '@/types/ProductTypes';
 import ItemCardImage from './ItemCardImage';
 import ItemCardInfo from './ItemCardInfo';
-import { CountdownTimer } from '@/components/CountdownTimer';
 
 interface FundingItemCardProps {
   product: FundingProductType;
@@ -10,25 +9,33 @@ interface FundingItemCardProps {
 
 export default function FundingItemCard({ product }: FundingItemCardProps) {
   const { funding } = product;
-  const thumbnailImage = product.images.find(img => img.isThumbnail)?.imageUrl || product.images[0]?.imageUrl;
+  const thumbnailImage =
+    product.images.find((img) => img.isThumbnail)?.imageUrl ||
+    product.images[0]?.imageUrl;
   const remainingPieces = product.funding.remainingPieces;
   const totalPieces = product.funding.totalPieces;
-  const progress = ((totalPieces - remainingPieces) / totalPieces) * 100;
 
   return (
-    <div className="w-full rounded-2xl shadow-lg bg-white overflow-hidden relative mx-auto items-center justify-center">
+    <div className="w-full rounded-lg shadow-lg bg-black/50 overflow-hidden relative mx-auto items-center justify-center border border-custom-green/50 sh shadow-custom-green">
       <ItemCardImage
-        remainingTime={<CountdownTimer endDateTime={funding.fundingDeadline} />}
+        type="funding"
+        remainingTime={funding.fundingDeadline}
         thumbnail={thumbnailImage}
       />
-      <ItemCardInfo 
+      <ItemCardInfo
         productName={product.productName}
+        mainCategory={product.mainCategory.categoryName}
+        subCategory={product.subCategory.categoryName}
         price={product.funding.piecePrice}
-        progress={progress}
-        remainingPieces={remainingPieces}
-        totalPieces={totalPieces}
+        description={product.aiEstimatedDescription || undefined}
+        fundingStatus={funding.fundingStatus as 'FUNDING' | 'FUNDING_SUCCESS'}
         type="funding"
+        progress={
+          totalPieces > 0
+            ? ((totalPieces - remainingPieces) / totalPieces) * 100
+            : 0
+        }
       />
     </div>
   );
-} 
+}

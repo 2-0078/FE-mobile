@@ -10,13 +10,13 @@ interface HeaderLayoutProps {
   userImageUrl?: string;
 }
 
-export default function HeaderLayout({ 
-  isLoggedIn, 
-  userName, 
-  userImageUrl 
+export default function HeaderLayout({
+  isLoggedIn,
+  userName,
+  userImageUrl,
 }: HeaderLayoutProps) {
   return (
-    <header className="flex items-center justify-between px-4 pt-4">
+    <header className="flex items-center justify-between">
       {isLoggedIn ? (
         <MainProfile
           isLoggedIn={true}
@@ -26,7 +26,7 @@ export default function HeaderLayout({
       ) : (
         <div className="flex-1" /> // 로그인하지 않은 경우 왼쪽 공간 확보
       )}
-      <AlertButton isActive={false} />
+      <AlertButton />
     </header>
   );
-} 
+}

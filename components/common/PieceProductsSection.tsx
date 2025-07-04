@@ -11,7 +11,7 @@ export default function PieceProductsSection({
 }: PieceProductsSectionProps) {
   return (
     <div className="space-y-4">
-      <h2 className="text-2xl font-bold text-gray-900">조각 상품 TOP 5</h2>
+      <h2 className="text-2xl font-bold text-custom-green">PIECE TOP 5</h2>
       <PieceProductList products={products} />
     </div>
   );

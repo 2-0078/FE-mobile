@@ -4,7 +4,7 @@ import { TypingTitleWrapper } from '@/components/layout/TitleWrapper';
 import PageWrapper from '@/components/layout/PageWrapper';
 import HeaderLayout from '@/components/layout/HeaderLayout';
 import FundingProductsSection from '@/components/common/FundingProductsSection';
-import PieceProductsSection from '@/components/common/PieceProductsSection';
+import PieceProductsWrapper from '@/components/common/PieceProductsWrapper';
 import { auth } from '@/auth';
 import { MemberService } from '@/services/MemberService';
 import { ProductService } from '@/services/ProductService';
@@ -33,19 +33,22 @@ export default async function page() {
         userImageUrl={memberProfile?.profileImageUrl || undefined}
       />
       <PageWrapper>
-        <div className="space-y-2">
-          <TypingTitleWrapper
-            text="투자는 Piece of Cake"
-            speed={80}
-            delay={500}
-          />
-          <TypingTitleWrapper text="Trading Hub" speed={80} delay={2000} />
-        </div>
+        <TypingTitleWrapper
+          titleStrings={[
+            'Trading Hub',
+            'Piece of Cake',
+            '투자는 피스오브케이크',
+          ]}
+          subtitleString="Investment is Easy and Fun"
+          className="pb-5"
+          titleClassName="text-3xl text-custom-green"
+          subtitleClassName="text-sm text-white/80"
+        />
         <Search />
         <AmmountCard user={isAuth} />
         <div className="space-y-8">
           <FundingProductsSection products={fundingProducts} />
-          <PieceProductsSection products={pieceProducts} />
+          <PieceProductsWrapper products={pieceProducts} />
         </div>
       </PageWrapper>
     </>

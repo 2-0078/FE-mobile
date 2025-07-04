@@ -3,6 +3,7 @@ import {
   getFundingProduct,
   getPieceProductsList,
   getPieceProducts,
+  getPieceMarketPrice,
 } from '@/action/product-service';
 import { FundingProductType, PieceProductType } from '@/types/ProductTypes';
 
@@ -51,12 +52,47 @@ export class ProductService {
       // 1. 조각 상품 UUID 목록 가져오기
       const pieceProductsList = await getPieceProductsList();
 
-      // 2. 각 상품의 상세 정보 가져오기
+      // 2. 각 상품의 상세 정보와 시장가 가져오기
       const pieceProducts = await Promise.all(
         pieceProductsList.pieceProductUuidList.map(
           async (pieceUuid: string) => {
             try {
-              return await getPieceProducts(pieceUuid);
+              const product = await getPieceProducts(pieceUuid);
+
+              // 시장가 가져오기
+              try {
+                const marketPriceData = await getPieceMarketPrice(pieceUuid);
+                console.log(`Market price for ${pieceUuid}:`, marketPriceData);
+
+                // 시장가가 유효한 숫자인지 확인
+                const marketPrice = marketPriceData.marketPrice;
+                if (
+                  typeof marketPrice === 'number' &&
+                  !isNaN(marketPrice) &&
+                  marketPrice > 0
+                ) {
+                  return {
+                    ...product,
+                    piece: {
+                      ...product.piece,
+                      marketPrice: marketPrice,
+                    },
+                  };
+                } else {
+                  console.warn(
+                    `Invalid market price for ${pieceUuid}:`,
+                    marketPrice
+                  );
+                  return product;
+                }
+              } catch (marketPriceError) {
+                console.error(
+                  `Failed to fetch market price for ${pieceUuid}:`,
+                  marketPriceError
+                );
+                // 시장가 가져오기 실패 시 기존 데이터 반환
+                return product;
+              }
             } catch (error) {
               console.error(
                 `Failed to fetch piece product ${pieceUuid}:`,

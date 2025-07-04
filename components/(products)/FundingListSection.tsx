@@ -6,14 +6,19 @@ import { FundingProductType } from '@/types/ProductTypes';
 
 // 유틸리티 함수들
 const getDaysLeft = (deadline: string) => {
+  // 클라이언트 사이드에서만 실행
+  if (typeof window === 'undefined') {
+    return { days: 0, hours: 0, minutes: 0 };
+  }
+
   const now = new Date();
   const end = new Date(deadline);
   const diff = end.getTime() - now.getTime();
-  
+
   const days = Math.floor(diff / (1000 * 60 * 60 * 24));
   const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
   const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-  
+
   return { days, hours, minutes };
 };
 

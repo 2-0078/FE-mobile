@@ -1,11 +1,14 @@
 import React from 'react';
-import ItemCardSkeleton from './ItemCardSkeleton';
-import FundingSwiperSkeleton from './FundingSwiperSkeleton';
 
 export default function ProductGridSkeleton() {
   return (
-    <div className="rounded-2xl">
-      <FundingSwiperSkeleton />
+    <div className="grid grid-cols-2 gap-4">
+      {Array.from({ length: 6 }).map((_, index) => (
+        <div
+          key={index}
+          className="bg-gray-200 rounded-lg h-64 animate-pulse"
+        />
+      ))}
     </div>
   );
 }
