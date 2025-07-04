@@ -38,11 +38,17 @@ export default function FundingSwiper({ products }: FundingSwiperProps) {
   // 터치/마우스 이동
   const handleMove = (clientX: number) => {
     if (!isDragging) return;
-    
+
     const diff = clientX - startX;
     const containerWidth = containerRef.current?.offsetWidth || 0;
-    const movePercent = (diff / containerWidth) * 100;
-    
+
+    // gap-4 (16px)를 퍼센트로 계산
+    const gapPercent = (16 / containerWidth) * 100;
+    const itemWidthPercent = 100 + gapPercent; // 아이템 너비 + gap
+
+    // gap을 고려한 이동 거리 계산
+    const movePercent = (diff / containerWidth) * itemWidthPercent;
+
     setCurrentX(clientX);
     setTranslateX(movePercent);
   };
@@ -50,14 +56,14 @@ export default function FundingSwiper({ products }: FundingSwiperProps) {
   // 터치/마우스 종료
   const handleEnd = () => {
     if (!isDragging) return;
-    
+
     setIsDragging(false);
     setTranslateX(0);
-    
+
     const diff = currentX - startX;
     const containerWidth = containerRef.current?.offsetWidth || 0;
     const threshold = containerWidth * 0.3; // 30% 이상 스와이프해야 이동
-    
+
     if (Math.abs(diff) > threshold) {
       if (diff > 0 && currentIndex > 0) {
         // 오른쪽으로 스와이프 - 이전 아이템
@@ -114,14 +120,14 @@ export default function FundingSwiper({ products }: FundingSwiperProps) {
     );
   }
 
-  // 스와이프 중일 때는 실시간 translateX 적용, 아닐 때는 currentIndex 기반 계산
-  const currentTranslateX = isDragging 
-    ? translateX 
-    : -currentIndex * (100 + 4); // 4%는 gap-4의 대략적인 퍼센트
+  // gap을 고려한 이동 거리 계산
+  const containerWidth = containerRef.current?.offsetWidth || 0;
+  const gapPercent = containerWidth > 0 ? (16 / containerWidth) * 100 : 4;
+  const itemWidthPercent = 100 + gapPercent;
 
   return (
     <div className="relative w-full overflow-hidden">
-      <div 
+      <div
         ref={containerRef}
         className="flex gap-[16px] cursor-grab active:cursor-grabbing"
         onTouchStart={handleTouchStart}
@@ -134,20 +140,20 @@ export default function FundingSwiper({ products }: FundingSwiperProps) {
         style={{ userSelect: 'none' }}
       >
         {products.map((product, index) => (
-          <div 
-            key={product.productUuid} 
+          <div
+            key={product.productUuid}
             className="w-full flex-shrink-0 transition-transform duration-500 ease-in-out"
-            style={{ 
-              transform: isDragging 
-                ? `translateX(calc(-${currentIndex * 100}% + ${translateX}px))`
-                : `translateX(calc(-${currentIndex * 100}%))`
+            style={{
+              transform: isDragging
+                ? `translateX(calc(-${currentIndex * itemWidthPercent}% + ${translateX}px))`
+                : `translateX(calc(-${currentIndex * itemWidthPercent}%))`,
             }}
           >
             <FundingItemCard product={product} />
           </div>
         ))}
       </div>
-      
+
       {/* 인디케이터 */}
       {products.length > 1 && (
         <div className="flex justify-center mt-4 space-x-2">
@@ -164,4 +170,4 @@ export default function FundingSwiper({ products }: FundingSwiperProps) {
       )}
     </div>
   );
-} 
+}
