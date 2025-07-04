@@ -18,11 +18,7 @@ export default function HeaderLayout({
   return (
     <header className="flex items-center justify-between">
       {isLoggedIn ? (
-        <MainProfile
-          isLoggedIn={true}
-          userName={userName}
-          userImageUrl={userImageUrl}
-        />
+        <MainProfile userName={userName} userImageUrl={userImageUrl} />
       ) : (
         <div className="flex-1" /> // 로그인하지 않은 경우 왼쪽 공간 확보
       )}
