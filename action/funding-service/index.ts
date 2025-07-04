@@ -8,7 +8,6 @@ export const fundingParticipate = async (
 ) => {
   const session = await auth();
   const token = session?.user?.accessToken;
-  console.log(token);
   const response = await fetch(
     `${process.env.BASE_API_URL}/funding-service/api/v1/participation`,
     {
@@ -20,17 +19,17 @@ export const fundingParticipate = async (
       body: JSON.stringify({ fundingUuid, quantity }),
     }
   );
-  const data = (await response.json()) as CommonResponseType<any>;
-  console.log(data);
+  const data = (await response.json()) as CommonResponseType<{
+    result: unknown;
+  }>;
   return data.result;
 };
 
-export const getFundingWish = async (fundingUuid: string) => {
+export const getFundingWish = async (_: string) => {
   const session = await auth();
   const token = session?.user?.accessToken;
-  console.log(token);
   const response = await fetch(
-    `${process.env.BASE_API_URL}/funding-service/api/v1/funding/wish/${fundingUuid}`,
+    `${process.env.BASE_API_URL}/funding-service/api/v1/funding/wish/${_}`,
     {
       method: 'GET',
       headers: {
@@ -39,8 +38,9 @@ export const getFundingWish = async (fundingUuid: string) => {
       },
     }
   );
-  const data = (await response.json()) as CommonResponseType<boolean>;
-  console.log(data);
+  const data = (await response.json()) as CommonResponseType<{
+    result: boolean;
+  }>;
   return data.result;
 };
 
@@ -57,6 +57,8 @@ export const fundingWish = async (fundingUuid: string) => {
       },
     }
   );
-  const data = (await response.json()) as CommonResponseType<any>;
+  const data = (await response.json()) as CommonResponseType<{
+    result: unknown;
+  }>;
   return data.result;
 };

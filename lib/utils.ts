@@ -18,6 +18,16 @@ export function formatPrice(price: number) {
 }
 
 export function getDaysLeft(date: string) {
+  // 클라이언트 사이드에서만 실행
+  if (typeof window === 'undefined') {
+    return {
+      days: 0,
+      hours: 0,
+      minutes: 0,
+      seconds: 0,
+    };
+  }
+
   const dateObj = new Date(date);
   const today = new Date();
   let diffTime = dateObj.getTime() - today.getTime();

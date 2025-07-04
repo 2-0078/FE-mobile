@@ -1,31 +1,43 @@
-import React from 'react';
+'use client';
+import React, { useState } from 'react';
 import Image from 'next/image';
+import { CountdownTimer } from '../CountdownTimer';
+
+interface ItemCardImageProps {
+  thumbnail?: string;
+  remainingTime: string;
+  type: 'funding' | 'piece';
+}
 
 export default function ItemCardImage({
   remainingTime,
   thumbnail,
-}: {
-  remainingTime: string;
-  thumbnail: string;
-}) {
+  type,
+}: ItemCardImageProps) {
+  const [hasError, setHasError] = useState(false);
+
   return (
-    <div className="relative w-full h-40 rounded-t-xl">
-      <Image
-        src={thumbnail}
-        alt="artwork"
-        fill={true}
-        className=" object-cover object-top"
-      />
-      <div className="absolute top-3 left-4 bg-black/15 backdrop-blur-sm text-xs px-3 py-1 rounded-lg shadow text-white">
-        <p className="text-center">
-          남은 시간
-          <br />
-          {remainingTime}
-        </p>
-      </div>
-      <div className="absolute bottom-3 left-4 bg-custom-red text-white text-xs px-2 py-0.5 rounded shadow">
-        Highest Bid
-      </div>
+    <div className="relative w-full h-62 bg-gray-100 rounded-t-lg overflow-hidden">
+      {hasError ? (
+        <div className="w-full h-full flex items-center justify-center bg-gray-200">
+          <span className="text-gray-500">이미지 로드 실패</span>
+        </div>
+      ) : (
+        <Image
+          src={thumbnail || '/example.png'}
+          alt="상품 이미지"
+          fill={true}
+          className="object-cover rounded-t-lg"
+          onError={() => {
+            setHasError(true);
+          }}
+        />
+      )}
+      {type === 'funding' && (
+        <div className="absolute top-4 left-4 flex items-center justify-center z-10 text-white text-[0.725rem]">
+          <CountdownTimer endDateTime={remainingTime} variant="card" />
+        </div>
+      )}
     </div>
   );
 }

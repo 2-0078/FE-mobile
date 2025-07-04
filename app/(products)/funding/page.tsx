@@ -47,11 +47,15 @@ export default async function FundingPage({
     search: selectedSearch,
     page: selectedPage,
   });
-  const fundingProducts = await Promise.all(
-    fundingProductsUuidList.fundingUuidList.map(async (Uuid) => {
-      return await getFundingProduct(Uuid);
-    })
-  );
+
+  // null 체크 추가
+  const fundingProducts = fundingProductsUuidList?.fundingUuidList 
+    ? await Promise.all(
+        fundingProductsUuidList.fundingUuidList.map(async (Uuid) => {
+          return await getFundingProduct(Uuid);
+        })
+      )
+    : [];
 
   return (
     <div className=" pb-20">
@@ -91,7 +95,7 @@ export default async function FundingPage({
         <p className="text-sm text-gray-400">
           총{' '}
           <span className="text-green-400 font-medium">
-            {fundingProductsUuidList.totalElements}
+            {fundingProductsUuidList?.totalElements || 0}
           </span>
           개의 상품
         </p>
@@ -99,7 +103,7 @@ export default async function FundingPage({
 
       <FundingListSection fundingProducts={fundingProducts} />
 
-      {fundingProductsUuidList.totalElements == 0 && (
+      {(fundingProductsUuidList?.totalElements === 0 || fundingProducts.length === 0) && (
         <div className="text-center py-12">
           <div className="text-gray-500 mb-2">검색된 상품이 없습니다</div>
           <div className="text-sm text-gray-600">
@@ -109,7 +113,7 @@ export default async function FundingPage({
       )}
 
       {/* Pagination */}
-      <Pagenation totalPages={fundingProductsUuidList.totalPage} />
+      <Pagenation totalPages={fundingProductsUuidList?.totalPage || 1} />
       <BottomNavbar />
     </div>
   );

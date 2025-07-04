@@ -21,9 +21,7 @@ export default function Header({
       <div className="justify-self-center">
         <TitleWrapper className="text-xl text-center">{title}</TitleWrapper>
       </div>
-      <div className="justify-self-end">
-        {isAlert && <AlertButton isActive={true} />}
-      </div>
+      <div className="justify-self-end">{isAlert && <AlertButton />}</div>
     </header>
   );
 }

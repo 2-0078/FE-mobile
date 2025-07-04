@@ -4,11 +4,16 @@ import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { getMemberBalance } from '@/action/payment-service';
 
-export default function AmmountCard() {
+export default function AmmountCard({ user }: { user: boolean }) {
   const [balance, setBalance] = useState<{ amount: number } | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!user) {
+      setLoading(false);
+      return;
+    }
+
     const fetchBalance = async () => {
       try {
         const balanceData = await getMemberBalance();
@@ -22,7 +27,11 @@ export default function AmmountCard() {
     };
 
     fetchBalance();
-  }, []);
+  }, [user]);
+
+  if (!user) {
+    return null;
+  }
 
   if (loading) {
     return (
