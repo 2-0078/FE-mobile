@@ -9,6 +9,11 @@ export default function AmmountCard({ user }: { user: boolean }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!user) {
+      setLoading(false);
+      return;
+    }
+
     const fetchBalance = async () => {
       try {
         const balanceData = await getMemberBalance();
@@ -22,7 +27,11 @@ export default function AmmountCard({ user }: { user: boolean }) {
     };
 
     fetchBalance();
-  }, []);
+  }, [user]);
+
+  if (!user) {
+    return null;
+  }
 
   if (loading) {
     return (
@@ -33,10 +42,6 @@ export default function AmmountCard({ user }: { user: boolean }) {
         </div>
       </div>
     );
-  }
-
-  if (!user) {
-    return null;
   }
 
   return (
