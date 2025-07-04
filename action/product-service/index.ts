@@ -36,7 +36,7 @@ export const getFundingProductsList = async (params: {
 }) => {
   const { sort, main, sub, search, page, size, direction } = params;
   const queryParams = new URLSearchParams();
-  
+
   if (sort) queryParams.append('sort', sort);
   if (main) queryParams.append('main', main);
   if (sub) queryParams.append('sub', sub);
@@ -44,7 +44,7 @@ export const getFundingProductsList = async (params: {
   if (page) queryParams.append('page', page.toString());
   if (size) queryParams.append('size', size.toString());
   if (direction) queryParams.append('direction', direction);
-  
+
   const response = await fetch(
     `${
       process.env.BASE_API_URL

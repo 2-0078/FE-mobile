@@ -11,14 +11,12 @@ export class ProductService {
    * 공모 상품 목록과 상세 정보를 가져옵니다.
    */
   static async getFundingProducts(
-    params: { page?: number; size?: number } = {}
-  ) {
+    page: number = 1,
+    size: number = 10
+  ): Promise<FundingProductType[]> {
     try {
       // 1. 공모 상품 UUID 목록 가져오기
-      const fundingProductsList = await getFundingProductsList({
-        page: params.page || 1,
-        size: params.size || 10,
-      });
+      const fundingProductsList = await getFundingProductsList({ page, size });
 
       // 2. 각 상품의 상세 정보 가져오기
       const fundingProducts = await Promise.all(
@@ -36,29 +34,19 @@ export class ProductService {
       );
 
       // 3. null 값 필터링
-      const validFundingProducts = fundingProducts.filter(
+      return fundingProducts.filter(
         (product) => product !== null
       ) as FundingProductType[];
-
-      return {
-        products: validFundingProducts,
-        totalElements: fundingProductsList.totalElements,
-        totalPage: fundingProductsList.totalPage,
-      };
     } catch (error) {
       console.error('Failed to fetch funding products:', error);
-      return {
-        products: [],
-        totalElements: 0,
-        totalPage: 0,
-      };
+      return [];
     }
   }
 
   /**
    * 조각 상품 목록과 상세 정보를 가져옵니다.
    */
-  static async getPieceProducts(params: { page?: number; size?: number } = {}) {
+  static async getPieceProducts(): Promise<PieceProductType[]> {
     try {
       // 1. 조각 상품 UUID 목록 가져오기
       const pieceProductsList = await getPieceProductsList();
@@ -81,41 +69,31 @@ export class ProductService {
       );
 
       // 3. null 값 필터링
-      const validPieceProducts = pieceProducts.filter(
+      return pieceProducts.filter(
         (product) => product !== null
       ) as PieceProductType[];
-
-      return {
-        products: validPieceProducts,
-        totalElements: pieceProductsList.totalElements,
-        totalPage: pieceProductsList.totalPage,
-      };
     } catch (error) {
       console.error('Failed to fetch piece products:', error);
-      return {
-        products: [],
-        totalElements: 0,
-        totalPage: 0,
-      };
+      return [];
     }
   }
 
   /**
-   * 메인 페이지용 상품 데이터를 가져옵니다.
+   * 공모 상품과 조각 상품을 동시에 가져옵니다.
    */
-  static async getMainPageProducts() {
+  static async getAllProducts(page: number = 1, size: number = 10) {
     try {
-      const [fundingResult, pieceResult] = await Promise.all([
-        this.getFundingProducts({ page: 1, size: 10 }),
-        this.getPieceProducts({ page: 1, size: 10 }),
+      const [fundingProducts, pieceProducts] = await Promise.all([
+        this.getFundingProducts(page, size),
+        this.getPieceProducts(),
       ]);
 
       return {
-        fundingProducts: fundingResult.products,
-        pieceProducts: pieceResult.products,
+        fundingProducts,
+        pieceProducts,
       };
     } catch (error) {
-      console.error('Failed to fetch main page products:', error);
+      console.error('Failed to fetch all products:', error);
       return {
         fundingProducts: [],
         pieceProducts: [],

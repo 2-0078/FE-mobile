@@ -5,24 +5,32 @@ import PageWrapper from '@/components/layout/PageWrapper';
 import HeaderLayout from '@/components/layout/HeaderLayout';
 import FundingProductsSection from '@/components/common/FundingProductsSection';
 import PieceProductsSection from '@/components/common/PieceProductsSection';
-import { AuthService } from '@/services/AuthService';
+import { auth } from '@/auth';
+import { MemberService } from '@/services/MemberService';
 import { ProductService } from '@/services/ProductService';
 import AmmountCard from '@/components/AmmountCard';
 
 export default async function page() {
-  // AuthService를 사용하여 사용자 정보 가져오기
-  const { isAuthenticated, profile } = await AuthService.getCurrentUser();
+  const session = await auth();
+  const isAuth = !!session?.user;
+  let memberProfile = undefined;
+
+  if (isAuth) {
+    memberProfile = await MemberService.getMemberProfile(
+      session.user.memberUuid
+    );
+  }
 
   // ProductService를 사용하여 상품 데이터 가져오기
   const { fundingProducts, pieceProducts } =
-    await ProductService.getMainPageProducts();
+    await ProductService.getAllProducts(1, 10);
 
   return (
     <>
       <HeaderLayout
-        isLoggedIn={isAuthenticated}
-        userName={profile?.nickname || undefined}
-        userImageUrl={profile?.profileImageUrl || undefined}
+        isLoggedIn={isAuth}
+        userName={memberProfile?.nickname || undefined}
+        userImageUrl={memberProfile?.profileImageUrl || undefined}
       />
       <PageWrapper>
         <TitleWrapper>
@@ -34,7 +42,7 @@ export default async function page() {
           Traiding Hub
         </TitleWrapper>
         <Search />
-        <AmmountCard user={isAuthenticated} />
+        <AmmountCard user={isAuth} />
         <div className="space-y-8">
           <FundingProductsSection products={fundingProducts} />
           <PieceProductsSection products={pieceProducts} />
