@@ -38,9 +38,8 @@ export default function SignupSteps() {
         const errorMessage = res.message || '회원가입에 실패했습니다.';
         alertContext?.error(errorMessage);
       }
-    } catch (error) {
-      const errorMessage = '회원가입 중 오류가 발생했습니다.';
-      alertContext?.error(errorMessage);
+    } catch {
+      console.error('Error during signup');
     }
   };
 

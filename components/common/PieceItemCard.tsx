@@ -1,24 +1,13 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Card } from '../ui/card';
 import AnimatedPrice from './AnimatedPrice';
-import StockPriceInfo from './StockPriceInfo';
-import RemainingPieces from './RemainingPieces';
-import { CountdownTimer } from '../CountdownTimer';
 import ItemCardImage from './ItemCardImage';
 import ItemCardInfo from './ItemCardInfo';
 import { getMarketPrice } from '@/action/market-price-service';
 import { PieceProductType, MarketPriceData } from '@/types/ProductTypes';
 import { Button } from '../ui/button';
-import {
-  Heart,
-  Share2,
-  ArrowUpCircle,
-  ArrowDownCircle,
-  TrendingUp,
-  TrendingDown,
-} from 'lucide-react';
+import { TrendingUp, TrendingDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface PieceItemCardProps {
