@@ -38,42 +38,59 @@ export const getFundingProductsList = async (params: {
   const queryParams = new URLSearchParams();
 
   if (sort) queryParams.append('sort', sort);
-  if (main) queryParams.append('main', main);
-  if (sub) queryParams.append('sub', sub);
+  if (main && main !== '전체') queryParams.append('main', main);
+  if (sub && sub !== '전체') queryParams.append('sub', sub);
   if (search) queryParams.append('search', search);
   if (page) queryParams.append('page', page.toString());
   if (size) queryParams.append('size', size.toString());
   if (direction) queryParams.append('direction', direction);
 
-  const response = await fetch(
-    `${
-      process.env.BASE_API_URL
-    }/product-read-service/api/v1/funding/list?${queryParams.toString()}`,
-    {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }
-  );
+  const baseUrl = process.env.BASE_API_URL || 'http://localhost:8080';
+  const url = `${baseUrl}/product-read-service/api/v1/funding/list?${queryParams.toString()}`;
+
+  console.log('Funding products API URL:', url);
+  console.log('Funding products API params:', params);
+
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  console.log('Funding products API response status:', response.status);
+
   const data =
     (await response.json()) as CommonResponseType<FundingListResponseType>;
+
+  console.log('Funding products API response data:', data);
+
   return data.result;
 };
 
 export const getFundingProduct = async (id: string) => {
-  const response = await fetch(
-    `${process.env.BASE_API_URL}/product-read-service/api/v1/funding/list/${id}`,
-    {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }
+  const baseUrl = process.env.BASE_API_URL || 'http://localhost:8080';
+  const url = `${baseUrl}/product-read-service/api/v1/funding/list/${id}`;
+
+  console.log('Individual funding product API URL:', url);
+
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  console.log(
+    'Individual funding product API response status:',
+    response.status
   );
+
   const data =
     (await response.json()) as CommonResponseType<FundingProductType>;
-  // console.log(data.result);
+
+  console.log('Individual funding product API response data:', data);
+
   return data.result;
 };
 

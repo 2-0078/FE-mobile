@@ -7,13 +7,20 @@ import ItemCardImage from './ItemCardImage';
 import ItemCardInfo from './ItemCardInfo';
 import dynamic from 'next/dynamic';
 import { Button } from '../ui/button';
-import { ArrowDownCircle, ArrowUpCircle } from 'lucide-react';
+import {
+  ArrowDownCircle,
+  ArrowUpCircle,
+  TrendingUp,
+  TrendingDown,
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 // AnimatedPrice를 동적으로 import
 const AnimatedPrice = dynamic(() => import('./AnimatedPrice'), {
   ssr: false,
-  loading: () => <div className="h-8 bg-gray-200 animate-pulse rounded" />,
+  loading: () => (
+    <div className="h-4 bg-gradient-to-r from-gray-100 to-gray-200 animate-pulse rounded" />
+  ),
 });
 
 interface PieceItemCardProps {
@@ -41,7 +48,7 @@ export default function PieceItemCard({ product }: PieceItemCardProps) {
       setIsLoadingMarketData(true);
       try {
         const response = await getMarketPrice(product.productUuid);
-        console.log(response);
+        console.log('Market price response:', response);
         if (response?.isSuccess && response.result) {
           setMarketData(response.result);
         }
@@ -55,12 +62,21 @@ export default function PieceItemCard({ product }: PieceItemCardProps) {
     fetchMarketData();
   }, [product.productUuid]);
 
-  // 주가 데이터가 있는 경우 표시
+  // 주가 데이터가 있는 경우 표시 (더 명확한 조건)
   const hasMarketData =
     marketData &&
-    marketData.stckPrpr &&
-    marketData.stckHgpr &&
-    marketData.stckLwpr;
+    typeof marketData.stckPrpr === 'number' &&
+    typeof marketData.stckHgpr === 'number' &&
+    typeof marketData.stckLwpr === 'number';
+
+  console.log('Market data state:', {
+    marketData,
+    isLoadingMarketData,
+    hasMarketData,
+    stckPrpr: marketData?.stckPrpr,
+    stckHgpr: marketData?.stckHgpr,
+    stckLwpr: marketData?.stckLwpr,
+  });
 
   return (
     <div className="w-full rounded-lg shadow-lg bg-white overflow-hidden relative mx-auto items-center justify-center">
@@ -80,41 +96,42 @@ export default function PieceItemCard({ product }: PieceItemCardProps) {
           priceComponent={<AnimatedPrice price={displayPrice} />}
         />
 
-        {/* 주가 정보 표시 */}
-        {isLoadingMarketData && (
-          <div className="mt-3 pt-3 border-t border-gray-100">
-            <div className="animate-pulse">
-              <div className="h-4 bg-gray-200 rounded mb-2"></div>
-              <div className="h-3 bg-gray-200 rounded w-3/4"></div>
+        {/* 주가 정보 표시 - 로딩 중에도 기본 레이아웃 유지 */}
+        <div className="px-4 mt-[-10px] pb-3 flex justify-start items-center gap-2 min-h-[20px]">
+          {isLoadingMarketData ? (
+            // 로딩 중일 때 부드러운 스켈레톤 애니메이션
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-gradient-to-r from-gray-200 to-gray-300 animate-pulse rounded-full"></div>
+              <div className="w-16 h-3 bg-gradient-to-r from-gray-200 to-gray-300 animate-pulse rounded"></div>
+              <div className="w-12 h-3 bg-gradient-to-r from-gray-200 to-gray-300 animate-pulse rounded"></div>
             </div>
-          </div>
-        )}
-
-        {hasMarketData && marketData && (
-          <div className="px-4 mt-[-10px] pb-3 flex justify-start items-center gap-2">
-            {marketData.prdyVrss > 0 ? (
-              <ArrowUpCircle className="w-3 h-3" color="red" />
-            ) : (
-              <ArrowDownCircle className="w-3 h-3" color="blue" />
-            )}
-            <p
-              className={cn(
-                'text-black text-xs font-bold',
-                marketData.prdyVrss > 0 ? 'text-red-500' : 'text-blue-500'
+          ) : hasMarketData && marketData ? (
+            // 실제 데이터가 있을 때
+            <>
+              {marketData.prdyVrss > 0 ? (
+                <TrendingUp className="w-3 h-3 text-red-500" />
+              ) : (
+                <TrendingDown className="w-3 h-3 text-blue-500" />
               )}
-            >
-              {marketData.prdyVrss.toLocaleString()}원
-            </p>
-            <p
-              className={cn(
-                'text-black text-xs font-bold',
-                marketData.prdyCrt > 0 ? 'text-red-500' : 'text-blue-500'
-              )}
-            >
-              ({marketData.prdyCrt.toFixed(2)}%)
-            </p>
-          </div>
-        )}
+              <p
+                className={cn(
+                  'text-xs font-bold',
+                  marketData.prdyVrss > 0 ? 'text-red-500' : 'text-blue-500'
+                )}
+              >
+                {marketData.prdyVrss.toLocaleString()}원
+              </p>
+              <p
+                className={cn(
+                  'text-xs font-bold',
+                  marketData.prdyCrt > 0 ? 'text-red-500' : 'text-blue-500'
+                )}
+              >
+                ({marketData.prdyCrt.toFixed(2)}%)
+              </p>
+            </>
+          ) : null}
+        </div>
       </div>
       {/* 상세보기 버튼 */}
       <div className="absolute bottom-0 right-0 p-4 flex justify-center items-center">

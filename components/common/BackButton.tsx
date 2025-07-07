@@ -7,7 +7,7 @@ export default function BackButton() {
   const router = useRouter();
   return (
     <button
-      className="bg-custom-slate rounded-full w-12 h-12"
+      className="bg-custom-green rounded-full w-12 h-12"
       onClick={() => router.back()}
     >
       <ArrowBackIcon className="mx-auto" />

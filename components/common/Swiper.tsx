@@ -57,13 +57,20 @@ export default function Swiper<T>({
         style={{
           userSelect: 'none',
           touchAction: 'pan-y pinch-zoom',
+          willChange: 'transform',
+          backfaceVisibility: 'hidden',
+          perspective: '1000px',
         }}
       >
         {items.map((item, index) => (
           <li
             key={index}
-            className={`w-full flex-shrink-0 transition-transform duration-500 ease-in-out ${itemClassName}`}
-            style={getSwiperStyles(state, containerRef, config.gap || 16)}
+            className={`w-full flex-shrink-0 ${itemClassName}`}
+            style={{
+              ...getSwiperStyles(state, containerRef, config.gap || 16),
+              willChange: 'transform',
+              backfaceVisibility: 'hidden',
+            }}
           >
             {renderItem(item, index)}
           </li>

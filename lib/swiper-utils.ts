@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, RefObject } from 'react';
+import { useState, useEffect, useRef, RefObject, useCallback } from 'react';
 import React from 'react';
 
 export interface SwiperState {
@@ -33,7 +33,7 @@ export function useSwiper(
   itemsLength: number,
   config: SwiperConfig = {}
 ): [SwiperState, SwiperHandlers, RefObject<HTMLUListElement | null>] {
-  const { autoPlayInterval = 3000, threshold = 0.3, gap = 16 } = config;
+  const { autoPlayInterval = 3000, threshold = 0.05, gap = 16 } = config;
 
   const [state, setState] = useState<SwiperState>({
     currentIndex: 0,
@@ -44,6 +44,7 @@ export function useSwiper(
   });
 
   const containerRef = useRef<HTMLUListElement | null>(null);
+  const animationFrameRef = useRef<number | undefined>(undefined);
 
   // 자동 재생
   useEffect(() => {
@@ -62,39 +63,54 @@ export function useSwiper(
   }, [itemsLength, state.isDragging, autoPlayInterval]);
 
   // 터치/마우스 시작
-  const handleStart = (clientX: number) => {
+  const handleStart = useCallback((clientX: number) => {
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
+    }
+
     setState((prev) => ({
       ...prev,
       isDragging: true,
       startX: clientX,
       currentX: clientX,
+      translateX: 0,
     }));
-  };
+  }, []);
 
-  // 터치/마우스 이동
-  const handleMove = (clientX: number) => {
-    if (!state.isDragging) return;
+  // 터치/마우스 이동 - requestAnimationFrame으로 최적화
+  const handleMove = useCallback(
+    (clientX: number) => {
+      if (!state.isDragging) return;
 
-    const diff = clientX - state.startX;
-    const containerWidth = containerRef.current?.offsetWidth || 0;
+      animationFrameRef.current = requestAnimationFrame(() => {
+        const diff = clientX - state.startX;
+        const containerWidth = containerRef.current?.offsetWidth || 0;
 
-    // gap을 퍼센트로 계산
-    const gapPercent = containerWidth > 0 ? (gap / containerWidth) * 100 : 4;
-    const itemWidthPercent = 100 + gapPercent;
+        // gap을 퍼센트로 계산
+        const gapPercent =
+          containerWidth > 0 ? (gap / containerWidth) * 100 : 4;
+        const itemWidthPercent = 100 + gapPercent;
 
-    // gap을 고려한 이동 거리 계산
-    const movePercent = (diff / containerWidth) * itemWidthPercent;
+        // gap을 고려한 이동 거리 계산
+        const movePercent = (diff / containerWidth) * itemWidthPercent;
 
-    setState((prev) => ({
-      ...prev,
-      currentX: clientX,
-      translateX: movePercent,
-    }));
-  };
+        setState((prev) => ({
+          ...prev,
+          currentX: clientX,
+          translateX: movePercent,
+        }));
+      });
+    },
+    [state.isDragging, state.startX, gap]
+  );
 
   // 터치/마우스 종료
-  const handleEnd = () => {
+  const handleEnd = useCallback(() => {
     if (!state.isDragging) return;
+
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
+    }
 
     const diff = state.currentX - state.startX;
     const containerWidth = containerRef.current?.offsetWidth || 0;
@@ -118,55 +134,79 @@ export function useSwiper(
       translateX: 0,
       currentIndex: newIndex,
     }));
-  };
+  }, [
+    state.isDragging,
+    state.currentX,
+    state.startX,
+    state.currentIndex,
+    threshold,
+    itemsLength,
+  ]);
 
-  // 터치 이벤트
-  const handleTouchStart = (e: React.TouchEvent) => {
-    // 터치 이벤트의 기본 동작을 막지 않음
-    handleStart(e.touches[0].clientX);
-  };
+  // 터치 이벤트 - passive 이벤트로 최적화
+  const handleTouchStart = useCallback(
+    (e: React.TouchEvent) => {
+      handleStart(e.touches[0].clientX);
+    },
+    [handleStart]
+  );
 
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (!state.isDragging) return;
-    // passive event listener와 충돌을 피하기 위해 preventDefault 제거
-    // 대신 스크롤 방지를 위해 CSS로 처리
-    handleMove(e.touches[0].clientX);
-  };
+  const handleTouchMove = useCallback(
+    (e: React.TouchEvent) => {
+      if (!state.isDragging) return;
+      handleMove(e.touches[0].clientX);
+    },
+    [state.isDragging, handleMove]
+  );
 
-  const handleTouchEnd = () => {
-    // 터치 이벤트의 기본 동작을 막지 않음
+  const handleTouchEnd = useCallback(() => {
     handleEnd();
-  };
+  }, [handleEnd]);
 
   // 마우스 이벤트
-  const handleMouseDown = (e: React.MouseEvent) => {
-    e.preventDefault();
-    handleStart(e.clientX);
-  };
+  const handleMouseDown = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      handleStart(e.clientX);
+    },
+    [handleStart]
+  );
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!state.isDragging) return;
-    e.preventDefault();
-    handleMove(e.clientX);
-  };
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent) => {
+      if (!state.isDragging) return;
+      e.preventDefault();
+      handleMove(e.clientX);
+    },
+    [state.isDragging, handleMove]
+  );
 
-  const handleMouseUp = () => {
+  const handleMouseUp = useCallback(() => {
     handleEnd();
-  };
+  }, [handleEnd]);
 
   // 마우스가 컨테이너를 벗어날 때
-  const handleMouseLeave = () => {
+  const handleMouseLeave = useCallback(() => {
     if (state.isDragging) {
       handleEnd();
     }
-  };
+  }, [state.isDragging, handleEnd]);
 
-  const setCurrentIndex = (index: number) => {
+  const setCurrentIndex = useCallback((index: number) => {
     setState((prev) => ({
       ...prev,
       currentIndex: index,
     }));
-  };
+  }, []);
+
+  // cleanup
+  useEffect(() => {
+    return () => {
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
+  }, []);
 
   const handlers: SwiperHandlers = {
     handleStart,
@@ -185,7 +225,7 @@ export function useSwiper(
   return [state, handlers, containerRef];
 }
 
-// 스타일 계산 유틸리티
+// 스타일 계산 유틸리티 - 하드웨어 가속 적용
 export function getSwiperStyles(
   state: SwiperState,
   containerRef: RefObject<HTMLUListElement | null>,
@@ -198,8 +238,13 @@ export function getSwiperStyles(
   return {
     transform: state.isDragging
       ? `translateX(calc(-${state.currentIndex * itemWidthPercent}% + ${state.translateX}px))`
-      : `translateX(calc(-${state.currentIndex * itemWidthPercent}%))`,
-    userSelect: 'none' as const,
+      : `translateX(-${state.currentIndex * itemWidthPercent}%)`,
+    transition: state.isDragging
+      ? 'none'
+      : 'transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+    willChange: 'transform',
+    backfaceVisibility: 'hidden',
+    perspective: '1000px',
   };
 }
 

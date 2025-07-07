@@ -10,6 +10,7 @@ import { CategoryType } from '@/types/ProductTypes';
 import Pagenation from '@/components/common/Pagenation';
 import { FundingListSection } from '@/components/(products)/FundingListSection';
 import SearchBar from '@/components/common/SearchBar';
+
 export default async function FundingPage({
   searchParams,
 }: {
@@ -30,10 +31,19 @@ export default async function FundingPage({
   const selectedPage = params.page || 1;
   const filters = ['최신순', '인기순', '가격순'];
 
+  console.log('Funding page params:', {
+    selectedSort,
+    selectedMainCategory,
+    selectedSubCategory,
+    selectedSearch,
+    selectedPage,
+  });
+
   const mainCategories = [
     { id: '전체', categoryName: '전체' },
     ...(await getMainCategories()),
   ];
+
   let subCategories: CategoryType[] = [];
   if (selectedMainCategory != '전체') {
     subCategories = [
@@ -41,6 +51,12 @@ export default async function FundingPage({
       ...(await getSubCategories(selectedMainCategory)),
     ];
   }
+
+  console.log('Categories loaded:', {
+    mainCategories: mainCategories.length,
+    subCategories: subCategories.length,
+  });
+
   const fundingProductsUuidList = await getFundingProductsList({
     main: selectedMainCategory,
     sub: selectedSubCategory,
@@ -48,14 +64,23 @@ export default async function FundingPage({
     page: selectedPage,
   });
 
+  console.log('Funding products UUID list:', fundingProductsUuidList);
+
   // null 체크 추가
-  const fundingProducts = fundingProductsUuidList?.fundingUuidList 
+  const fundingProducts = fundingProductsUuidList?.fundingUuidList
     ? await Promise.all(
         fundingProductsUuidList.fundingUuidList.map(async (Uuid) => {
-          return await getFundingProduct(Uuid);
+          const product = await getFundingProduct(Uuid);
+          console.log('Individual product loaded:', product?.productName);
+          return product;
         })
       )
     : [];
+
+  console.log('Final funding products:', {
+    count: fundingProducts.length,
+    products: fundingProducts.map((p) => p?.productName),
+  });
 
   return (
     <div className=" pb-20">
@@ -103,7 +128,8 @@ export default async function FundingPage({
 
       <FundingListSection fundingProducts={fundingProducts} />
 
-      {(fundingProductsUuidList?.totalElements === 0 || fundingProducts.length === 0) && (
+      {(fundingProductsUuidList?.totalElements === 0 ||
+        fundingProducts.length === 0) && (
         <div className="text-center py-12">
           <div className="text-gray-500 mb-2">검색된 상품이 없습니다</div>
           <div className="text-sm text-gray-600">

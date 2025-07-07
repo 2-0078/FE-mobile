@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import AlertProvider from '@/lib/Alert/AlertProvider';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -13,7 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased font-pretendard">{children}</body>
+      <body className="antialiased font-pretendard">
+        <AlertProvider>{children}</AlertProvider>
+      </body>
     </html>
   );
 }
