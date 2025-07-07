@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
       new URL(
         'https://pieceofcake-server-images.s3.ap-northeast-2.amazonaws.com/**'
       ),
+      new URL('https://kream-phinf.pstatic.net/**'),
     ],
   },
 };
