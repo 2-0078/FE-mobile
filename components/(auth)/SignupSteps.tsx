@@ -1,8 +1,9 @@
 'use client';
-import React from 'react';
+import React, { useContext } from 'react';
 import { useRouter } from 'next/navigation';
 import { signup } from '@/action/auth-service';
 import { useFunnel } from '@/action/funnel';
+import { AlertContext } from '@/lib/Alert';
 
 import Stepper from './Stepper';
 import SignupInfoSection from './SignupInfoSection';
@@ -13,6 +14,7 @@ import NicknameSection from './NicknameSection';
 
 export default function SignupSteps() {
   const router = useRouter();
+  const alertContext = useContext(AlertContext);
   const { Funnel, Step, setStep, formData, setFormData, currentStep } =
     useFunnel('step1');
 
@@ -20,15 +22,24 @@ export default function SignupSteps() {
     setStep(step);
     setFormData({ ...formData, ...data });
   };
+
   const handleSubmit = async (data: Record<string, string>) => {
-    const signupData = { ...formData, ...data };
-    setFormData(signupData);
-    const res = await signup(signupData);
-    if (res.isSuccess) {
-      alert('회원가입 성공');
-      router.push('/login');
-    } else {
-      alert(res.message);
+    try {
+      const signupData = { ...formData, ...data };
+      setFormData(signupData);
+      const res = await signup(signupData);
+
+      if (res.isSuccess) {
+        alertContext?.basic('회원가입이 완료되었습니다.');
+        setTimeout(() => {
+          router.push('/login');
+        }, 1000);
+      } else {
+        const errorMessage = res.message || '회원가입에 실패했습니다.';
+        alertContext?.error(errorMessage);
+      }
+    } catch {
+      console.error('Error during signup');
     }
   };
 

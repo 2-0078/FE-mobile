@@ -22,28 +22,31 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: { label: 'Password', type: 'password' },
       },
       authorize: async (credentials) => {
-        let user = null;
+        if (!credentials.email || !credentials.password) {
+          throw new Error('이메일과 비밀번호를 입력해주세요.');
+        }
 
-        if (credentials.email && credentials.password) {
+        try {
           const res = await signin(
             credentials.email as string,
             credentials.password as string
           );
 
-          if (res.isSuccess) {
-            user = res.result;
+          if (res.isSuccess && res.result) {
+            return {
+              ...res.result,
+              memberUuid: res.result.memberUuid,
+              accessToken: res.result.accessToken,
+            };
+          } else {
+            throw new Error(res.message || '로그인에 실패했습니다.');
           }
+        } catch (error) {
+          if (error instanceof Error) {
+            throw new Error(error.message);
+          }
+          throw new Error('로그인 중 오류가 발생했습니다.');
         }
-
-        if (!user) {
-          throw new Error('로그인에 실패했습니다.');
-        }
-        // return user object with their profile data
-        return {
-          ...user,
-          memberUuid: user.memberUuid,
-          accessToken: user.accessToken,
-        };
       },
     }),
   ],
@@ -61,6 +64,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         accessToken: string;
       };
       return session;
+    },
+    redirect({ url, baseUrl }) {
+      // callbackUrl이 있으면 해당 URL로, 없으면 홈으로
+      if (url.startsWith('/')) return `${baseUrl}${url}`;
+      else if (new URL(url).origin === baseUrl) return url;
+      return baseUrl;
     },
   },
   pages: {

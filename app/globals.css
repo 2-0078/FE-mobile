@@ -183,3 +183,131 @@
     -ms-overflow-style: none; /* Internet Explorer 10+ */
   }
 }
+
+/* Alert 컴포넌트 스타일 */
+.toast-basic {
+  @apply bg-white text-black px-4 py-3 rounded-lg shadow-lg mx-auto;
+  min-width: fit-content;
+  max-width: 90vw;
+}
+
+.toast-error {
+  @apply bg-red-500 text-white px-4 py-3 rounded-lg shadow-lg mx-auto;
+  min-width: fit-content;
+  max-width: 90vw;
+}
+
+/* Alert 애니메이션 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes headShake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-5px);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(5px);
+  }
+}
+
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(5deg);
+  }
+  75% {
+    transform: rotate(-5deg);
+  }
+}
+
+@keyframes heartBeat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate-fadeOut {
+  animation: fadeOut 0.3s ease-out;
+}
+
+.animate-headShake {
+  animation: headShake 0.5s ease-in-out;
+}
+
+.animate-wiggle {
+  animation: wiggle 0.5s ease-in-out;
+}
+
+.animate-heartBeat {
+  animation: heartBeat 0.5s ease-in-out;
+}
+
+/* 자동완성 스타일 오버라이드 */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px transparent inset !important;
+  -webkit-text-fill-color: white !important;
+  transition: background-color 5000s ease-in-out 0s;
+  background-color: transparent !important;
+}
+
+/* Chrome, Safari, Edge */
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+  -webkit-text-fill-color: white !important;
+}
+
+/* Firefox */
+input:-moz-autofill {
+  background-color: transparent !important;
+  color: white !important;
+}
+
+/* 모든 브라우저용 */
+input:autofill {
+  background-color: transparent !important;
+  color: white !important;
+}

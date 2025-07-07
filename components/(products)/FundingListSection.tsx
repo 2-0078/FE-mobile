@@ -1,8 +1,8 @@
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Puzzle, Clock } from 'lucide-react';
 import { FundingProductType } from '@/types/ProductTypes';
+import ImageWithFallback from '@/components/common/ImageWithFallback';
 
 // 유틸리티 함수들
 const getDaysLeft = (deadline: string) => {
@@ -26,6 +26,14 @@ const formatPrice = (price: number) => {
   return new Intl.NumberFormat('ko-KR').format(price);
 };
 
+// 이미지 URL을 가져오는 함수
+const getProductImage = (product: FundingProductType) => {
+  if (!product.images || product.images.length === 0) {
+    return '/example.png'; // 기본 이미지
+  }
+  return product.images[0].imageUrl;
+};
+
 export function FundingListSection({
   fundingProducts,
 }: {
@@ -43,6 +51,10 @@ export function FundingListSection({
         const isHourLeft = daysLeft.days == 0 && daysLeft.hours > 0;
         const isExpired =
           daysLeft.days == 0 && daysLeft.hours == 0 && daysLeft.minutes < 5;
+
+        const imageUrl = getProductImage(product);
+        console.log(imageUrl);
+
         return (
           <div
             key={product.funding.fundingUuid}
@@ -50,12 +62,13 @@ export function FundingListSection({
           >
             <Link href={`/funding/${product.funding.fundingUuid}`}>
               <div className="flex items-center gap-3 relative">
-                <div className="w-16 h-24 relative rounded-lg flex items-center justify-center">
-                  <Image
-                    src="/example.png"
-                    alt="example"
+                <div className="w-16 h-24 relative rounded-lg overflow-hidden bg-gray-200">
+                  <ImageWithFallback
+                    src={imageUrl}
+                    alt={product.productName}
                     fill={true}
-                    className="object-contain mx-auto"
+                    className="object-cover"
+                    sizes="64px"
                   />
                 </div>
 
