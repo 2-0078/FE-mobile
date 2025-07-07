@@ -30,6 +30,7 @@ export default function PhonenumberSection({
   const [isVerified, setIsVerified] = useState(false);
   const [timeLeft, setTimeLeft] = useState(180); // 3분 = 180초
   const [canResend, setCanResend] = useState(false);
+
   const [isSendingCode, setIsSendingCode] = useState(false);
   const [isVerifyingCode, setIsVerifyingCode] = useState(false);
 
@@ -148,7 +149,7 @@ export default function PhonenumberSection({
       } else {
         setGeneralError('인증번호 발송에 실패했습니다. 다시 시도해주세요.');
       }
-    } catch (error) {
+    } catch {
       setGeneralError('인증번호 발송 중 오류가 발생했습니다.');
     } finally {
       setIsSendingCode(false);
@@ -171,7 +172,7 @@ export default function PhonenumberSection({
       } else {
         setGeneralError('인증번호 재발송에 실패했습니다. 다시 시도해주세요.');
       }
-    } catch (error) {
+    } catch {
       setGeneralError('인증번호 재발송 중 오류가 발생했습니다.');
     } finally {
       setIsSendingCode(false);
@@ -203,7 +204,7 @@ export default function PhonenumberSection({
           '인증번호가 올바르지 않습니다. 다시 확인해주세요.'
         );
       }
-    } catch (error) {
+    } catch {
       setVerificationCodeError('인증번호 확인 중 오류가 발생했습니다.');
     } finally {
       setIsVerifyingCode(false);

@@ -53,7 +53,7 @@ export default function LoginSection({ searchParams }: LoginSectionProps) {
             redirect: true,
             callbackUrl: callbackUrl || '/',
           });
-        } catch (searchParamsError) {
+        } catch {
           // searchParams 처리 실패 시 홈으로 리다이렉트
           await signIn('credentials', {
             email,
@@ -63,7 +63,7 @@ export default function LoginSection({ searchParams }: LoginSectionProps) {
           });
         }
       }
-    } catch (error) {
+    } catch {
       const errorMessage = '로그인 중 오류가 발생했습니다.';
       setError(errorMessage);
       alertContext?.error(errorMessage);

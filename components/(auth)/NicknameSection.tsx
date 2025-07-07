@@ -46,7 +46,7 @@ export default function NicknameSection({
           setIsAvailable(null);
           setNicknameError('닉네임 확인 중 오류가 발생했습니다.');
         }
-      } catch (error) {
+      } catch {
         setIsAvailable(null);
         setNicknameError('닉네임 확인 중 오류가 발생했습니다.');
       } finally {

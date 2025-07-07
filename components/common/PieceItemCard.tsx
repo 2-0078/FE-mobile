@@ -1,27 +1,25 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { PieceProductType, MarketPriceData } from '@/types/ProductTypes';
-import { getMarketPrice } from '@/action/market-price-service';
+import { Card } from '../ui/card';
+import AnimatedPrice from './AnimatedPrice';
+import StockPriceInfo from './StockPriceInfo';
+import RemainingPieces from './RemainingPieces';
+import { CountdownTimer } from '../CountdownTimer';
 import ItemCardImage from './ItemCardImage';
 import ItemCardInfo from './ItemCardInfo';
-import dynamic from 'next/dynamic';
+import { getMarketPrice } from '@/action/market-price-service';
+import { PieceProductType, MarketPriceData } from '@/types/ProductTypes';
 import { Button } from '../ui/button';
 import {
-  ArrowDownCircle,
+  Heart,
+  Share2,
   ArrowUpCircle,
+  ArrowDownCircle,
   TrendingUp,
   TrendingDown,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-
-// AnimatedPrice를 동적으로 import
-const AnimatedPrice = dynamic(() => import('./AnimatedPrice'), {
-  ssr: false,
-  loading: () => (
-    <div className="h-4 bg-gradient-to-r from-gray-100 to-gray-200 animate-pulse rounded" />
-  ),
-});
 
 interface PieceItemCardProps {
   product: PieceProductType;

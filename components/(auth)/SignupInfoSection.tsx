@@ -1,5 +1,4 @@
 'use client';
-import { EyeOff, Eye } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { Button } from '../ui/button';
 import { FloatingInput } from '../ui/floating-input';
@@ -59,7 +58,7 @@ export default function SignupInfoSection({
           setIsEmailAvailable(null);
           setEmailError('이메일 확인 중 오류가 발생했습니다.');
         }
-      } catch (error) {
+      } catch {
         setIsEmailAvailable(null);
         setEmailError('이메일 확인 중 오류가 발생했습니다.');
       } finally {
