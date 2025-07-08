@@ -24,7 +24,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
 
   return (
     <PageWrapper>
-      <Header isAlert={false} title={getTitle()} />
+      <Header title={getTitle()} isCloseButton={true} />
       {children}
     </PageWrapper>
   );

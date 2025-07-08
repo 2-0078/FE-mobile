@@ -93,9 +93,49 @@ export const verifyCode = async (
   }
 };
 
+// 일반 함수로 signin 구현 (NextAuth용)
 export const signin = async (email: string, password: string) => {
   try {
     console.log('Signin attempt for email:', email);
+
+    const response = await fetch(
+      `${process.env.BASE_API_URL}/auth-service/api/v1/login`,
+      {
+        method: 'POST',
+        body: JSON.stringify({ email, password }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    const res = await response.json();
+    console.log('API Response:', res);
+
+    // API 응답에서 에러 메시지 추출
+    if (!res.isSuccess) {
+      const errorMessage = res.message || res.error || '로그인에 실패했습니다.';
+      console.log('Login failed:', errorMessage);
+      throw new Error(errorMessage);
+    }
+
+    console.log('Login successful');
+    return res;
+  } catch (error) {
+    console.log('Signin error:', error);
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error('로그인 중 오류가 발생했습니다.');
+  }
+};
+
+// Server action으로 signin 구현
+export const signinAction = async (email: string, password: string) => {
+  'use server';
+
+  try {
+    console.log('Signin action attempt for email:', email);
 
     const response = await fetch(
       `${process.env.BASE_API_URL}/auth-service/api/v1/login`,

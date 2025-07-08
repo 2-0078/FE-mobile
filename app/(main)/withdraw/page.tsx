@@ -65,9 +65,9 @@ export default function WithdrawPage() {
       // 입력값 초기화
       setAmount('');
 
-      // 잠시 후 mywallet으로 이동
+      // 잠시 후 이전 페이지로 이동
       setTimeout(() => {
-        router.push('/mywallet');
+        router.back();
       }, 1500);
     } catch (error) {
       if (error instanceof Error) {
@@ -83,7 +83,7 @@ export default function WithdrawPage() {
   const quickAmounts = [10000, 50000, 100000, 200000, 500000];
 
   const handleClose = () => {
-    router.push('/mywallet');
+    router.back();
   };
 
   return (

@@ -1,7 +1,7 @@
 'use client';
 import React, { useContext } from 'react';
 import { useRouter } from 'next/navigation';
-import { signup } from '@/action/auth-service';
+import { signup } from '@/action/auth-service/index';
 import { useFunnel } from '@/action/funnel';
 import { AlertContext } from '@/lib/Alert';
 
@@ -44,7 +44,7 @@ export default function SignupSteps() {
   };
 
   return (
-    <form>
+    <form className="space-y-6 px-0 pt-20">
       <Stepper
         totalSteps={['step1', 'step2', 'step3']}
         icons={[

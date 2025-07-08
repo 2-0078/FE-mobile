@@ -4,7 +4,7 @@ import { Button } from '../ui/button';
 import { FloatingInput } from '../ui/floating-input';
 import { SelectBox } from '@/lib/SelectBox';
 import { validatePhoneNumber, formatPhoneNumber } from '@/lib/validation';
-import { sendVerificationCode, verifyCode } from '@/action/auth-service';
+import { sendVerificationCode, verifyCode } from '@/action/auth-service/index';
 
 interface GenderOption {
   value: string;

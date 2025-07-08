@@ -1,7 +1,7 @@
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 
-import { signin } from './action/auth-service';
+import { signin } from './action/auth-service/index';
 import { AdapterUser } from 'next-auth/adapters';
 import { DefaultSession } from 'next-auth';
 

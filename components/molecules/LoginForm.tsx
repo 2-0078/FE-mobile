@@ -69,7 +69,7 @@ export default function LoginForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 px-0">
+    <form onSubmit={handleSubmit} className="space-y-6 px-0 pt-20">
       <FloatingInput
         id="email"
         name="email"

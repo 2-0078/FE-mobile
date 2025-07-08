@@ -66,9 +66,9 @@ export function useCharge() {
       // 입력값 초기화
       setAmount('');
 
-      // 잠시 후 mywallet으로 이동
+      // 잠시 후 이전 페이지로 이동
       setTimeout(() => {
-        router.push('/mywallet');
+        router.back();
       }, 1500);
     } catch (error) {
       if (error instanceof Error) {
@@ -82,7 +82,7 @@ export function useCharge() {
   };
 
   const handleClose = () => {
-    router.push('/mywallet');
+    router.back();
   };
 
   const isDisabled = loading || !amount || parseInt(amount) === 0;

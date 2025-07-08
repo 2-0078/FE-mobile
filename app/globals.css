@@ -183,6 +183,49 @@
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* Internet Explorer 10+ */
   }
+
+  /* Link 관련 기본 스타일 초기화 */
+  a {
+    text-decoration: none;
+    color: inherit;
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+  }
+
+  a:hover {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  a:focus {
+    outline: none;
+  }
+
+  a:visited {
+    color: inherit;
+  }
+
+  /* Next.js Link 컴포넌트 스타일 초기화 */
+  a[href] {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  /* 버튼 스타일의 링크 초기화 */
+  a[role='button'] {
+    text-decoration: none;
+    color: inherit;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  /* Next.js Link 컴포넌트 기본 display 설정 */
+  a[href] {
+    display: block;
+  }
 }
 
 /* Alert 컴포넌트 스타일 */

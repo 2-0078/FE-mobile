@@ -11,7 +11,7 @@ interface FundingSwiperProps {
 
 export default function FundingSwiper({ products }: FundingSwiperProps) {
   const renderFundingItem = (product: FundingProductType) => (
-    <FundingItemCard product={product} />
+    <FundingItemCard product={product} isMainPage={true} />
   );
 
   return (

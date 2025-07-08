@@ -39,7 +39,7 @@ export default function BottomNavbar() {
     if (!isVisible) {
       autoShowTimeoutRef.current = setTimeout(() => {
         setIsVisible(true);
-      }, 1000); // 1초 후 자동 표시
+      }, 500); // 1초 후 자동 표시
     }
   }, [isVisible]);
 

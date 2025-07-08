@@ -10,7 +10,7 @@ export default function Pagenation({ totalPages }: { totalPages: number }) {
   const handlePageChange = (page: number) => {
     const params = new URLSearchParams(searchParams);
     params.set('page', page.toString());
-    router.push(`?${params.toString()}`);
+    router.replace(`?${params.toString()}`);
   };
 
   // 현재 페이지 기준으로 5개의 페이지 번호만 표시

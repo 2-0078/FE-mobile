@@ -9,6 +9,6 @@ export default function PageWrapper({
   className?: string;
 }) {
   return (
-    <div className={cn('px-5 pt-6 space-y-5 pb-24', className)}>{children}</div>
+    <div className={cn('px-5 pt-8 space-y-5 pb-24', className)}>{children}</div>
   );
 }

@@ -26,7 +26,7 @@ export const getSubCategories = async (mainCategoryId: string) => {
 };
 
 export const getFundingProductsList = async (params: {
-  sort?: string;
+  sortBy?: string;
   main?: string;
   sub?: string;
   search?: string;
@@ -34,13 +34,16 @@ export const getFundingProductsList = async (params: {
   size?: number;
   direction?: string;
 }) => {
-  const { sort, main, sub, search, page, size, direction } = params;
+  const { sortBy, main, sub, search, page, size, direction } = params;
   const queryParams = new URLSearchParams();
 
-  if (sort) queryParams.append('sort', sort);
+  // sortBy 파라미터 처리
+  const finalSortBy = sortBy || 'ID'; // 기본값
+
+  queryParams.append('sortBy', finalSortBy);
   if (main && main !== '전체') queryParams.append('main', main);
   if (sub && sub !== '전체') queryParams.append('sub', sub);
-  if (search) queryParams.append('search', search);
+  if (search && search.trim() !== '') queryParams.append('name', search);
   if (page) queryParams.append('page', page.toString());
   if (size) queryParams.append('size', size.toString());
   if (direction) queryParams.append('direction', direction);
@@ -60,10 +63,20 @@ export const getFundingProductsList = async (params: {
 
   console.log('Funding products API response status:', response.status);
 
+  if (!response.ok) {
+    console.error('API response not ok:', response.status, response.statusText);
+    throw new Error(`API request failed: ${response.status}`);
+  }
+
   const data =
     (await response.json()) as CommonResponseType<FundingListResponseType>;
 
   console.log('Funding products API response data:', data);
+
+  if (!data.result) {
+    console.error('No result in API response');
+    throw new Error('No result in API response');
+  }
 
   return data.result;
 };
@@ -86,27 +99,78 @@ export const getFundingProduct = async (id: string) => {
     response.status
   );
 
+  if (!response.ok) {
+    console.error('API response not ok:', response.status, response.statusText);
+    throw new Error(`API request failed: ${response.status}`);
+  }
+
   const data =
     (await response.json()) as CommonResponseType<FundingProductType>;
 
   console.log('Individual funding product API response data:', data);
+  console.log('Individual funding product result:', data.result);
+
+  if (!data.result) {
+    console.error('No result in API response');
+    throw new Error('No result in API response');
+  }
 
   return data.result;
 };
 
-export const getPieceProductsList = async () => {
-  const response = await fetch(
-    `${process.env.BASE_API_URL}/product-read-service/api/v1/piece/list`,
-    {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }
-  );
+export const getPieceProductsList = async (params: {
+  sortBy?: string;
+  main?: string;
+  sub?: string;
+  search?: string;
+  page?: number;
+  size?: number;
+  direction?: string;
+}) => {
+  const { sortBy, main, sub, search, page, size, direction } = params;
+  const queryParams = new URLSearchParams();
+
+  // sortBy 파라미터 처리
+  const finalSortBy = sortBy || 'ID'; // 기본값
+
+  queryParams.append('sortBy', finalSortBy);
+  if (main && main !== '전체') queryParams.append('main', main);
+  if (sub && sub !== '전체') queryParams.append('sub', sub);
+  if (search && search.trim() !== '') queryParams.append('name', search);
+  if (page !== undefined) queryParams.append('page', page.toString());
+  if (size !== undefined) queryParams.append('size', size.toString());
+  if (direction) queryParams.append('direction', direction);
+
+  const baseUrl = process.env.BASE_API_URL || 'http://localhost:8080';
+  const url = `${baseUrl}/product-read-service/api/v1/piece/list?${queryParams.toString()}`;
+
+  console.log('Piece products API URL:', url);
+  console.log('Piece products API params:', params);
+
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  console.log('Piece products API response status:', response.status);
+
+  if (!response.ok) {
+    console.error('API response not ok:', response.status, response.statusText);
+    throw new Error(`API request failed: ${response.status}`);
+  }
+
   const data =
     (await response.json()) as CommonResponseType<PieceProductListResponseType>;
-  // console.log(data);
+
+  console.log('Piece products API response data:', data);
+
+  if (!data.result) {
+    console.error('No result in API response');
+    throw new Error('No result in API response');
+  }
+
   return data.result;
 };
 

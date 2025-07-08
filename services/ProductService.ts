@@ -50,7 +50,11 @@ export class ProductService {
   static async getPieceProducts(): Promise<PieceProductType[]> {
     try {
       // 1. 조각 상품 UUID 목록 가져오기
-      const pieceProductsList = await getPieceProductsList();
+      const pieceProductsList = await getPieceProductsList({
+        sortBy: 'ID',
+        page: 0,
+        size: 10,
+      });
 
       // 2. 각 상품의 상세 정보와 시장가 가져오기
       const pieceProducts = await Promise.all(
