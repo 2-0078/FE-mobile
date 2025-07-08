@@ -1,7 +1,7 @@
 import { PartyPopper, Calendar, Users, Gift, Clock } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import PageWrapper from '@/components/layout/PageWrapper';
-import { auth } from '@/auth';
+// import { auth } from '@/auth'; // 사용하지 않는 import 주석 처리
 
 interface EventItem {
   id: number;
