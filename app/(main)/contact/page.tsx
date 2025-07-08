@@ -1,6 +1,6 @@
 'use client';
 
-import { Headset, Mail, Phone, MessageSquare, Send } from 'lucide-react';
+import { Headset, Mail, Phone, MessageSquare } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import PageWrapper from '@/components/layout/PageWrapper';
 import { Button } from '@/components/ui/button';
@@ -63,7 +63,7 @@ export default function ContactPage() {
         subject: '',
         message: '',
       });
-    } catch (error) {
+    } catch {
       alert('문의 접수에 실패했습니다. 다시 시도해주세요.');
     } finally {
       setIsSubmitting(false);

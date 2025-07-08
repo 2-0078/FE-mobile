@@ -1,9 +1,6 @@
 import { ChartColumn, LucideIcon, User2, Wallet2Icon } from 'lucide-react';
 import { Puzzle } from 'lucide-react';
-import CardIcon from '@/repo/ui/Icons/CardIcon';
 import HomeIcon from '@/repo/ui/Icons/HomeIcon';
-import MyPageIcon from '@/repo/ui/Icons/MyPageIcon';
-import OtherIcon from '@/repo/ui/Icons/OtherIcon';
 
 export interface NavItem {
   href: string;

@@ -1,4 +1,4 @@
-import { ChevronLeft, FileText, Calendar, User } from 'lucide-react';
+import { FileText, Calendar, User } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import PageWrapper from '@/components/layout/PageWrapper';
 import { auth } from '@/auth';
@@ -14,7 +14,7 @@ interface NoticeItem {
 
 export default async function NoticePage() {
   const session = await auth();
-  const user = session?.user;
+  // const user = session?.user; // 사용하지 않는 변수 주석 처리
 
   // 임시 공지사항 데이터
   const notices: NoticeItem[] = [

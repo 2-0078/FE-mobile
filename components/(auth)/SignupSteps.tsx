@@ -1,7 +1,7 @@
 'use client';
 import React, { useContext } from 'react';
 import { useRouter } from 'next/navigation';
-import { signup } from '@/action/auth-service';
+import { signup } from '@/action/auth-service/index';
 import { useFunnel } from '@/action/funnel';
 import { AlertContext } from '@/lib/Alert';
 
