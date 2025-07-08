@@ -10,6 +10,7 @@
   --color-custom-green: #00fc83;
   --color-custom-black: #020318;
   --color-custom-slate: #161733;
+  --color-dark-blue: #161733;
   --color-custom-light-blue: #007dfc;
   --color-custom-blue: #2d60ff;
   --color-custom-gray-100: #b2b2b2;
@@ -187,6 +188,12 @@
 /* Alert 컴포넌트 스타일 */
 .toast-basic {
   @apply bg-white text-black px-4 py-3 rounded-lg shadow-lg mx-auto;
+  min-width: fit-content;
+  max-width: 90vw;
+}
+
+.toast-success {
+  @apply bg-green-500 text-white px-4 py-3 rounded-lg shadow-lg mx-auto;
   min-width: fit-content;
   max-width: 90vw;
 }

@@ -1,0 +1,1 @@
+export { ChargePageTemplate } from './ChargePageTemplate';

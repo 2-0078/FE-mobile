@@ -29,6 +29,7 @@ const AlertProvider = ({ children }: { children: React.ReactNode }) => {
   const contextValue: AlertContextType = {
     basic: (msg) => showAlert('basic', msg),
     error: (msg) => showAlert('error', msg),
+    success: (msg) => showAlert('success', msg),
     wiggle: (msg) => showAlert('wiggle', msg),
     midBig: (msg) => showAlert('midBig', msg),
     heartBeat: (msg) => showAlert('heartBeat', msg),

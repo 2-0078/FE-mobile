@@ -39,3 +39,42 @@ export const confirmPayment = async (paymentData: any) => {
   const data = (await response.json()) as CommonResponseType<any>;
   return data.result;
 };
+
+export const chargeMoney = async (amount: number) => {
+  const session = await auth();
+  const token = session?.user?.accessToken;
+
+  const chargeData = {
+    amount: amount,
+    isPositive: true,
+    historyType: 'DEPOSIT',
+    moneyHistoryDetail: '충전',
+    bankName: 'string',
+    accountNumber: 'string',
+    accountHolderName: 'string',
+    paymentUuid: 'string',
+    paymentTime: new Date().toISOString(),
+    paymentMethod: 'string',
+    paymentStatus: 'string',
+  };
+
+  const response = await fetch(
+    `${process.env.BASE_API_URL}/payment-service/api/v1/money`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify(chargeData),
+    }
+  );
+
+  const data = (await response.json()) as CommonResponseType<any>;
+
+  if (!data.isSuccess) {
+    throw new Error(data.message || '충전에 실패했습니다.');
+  }
+
+  return data.result;
+};

@@ -27,7 +27,7 @@ export default function SearchBar() {
           <Input
             name="searchQuery"
             placeholder="상품을 검색하세요"
-            className="pl-10 bg-slate-800/50 border-gray-700 rounded-lg text-white placeholder-gray-400"
+            className="pl-10 bg-dark-blue border-gray-700 rounded-lg text-white placeholder-gray-400"
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
           />

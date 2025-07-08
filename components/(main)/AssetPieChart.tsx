@@ -45,7 +45,7 @@ export default function AssetPieChart() {
   };
 
   return (
-    <div className="bg-slate-800/50 rounded-2xl px-4 pt-2">
+    <div className="bg-dark-blue rounded-2xl px-4 pt-2">
       <h3 className="text-white text-lg font-semibold text-center">
         내 자산 가치
       </h3>
