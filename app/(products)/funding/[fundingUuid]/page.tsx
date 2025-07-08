@@ -17,7 +17,7 @@ export default async function FundingPage({
 }) {
   const param = await params;
   const data = await getFundingProduct(param.fundingUuid);
-  
+
   return (
     <PageWrapper>
       <div className="relative rounded-xl overflow-hidden w-full h-[50vh]">
@@ -25,6 +25,7 @@ export default async function FundingPage({
           src={data.images[0].imageUrl}
           alt={data.productName}
           fill={true}
+          sizes="100vw"
           className="object-contain"
         />
       </div>

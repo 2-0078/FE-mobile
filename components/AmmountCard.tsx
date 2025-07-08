@@ -3,10 +3,15 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { getMemberBalance } from '@/action/payment-service';
+import { useRouter } from 'next/navigation';
+import { Plus, Minus, Wallet } from 'lucide-react';
+import { ResponsiveAmount } from '@/components/atoms/ResponsiveAmount';
+import { AmountSkeleton, ButtonSkeleton } from '@/components/atoms';
 
 export default function AmmountCard({ user }: { user: boolean }) {
   const [balance, setBalance] = useState<{ amount: number } | null>(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     if (!user) {
@@ -29,32 +34,64 @@ export default function AmmountCard({ user }: { user: boolean }) {
     fetchBalance();
   }, [user]);
 
+  const handleCharge = () => {
+    // 충전하기 페이지로 이동
+    router.push('/charge');
+  };
+
+  const handleWithdraw = () => {
+    // 출금하기 페이지로 이동
+    router.push('/withdraw');
+  };
+
   if (!user) {
     return null;
   }
 
   if (loading) {
     return (
-      <div className="bg-slate-800/50 rounded-2xl p-6">
+      <div className="bg-dark-blue rounded-2xl py-6 px-4">
         <div className="text-center mb-6">
-          <p className="text-gray-400 mb-2">현재 잔액</p>
-          <h2 className="text-3xl font-bold mb-1">로딩 중...</h2>
+          <div className="flex items-center justify-center mb-2">
+            <Wallet className="w-6 h-6 text-custom-green mr-2" />
+            <p className="text-gray-400">현재 잔액</p>
+          </div>
+          <AmountSkeleton className="mb-1" />
+        </div>
+
+        <div className="flex justify-center items-center gap-3 w-full">
+          <ButtonSkeleton />
+          <ButtonSkeleton />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="bg-slate-800/50 rounded-2xl p-6">
+    <div className="bg-dark-blue rounded-2xl py-6 px-4">
       <div className="text-center mb-6">
-        <p className="text-gray-400 mb-2">현재 잔액</p>
-        <h2 className="text-3xl font-bold mb-1">
-          {balance?.amount.toLocaleString() || '0'}원
-        </h2>
+        <div className="flex items-center justify-center mb-2">
+          <Wallet className="w-6 h-6 text-custom-green mr-2" />
+          <p className="text-gray-400">현재 잔액</p>
+        </div>
+        <ResponsiveAmount amount={balance?.amount || 0} className="mb-1" />
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
-        <Button className="bg-custom-light-blue">출금하기</Button>
+      <div className="flex justify-center items-center gap-3 w-full">
+        <Button
+          onClick={handleCharge}
+          className="bg-custom-green text-black font-semibold hover:bg-custom-green/90 flex items-center justify-center gap-2 w-fit"
+        >
+          <Plus size={18} />
+          충전하기
+        </Button>
+        <Button
+          onClick={handleWithdraw}
+          className="bg-custom-light-blue text-white font-semibold hover:bg-custom-light-blue/90 flex items-center justify-center gap-2 w-fit"
+        >
+          <Minus size={18} />
+          출금하기
+        </Button>
       </div>
     </div>
   );

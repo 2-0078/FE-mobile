@@ -9,6 +9,8 @@ import { PieceProductType, MarketPriceData } from '@/types/ProductTypes';
 import { Button } from '../ui/button';
 import { TrendingUp, TrendingDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { marketStorage } from '@/lib/market-storage';
+import { Skeleton } from '@/components/atoms';
 
 interface PieceItemCardProps {
   product: PieceProductType;
@@ -18,6 +20,9 @@ export default function PieceItemCard({ product }: PieceItemCardProps) {
   const { piece } = product;
   const [marketData, setMarketData] = useState<MarketPriceData | null>(null);
   const [isLoadingMarketData, setIsLoadingMarketData] = useState(false);
+  const [dataSource, setDataSource] = useState<'live' | 'cached' | 'none'>(
+    'none'
+  );
 
   const thumbnailImage =
     product.images.find((img) => img.isThumbnail)?.imageUrl ||
@@ -31,23 +36,65 @@ export default function PieceItemCard({ product }: PieceItemCardProps) {
 
   // 주가 데이터 가져오기
   useEffect(() => {
+    console.log('product.productUuid', product.productUuid);
+    console.log('Effect triggered for product:', product.productName);
+
     const fetchMarketData = async () => {
+      // 이미 로딩 중이면 중복 호출 방지
+      if (isLoadingMarketData) {
+        console.log('Already loading, skipping...');
+        return;
+      }
+
       setIsLoadingMarketData(true);
+
       try {
+        // 먼저 캐시된 데이터 확인
+        const cachedData = marketStorage.getMarketData(product.productUuid);
+        console.log('cachedData', cachedData);
+
+        // 실시간 데이터 가져오기 시도
         const response = await getMarketPrice(product.productUuid);
-        console.log('Market price response:', response);
+        console.log('API response:', response);
+
         if (response?.isSuccess && response.result) {
+          // 실시간 데이터가 있으면 저장하고 사용
+          console.log('response.result', response.result);
           setMarketData(response.result);
+          setDataSource('live');
+          marketStorage.saveMarketData(product.productUuid, response.result);
+        } else if (cachedData) {
+          // 실시간 데이터가 없고 캐시된 데이터가 있으면 사용
+          console.log('Using cached data:', cachedData);
+          setMarketData(cachedData);
+          setDataSource('cached');
+        } else {
+          // 둘 다 없으면 null
+          console.log('No data available');
+          setMarketData(null);
+          setDataSource('none');
         }
       } catch (error) {
         console.error('Failed to fetch market data:', error);
+
+        // 에러 발생 시 캐시된 데이터 확인
+        const cachedData = marketStorage.getMarketData(product.productUuid);
+        if (cachedData) {
+          console.log('Using cached data after error:', cachedData);
+          setMarketData(cachedData);
+          setDataSource('cached');
+        } else {
+          console.log('No cached data available after error');
+          setMarketData(null);
+          setDataSource('none');
+        }
       } finally {
         setIsLoadingMarketData(false);
       }
     };
 
     fetchMarketData();
-  }, [product.productUuid]);
+  }, [product.productUuid]); // productUuid만 의존성으로 사용
 
   // 주가 데이터가 있는 경우 표시 (더 명확한 조건)
   const hasMarketData =
@@ -56,14 +103,13 @@ export default function PieceItemCard({ product }: PieceItemCardProps) {
     typeof marketData.stckHgpr === 'number' &&
     typeof marketData.stckLwpr === 'number';
 
-  console.log('Market data state:', {
-    marketData,
-    isLoadingMarketData,
-    hasMarketData,
-    stckPrpr: marketData?.stckPrpr,
-    stckHgpr: marketData?.stckHgpr,
-    stckLwpr: marketData?.stckLwpr,
-  });
+  // 데이터 소스에 따른 표시 텍스트
+  const getDataSourceText = () => {
+    if (dataSource === 'cached') {
+      return '전일 데이터';
+    }
+    return '';
+  };
 
   return (
     <div className="w-full rounded-lg shadow-lg bg-white overflow-hidden relative mx-auto items-center justify-center">
@@ -88,9 +134,9 @@ export default function PieceItemCard({ product }: PieceItemCardProps) {
           {isLoadingMarketData ? (
             // 로딩 중일 때 부드러운 스켈레톤 애니메이션
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-gradient-to-r from-gray-200 to-gray-300 animate-pulse rounded-full"></div>
-              <div className="w-16 h-3 bg-gradient-to-r from-gray-200 to-gray-300 animate-pulse rounded"></div>
-              <div className="w-12 h-3 bg-gradient-to-r from-gray-200 to-gray-300 animate-pulse rounded"></div>
+              <Skeleton width="w-3" height="h-3" rounded="full" />
+              <Skeleton width="w-16" height="h-3" />
+              <Skeleton width="w-12" height="h-3" />
             </div>
           ) : hasMarketData && marketData ? (
             // 실제 데이터가 있을 때
@@ -116,8 +162,16 @@ export default function PieceItemCard({ product }: PieceItemCardProps) {
               >
                 ({marketData.prdyCrt.toFixed(2)}%)
               </p>
+              {dataSource === 'cached' && (
+                <span className="text-xs text-gray-500 ml-1">
+                  {getDataSourceText()}
+                </span>
+              )}
             </>
-          ) : null}
+          ) : (
+            // 데이터가 없을 때
+            <span className="text-xs text-gray-500">거래값을 요청중입니다</span>
+          )}
         </div>
       </div>
       {/* 상세보기 버튼 */}

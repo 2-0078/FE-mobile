@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { NumberPad } from '@/components/NumberPad';
+import { Wallet } from 'lucide-react';
 
 export function AmountSection({
   piecePrice,
@@ -48,7 +49,10 @@ export function AmountSection({
     <>
       <div>
         <p className="flex items-center justify-between mb-2">
-          <span className="text-gray-600 text-sm">예치금 잔액</span>
+          <span className="text-gray-600 text-sm flex items-center">
+            <Wallet className="w-4 h-4 mr-1 text-custom-green" />
+            예치금 잔액
+          </span>
           <span className="text-custom-green text-2xl font-bold">
             {depositBalance.toLocaleString()}원
           </span>

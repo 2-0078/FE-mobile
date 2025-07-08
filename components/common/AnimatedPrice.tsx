@@ -55,7 +55,7 @@ export default function AnimatedPrice({ price }: AnimatedPriceProps) {
 
       requestAnimationFrame(animate);
     }
-  }, [price, displayPrice, isMounted]);
+  }, [price, isMounted]); // displayPrice를 의존성 배열에서 제거
 
   // 서버 사이드 렌더링 시 기본 가격 표시
   if (!isMounted) {

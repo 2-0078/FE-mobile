@@ -33,9 +33,9 @@ export default async function PiecePage({
   const params = await searchParams;
   const selectedMainCategory = params.main || '전체';
   const selectedSort = params.sort || '최신순';
-  
+
   const filters = ['최신순', '인기순', '가격순', '변동률순'];
-  
+
   const mainCategories = [
     { id: '전체', categoryName: '전체' },
     ...(await getMainCategories()),
@@ -57,7 +57,7 @@ export default async function PiecePage({
     )
   );
   console.log(pieceProducts);
-  
+
   const MiniChart = ({
     data,
     isPositive,
@@ -75,14 +75,14 @@ export default async function PiecePage({
         const y = 20 - ((value - min) / range) * 20;
         return `${x},${y}`;
       })
-      .join(" ");
+      .join(' ');
 
     return (
       <svg width="40" height="20" className="flex-shrink-0">
         <polyline
           points={points}
           fill="none"
-          stroke={isPositive ? "#10b981" : "#ef4444"}
+          stroke={isPositive ? '#10b981' : '#ef4444'}
           strokeWidth="2"
           className="drop-shadow-sm"
         />
@@ -108,7 +108,7 @@ export default async function PiecePage({
             <Search />
             <Input
               placeholder="상품을 검색하세요"
-              className="pl-10 bg-slate-800/50 border-gray-700 rounded-lg text-white placeholder-gray-400"
+              className="pl-10 bg-dark-blue border-gray-700 rounded-lg text-white placeholder-gray-400"
             />
           </div>
           <Button className="bg-green-500 px-4">검색</Button>
@@ -137,16 +137,14 @@ export default async function PiecePage({
 
       {/* Product Count */}
       <div className="px-4 mb-4">
-        <p className="text-sm text-gray-400">
-          {pieceProducts.length}개의 상품
-        </p>
+        <p className="text-sm text-gray-400">{pieceProducts.length}개의 상품</p>
       </div>
 
       <div className="space-y-4 px-4">
         {pieceProducts.map((product) => (
           <div
             key={product.piece.pieceProductUuid}
-            className="bg-slate-800/50 h-30 rounded-lg px-4 py-2 border border-slate-700/50"
+            className="bg-dark-blue h-30 rounded-lg px-4 py-2 border border-slate-700/50"
           >
             <Link href={`/piece/${product.piece.pieceProductUuid}`}>
               <div className="flex items-center gap-3">

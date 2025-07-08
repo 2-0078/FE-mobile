@@ -58,7 +58,7 @@ export function FundingListSection({
         return (
           <div
             key={product.funding.fundingUuid}
-            className="bg-slate-800/50 rounded-lg px-4 py-2 border h-30 border-slate-700/50"
+            className="bg-dark-blue rounded-lg px-4 py-2 border h-30 border-slate-700/50"
           >
             <Link href={`/funding/${product.funding.fundingUuid}`}>
               <div className="flex items-center gap-3 relative">

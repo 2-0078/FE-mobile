@@ -6,6 +6,10 @@ const alertTypeConfig: Record<string, { className: string; position: string }> =
       className: 'toast-basic animate-fadeIn',
       position: 'bottom-[3vh] left-1/2 translate-x-[-50%]',
     },
+    success: {
+      className: 'toast-success animate-fadeIn',
+      position: 'bottom-[3vh] left-1/2 translate-x-[-50%]',
+    },
     wiggle: {
       className: 'toast-basic animate-wiggle',
       position: 'bottom-[3vh] left-1/2 translate-x-[-50%]',

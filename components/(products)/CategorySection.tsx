@@ -69,7 +69,7 @@ export default function CategorySection({
               className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
                 selectedMainCategory == category.id
                   ? 'bg-custom-green text-gray-900'
-                  : 'bg-slate-800/50 text-gray-300 '
+                  : 'bg-dark-blue text-gray-300 '
               }`}
             >
               {category.categoryName}
@@ -92,7 +92,7 @@ export default function CategorySection({
                 className={`px-3 py-2 rounded-lg text-xs whitespace-nowrap transition-all ${
                   selectedSubCategory == subCategory.id
                     ? 'bg-custom-green text-gray-900 font-medium'
-                    : 'bg-slate-800/50 text-gray-400  '
+                    : 'bg-dark-blue text-gray-400  '
                 }`}
               >
                 {subCategory.categoryName}
