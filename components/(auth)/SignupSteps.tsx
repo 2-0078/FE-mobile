@@ -1,9 +1,8 @@
 'use client';
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { signup } from '@/action/auth-service/index';
 import { useFunnel } from '@/action/funnel';
-import { AlertContext } from '@/lib/Alert';
 import { useAlert } from '@/hooks/useAlert';
 
 import Stepper from './Stepper';
@@ -15,7 +14,6 @@ import NicknameSection from './NicknameSection';
 
 export default function SignupSteps() {
   const router = useRouter();
-  const alertContext = useContext(AlertContext);
   const { Funnel, Step, setStep, formData, setFormData, currentStep } =
     useFunnel('step1');
   const [isSubmitting, setIsSubmitting] = useState(false);
