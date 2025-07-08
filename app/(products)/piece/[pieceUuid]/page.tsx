@@ -1,22 +1,50 @@
 import React from 'react';
+import { Metadata } from 'next';
 import Image from 'next/image';
+import Script from 'next/script';
+import { getPieceProducts } from '@/action/product-service';
 import Header from '@/components/layout/Header';
 import PageWrapper from '@/components/layout/PageWrapper';
 import TabLayout from '@/components/layout/TabLayout';
 import InfoCardLayout from '@/components/layout/InfoCardLayout';
 import TempPriceIcon from '@/repo/ui/Icons/TempPriceIcon';
 import ClockIcon from '@/repo/ui/Icons/ClockIcon';
+import { generatePieceMetadata } from '@/lib/metadata';
+import { generatePieceProductJsonLd } from '@/lib/structured-data';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ pieceUuid: string }>;
+}): Promise<Metadata> {
+  const param = await params;
+  const data = await getPieceProducts(param.pieceUuid);
+
+  return generatePieceMetadata(
+    {
+      title: data.productName,
+      description: data.description,
+      price: data.piece.closingPrice || 0,
+      category: data.mainCategory.categoryName,
+      imageUrl: data.images[0]?.imageUrl,
+      piecePrice: data.piece.closingPrice || 0,
+      totalPieces: data.piece.tradeQuantity,
+      availablePieces: data.piece.tradeQuantity,
+    },
+    param.pieceUuid
+  );
+}
 
 // 작품 카드 컴포넌트
 function ArtworkCard({ imageUrl, title }: { imageUrl: string; title: string }) {
   return (
     <div className="relative">
-      <Image 
-        src={imageUrl} 
-        alt={title} 
+      <Image
+        src={imageUrl}
+        alt={title}
         width={400}
         height={256}
-        className="w-full h-64 object-cover rounded-lg" 
+        className="w-full h-64 object-cover rounded-lg"
       />
       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
         <h2 className="text-white text-lg font-semibold">{title}</h2>
@@ -26,25 +54,31 @@ function ArtworkCard({ imageUrl, title }: { imageUrl: string; title: string }) {
 }
 
 // 가격 및 남은 시간 컴포넌트
-function InfoCards() {
+function InfoCards({
+  closingPrice,
+  tradeQuantity,
+}: {
+  closingPrice: number | null;
+  tradeQuantity: number;
+}) {
   return (
     <div className="flex justify-around gap-x-3">
       <InfoCardLayout
         className="h-12 border-white border-1"
-        title="Highest Bid"
+        title="현재가"
         icon={<TempPriceIcon />}
       >
         <span className="text-base font-semibold text-white leading-none">
-          15,800,000
+          {closingPrice ? closingPrice.toLocaleString() : '0'}
         </span>
       </InfoCardLayout>
       <InfoCardLayout
         className="h-12 border-white border-1"
-        title="Time Left"
+        title="거래량"
         icon={<ClockIcon />}
       >
         <span className="text-base font-semibold text-white leading-none">
-          2h 4m 52s
+          {tradeQuantity}
         </span>
       </InfoCardLayout>
     </div>
@@ -52,36 +86,58 @@ function InfoCards() {
 }
 
 // 메인 페이지 컴포넌트
-export default function FundingPage() {
+export default async function PiecePage({
+  params,
+}: {
+  params: Promise<{ pieceUuid: string }>;
+}) {
+  const param = await params;
+  const data = await getPieceProducts(param.pieceUuid);
+
   return (
-    <PageWrapper>
-      <Header isAlert={false} />
-      <div>
-        <ArtworkCard imageUrl="/example.png" title="KATSUSHIKA HOKUSAI" />
-      </div>
-      <InfoCards />
-      <TabLayout tabs={["Details", "Owners", "Bids", "History"]}>
+    <>
+      <Script
+        id="piece-product-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            generatePieceProductJsonLd({
+              name: data.productName,
+              description: data.description,
+              image: data.images[0]?.imageUrl || '',
+              url: `https://pieceofcake.site/piece/${param.pieceUuid}`,
+              price: data.piece.closingPrice || 0,
+              priceCurrency: 'KRW',
+              category: data.mainCategory.categoryName,
+              availability: data.piece.isTrading
+                ? 'https://schema.org/InStock'
+                : 'https://schema.org/OutOfStock',
+              piecePrice: data.piece.closingPrice || 0,
+              totalPieces: data.piece.tradeQuantity,
+              availablePieces: data.piece.tradeQuantity,
+            })
+          ),
+        }}
+      />
+      <PageWrapper>
+        <Header isAlert={false} />
         <div>
-          Lorem ipsum dolor sit amet, consectetur elit. Quisque non elit mauris.
-          Cras euismod, Lorem ipsum metus ac finibus finibus, felis dui
-          suscipit...
+          <ArtworkCard
+            imageUrl={data.images[0]?.imageUrl || '/example.png'}
+            title={data.productName}
+          />
         </div>
-        <div>
-          Lorem ipsum dolor sit amet, consectetur elit. Quisque non elit mauris.
-          Cras euismod, assaLorem ipsum metus ac finibus finibus, felis dui
-          suscipit...sadasdasda
-        </div>
-        <div>
-          Lorem ipsum dolor sit amet, consectetur elit. Quisque non elit mauris.
-          Cras euismod, Lorem ipsum metus ac finibus finibus, felis dui
-          suscipit...
-        </div>
-        <div>
-          Lorem ipsum dolor sit amet, consectetur elit. Quisque non elit mauris.
-          Cras euismod, Lorem ipsum metus ac finibus finibus, felis dui
-          suscipit...
-        </div>
-      </TabLayout>
-    </PageWrapper>
+        <InfoCards
+          closingPrice={data.piece.closingPrice}
+          tradeQuantity={data.piece.tradeQuantity}
+        />
+        <TabLayout tabs={['Details', 'Owners', 'Bids', 'History']}>
+          <div>{data.description}</div>
+          <div>소유자 정보가 여기에 표시됩니다.</div>
+          <div>입찰 정보가 여기에 표시됩니다.</div>
+          <div>거래 내역이 여기에 표시됩니다.</div>
+        </TabLayout>
+      </PageWrapper>
+    </>
   );
 }

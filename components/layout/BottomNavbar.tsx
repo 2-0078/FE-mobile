@@ -45,8 +45,10 @@ export default function BottomNavbar() {
 
   const handleScroll = useCallback(
     throttle(() => {
+      if (typeof window === 'undefined') return;
+
       const currentScrollY = window.scrollY;
-      const currentTime = Date.now();
+      const currentTime = typeof window !== 'undefined' ? Date.now() : 0;
 
       // 스크롤 방향 감지
       if (currentScrollY > lastScrollY && currentScrollY > 100) {
@@ -79,7 +81,7 @@ export default function BottomNavbar() {
 
   // 스크롤이 멈췄는지 확인하는 함수
   const checkScrollStopped = useCallback(() => {
-    const currentTime = Date.now();
+    const currentTime = typeof window !== 'undefined' ? Date.now() : 0;
     const timeSinceLastScroll = currentTime - lastScrollTimeRef.current;
 
     // 마지막 스크롤 후 1초가 지났고, 하단바가 숨겨져 있다면 보이기
@@ -93,6 +95,9 @@ export default function BottomNavbar() {
   }, [isVisible]);
 
   useEffect(() => {
+    // 클라이언트에서만 실행
+    if (typeof window === 'undefined') return;
+
     // 스크롤이 멈췄는지 주기적으로 확인
     const scrollCheckInterval = setInterval(checkScrollStopped, 500);
 
