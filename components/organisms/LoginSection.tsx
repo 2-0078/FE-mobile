@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import LoginForm from '@/components/molecules/LoginForm';
 import { useAlert } from '@/hooks/useAlert';
+import Header from '@/components/layout/Header';
 
 interface LoginSectionProps {
   searchParams: Promise<{ callbackUrl: string }>;
@@ -75,6 +76,7 @@ export default function LoginSection({ searchParams }: LoginSectionProps) {
 
   return (
     <>
+      <Header title="로그인" isCloseButton={true} />
       <LoginForm
         onSubmit={handleLogin}
         error={error}

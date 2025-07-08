@@ -4,7 +4,11 @@ import { Button } from '../ui/button';
 import { FloatingInput } from '../ui/floating-input';
 import { SelectBox } from '@/lib/SelectBox';
 import { validatePhoneNumber, formatPhoneNumber } from '@/lib/validation';
-import { sendVerificationCode, verifyCode } from '@/action/auth-service/index';
+import {
+  sendVerificationCode,
+  verifyCode,
+  checkPhoneNumber,
+} from '@/action/auth-service/index';
 
 interface GenderOption {
   value: string;
@@ -32,6 +36,7 @@ export default function PhonenumberSection({
 
   const [isSendingCode, setIsSendingCode] = useState(false);
   const [isVerifyingCode, setIsVerifyingCode] = useState(false);
+  const [isCheckingPhone, setIsCheckingPhone] = useState(false);
 
   // 개별 에러 상태
   const [nameError, setNameError] = useState('');
@@ -79,6 +84,18 @@ export default function PhonenumberSection({
         const formattedPhone = formatPhoneNumber(value);
         setPhoneNumber(formattedPhone);
         if (phoneNumberError) setPhoneNumberError('');
+
+        // 전화번호가 변경되면 인증 상태 리셋
+        if (formattedPhone !== phoneNumber) {
+          setIsVerificationSent(false);
+          setIsVerified(false);
+          setVerificationCode('');
+          setVerificationCodeError('');
+          setTimeLeft(180);
+          setGeneralError('');
+          setIsCheckingPhone(false);
+          setIsSendingCode(false);
+        }
         break;
       case 'verificationCode':
         setVerificationCode(value);
@@ -133,6 +150,33 @@ export default function PhonenumberSection({
       return;
     }
 
+    // 전화번호 중복체크
+    setIsCheckingPhone(true);
+    setGeneralError('');
+
+    try {
+      const checkResult = await checkPhoneNumber(phoneNumber);
+
+      if (checkResult && checkResult.isSuccess) {
+        if (!checkResult.result.available) {
+          setPhoneNumberError('이미 등록된 휴대전화 번호입니다.');
+          setIsCheckingPhone(false);
+          return;
+        }
+      } else {
+        setGeneralError(
+          '전화번호 중복 확인에 실패했습니다. 다시 시도해주세요.'
+        );
+        setIsCheckingPhone(false);
+        return;
+      }
+    } catch {
+      setGeneralError('전화번호 중복 확인 중 오류가 발생했습니다.');
+      setIsCheckingPhone(false);
+      return;
+    }
+
+    // 인증번호 발송
     setIsSendingCode(true);
     setGeneralError('');
 
@@ -150,6 +194,7 @@ export default function PhonenumberSection({
       setGeneralError('인증번호 발송 중 오류가 발생했습니다.');
     } finally {
       setIsSendingCode(false);
+      setIsCheckingPhone(false);
     }
   };
 
@@ -287,11 +332,16 @@ export default function PhonenumberSection({
                 !birthdate.trim() ||
                 !gender.trim() ||
                 !phoneNumber.trim() ||
-                isSendingCode
+                isSendingCode ||
+                isCheckingPhone
               }
               className="w-full bg-custom-green text-black font-bold px-4 rounded-md h-14 disabled:opacity-50"
             >
-              {isSendingCode ? '발송 중...' : '인증하기'}
+              {isCheckingPhone
+                ? '중복 확인 중...'
+                : isSendingCode
+                  ? '발송 중...'
+                  : '인증하기'}
             </Button>
           )}
         </div>
