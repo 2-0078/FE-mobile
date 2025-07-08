@@ -17,7 +17,7 @@ interface EventItem {
 }
 
 export default async function EventPage() {
-  const session = await auth();
+  // const session = await auth(); // 사용하지 않는 변수 주석 처리
   // const user = session?.user; // 사용하지 않는 변수 주석 처리
 
   // 임시 이벤트 데이터

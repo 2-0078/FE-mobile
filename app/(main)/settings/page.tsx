@@ -123,6 +123,7 @@ export default async function SettingsPage() {
   ];
 
   const renderSettingItem = (item: any) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if (item.href) {
       return (
         <Link key={item.title} href={item.href}>
