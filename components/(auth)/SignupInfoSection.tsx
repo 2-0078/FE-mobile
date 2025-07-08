@@ -81,7 +81,11 @@ export default function SignupInfoSection({
     if (passwordError) {
       setPasswordError('');
     }
-    if (confirmPasswordError) {
+
+    // 확인 비밀번호와 일치 여부 실시간 확인
+    if (confirmPassword && value !== confirmPassword) {
+      setConfirmPasswordError('비밀번호가 일치하지 않습니다.');
+    } else if (confirmPassword && value === confirmPassword) {
       setConfirmPasswordError('');
     }
   };
@@ -89,8 +93,13 @@ export default function SignupInfoSection({
   const handleConfirmPasswordChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setConfirmPassword(e.target.value);
-    if (confirmPasswordError) {
+    const value = e.target.value;
+    setConfirmPassword(value);
+
+    // 실시간으로 비밀번호 일치 여부 확인
+    if (value && password !== value) {
+      setConfirmPasswordError('비밀번호가 일치하지 않습니다.');
+    } else {
       setConfirmPasswordError('');
     }
   };

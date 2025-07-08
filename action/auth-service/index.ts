@@ -29,6 +29,16 @@ export interface VerifyCodeResponse {
   result?: any;
 }
 
+export interface CheckPhoneNumberResponse {
+  httpStatus: string;
+  isSuccess: boolean;
+  message: string;
+  code: number;
+  result: {
+    available: boolean;
+  };
+}
+
 export const sendVerificationCode = async (
   phoneNumber: string
 ): Promise<SendVerificationCodeResponse | null> => {
@@ -89,6 +99,33 @@ export const verifyCode = async (
     return data;
   } catch (error) {
     console.error('Error verifying code:', error);
+    return null;
+  }
+};
+
+export const checkPhoneNumber = async (
+  phoneNumber: string
+): Promise<CheckPhoneNumberResponse | null> => {
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/member-service/api/v1/check-phone-number?phoneNumber=${phoneNumber}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    if (!response.ok) {
+      console.error('Failed to check phone number:', response.status);
+      return null;
+    }
+
+    const data: CheckPhoneNumberResponse = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error checking phone number:', error);
     return null;
   }
 };

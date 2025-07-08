@@ -1,9 +1,10 @@
 'use client';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { signup } from '@/action/auth-service/index';
 import { useFunnel } from '@/action/funnel';
 import { AlertContext } from '@/lib/Alert';
+import { useAlert } from '@/hooks/useAlert';
 
 import Stepper from './Stepper';
 import SignupInfoSection from './SignupInfoSection';
@@ -17,6 +18,8 @@ export default function SignupSteps() {
   const alertContext = useContext(AlertContext);
   const { Funnel, Step, setStep, formData, setFormData, currentStep } =
     useFunnel('step1');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { success, error: showError } = useAlert();
 
   const handleNext = (data: Record<string, string>, step: string) => {
     setStep(step);
@@ -24,22 +27,26 @@ export default function SignupSteps() {
   };
 
   const handleSubmit = async (data: Record<string, string>) => {
+    setIsSubmitting(true);
     try {
       const signupData = { ...formData, ...data };
       setFormData(signupData);
       const res = await signup(signupData);
 
       if (res.isSuccess) {
-        alertContext?.basic('회원가입이 완료되었습니다.');
+        success('🎉 회원가입이 완료되었습니다!');
         setTimeout(() => {
           router.push('/login');
-        }, 1000);
+        }, 1500);
       } else {
         const errorMessage = res.message || '회원가입에 실패했습니다.';
-        alertContext?.error(errorMessage);
+        showError(errorMessage);
       }
-    } catch {
-      console.error('Error during signup');
+    } catch (error) {
+      console.error('Error during signup:', error);
+      showError('회원가입 중 오류가 발생했습니다.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -80,6 +87,7 @@ export default function SignupSteps() {
             onNext={(data: { nickname: string }) => {
               handleSubmit(data);
             }}
+            isSubmitting={isSubmitting}
           />
         </Step>
       </Funnel>

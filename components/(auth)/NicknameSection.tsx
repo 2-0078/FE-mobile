@@ -6,8 +6,10 @@ import { checkNicknameAvailability } from '@/action/validation-service';
 
 export default function NicknameSection({
   onNext,
+  isSubmitting = false,
 }: {
   onNext: (data: { nickname: string }) => void;
+  isSubmitting?: boolean;
 }) {
   const [nickname, setNickname] = useState('');
   const [nicknameError, setNicknameError] = useState('');
@@ -93,6 +95,7 @@ export default function NicknameSection({
             required
             error={!!nicknameError}
             helperText={nicknameError}
+            disabled={isSubmitting}
           />
           {isChecking && (
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
@@ -117,9 +120,21 @@ export default function NicknameSection({
           type="button"
           className="w-full bg-custom-green text-black font-bold text-lg py-4 rounded-md h-14"
           onClick={handleNext}
-          disabled={!nickname.trim() || isAvailable === false || isChecking}
+          disabled={
+            !nickname.trim() ||
+            isAvailable === false ||
+            isChecking ||
+            isSubmitting
+          }
         >
-          회원가입
+          {isSubmitting ? (
+            <div className="flex items-center justify-center">
+              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-black mr-2"></div>
+              가입 중...
+            </div>
+          ) : (
+            '회원가입'
+          )}
         </Button>
       </div>
     </div>
