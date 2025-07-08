@@ -41,7 +41,8 @@ const Search = ({
           params.set('page', '0');
 
           // 현재 경로에 따라 다른 라우팅
-          const currentPath = window.location.pathname;
+          const currentPath =
+            typeof window !== 'undefined' ? window.location.pathname : '';
           if (currentPath.startsWith('/funding')) {
             router.replace(`/funding?${params.toString()}`);
           } else if (currentPath.startsWith('/piece')) {
@@ -72,7 +73,8 @@ const Search = ({
         return;
       }
 
-      const currentPath = window.location.pathname;
+      const currentPath =
+        typeof window !== 'undefined' ? window.location.pathname : '';
       const params = new URLSearchParams(searchParams.toString());
 
       params.set('search', searchValue.trim());
@@ -93,7 +95,8 @@ const Search = ({
   const handleClear = () => {
     setSearchValue('');
 
-    const currentPath = window.location.pathname;
+    const currentPath =
+      typeof window !== 'undefined' ? window.location.pathname : '';
     const params = new URLSearchParams(searchParams.toString());
     params.delete('search');
     params.set('page', '0');

@@ -13,6 +13,8 @@ export const marketStorage = {
   // 전일 데이터 저장
   saveMarketData: (productUuid: string, marketData: MarketPriceData) => {
     try {
+      if (typeof window === 'undefined') return;
+
       const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
       const storedData: StoredMarketData = {
         data: marketData,
@@ -42,6 +44,8 @@ export const marketStorage = {
   // 저장된 데이터 불러오기
   getMarketData: (productUuid: string): MarketPriceData | null => {
     try {
+      if (typeof window === 'undefined') return null;
+
       const stored = localStorage.getItem(
         `${MARKET_DATA_PREFIX}${productUuid}`
       );
@@ -74,6 +78,8 @@ export const marketStorage = {
   // 마지막 업데이트 시간 확인
   getLastUpdateTime: (productUuid: string): number | null => {
     try {
+      if (typeof window === 'undefined') return null;
+
       const timestamp = localStorage.getItem(
         `${LAST_UPDATE_PREFIX}${productUuid}`
       );
@@ -86,6 +92,8 @@ export const marketStorage = {
 
   // 데이터가 최신인지 확인 (1시간 이내)
   isDataRecent: (productUuid: string): boolean => {
+    if (typeof window === 'undefined') return false;
+
     const lastUpdate = marketStorage.getLastUpdateTime(productUuid);
     if (!lastUpdate) return false;
 
@@ -95,6 +103,8 @@ export const marketStorage = {
 
   // 현재 시간이 거래 시간인지 확인 (9시 ~ 15시 30분)
   isMarketOpen: (): boolean => {
+    if (typeof window === 'undefined') return false;
+
     const now = new Date();
     const hour = now.getHours();
     const minute = now.getMinutes();

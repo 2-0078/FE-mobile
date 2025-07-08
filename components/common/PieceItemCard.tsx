@@ -96,7 +96,7 @@ export default function PieceItemCard({ product }: PieceItemCardProps) {
     };
 
     fetchMarketData();
-  }, [product.productUuid]); // productUuid만 의존성으로 사용
+  }, [product.productUuid]); // isLoadingMarketData 제거
 
   // 주가 데이터가 있는 경우 표시 (더 명확한 조건)
   const hasMarketData =

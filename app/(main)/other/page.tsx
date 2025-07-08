@@ -1,3 +1,4 @@
+import { Metadata } from 'next';
 import {
   PartyPopper,
   ChevronRight,
@@ -14,6 +15,46 @@ import LogoutButton from '@/components/common/LogoutButton';
 import { auth } from '@/auth';
 import { getMemberProfile } from '@/action/member-service';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+  title: '더보기',
+  description:
+    'Piece of Cake에서 공지사항, 이벤트, 자주하는 질문, 상품 판매, 문의하기 등 다양한 서비스를 이용하세요.',
+  keywords: [
+    '공지사항',
+    '이벤트',
+    '자주하는 질문',
+    '상품 판매',
+    '문의하기',
+    '고객센터',
+    '투자',
+    '조각투자',
+  ],
+  openGraph: {
+    title: '더보기 | Piece of Cake',
+    description:
+      '공지사항, 이벤트, 자주하는 질문, 상품 판매, 문의하기 등 다양한 서비스를 이용하세요.',
+    url: 'https://pieceofcake.site/other',
+    siteName: 'Piece of Cake',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Piece of Cake - 더보기',
+      },
+    ],
+    locale: 'ko_KR',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: '더보기 | Piece of Cake',
+    description:
+      '공지사항, 이벤트, 자주하는 질문, 상품 판매, 문의하기 등 다양한 서비스를 이용하세요.',
+    images: ['/og-image.png'],
+  },
+};
 
 export default async function OtherPage() {
   const session = await auth();
