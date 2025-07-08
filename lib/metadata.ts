@@ -84,7 +84,6 @@ export function generateFundingMetadata(
     imageUrl,
     remainingPieces,
     totalPieces,
-    fundingStatus,
   } = funding;
 
   const fullDescription = `${description} ${price ? `가격: ${price.toLocaleString()}원` : ''} ${remainingPieces && totalPieces ? `남은 조각: ${remainingPieces}/${totalPieces}` : ''}`;
@@ -145,7 +144,6 @@ export function generatePieceMetadata(
   const {
     title,
     description,
-    price,
     category,
     imageUrl,
     piecePrice,
