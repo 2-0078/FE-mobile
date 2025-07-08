@@ -31,7 +31,7 @@ export default function NavItem({ item, isActive }: NavItemProps) {
   return (
     <li className="w-fit flex justify-center items-center">
       <Link href={href} className="relative" aria-label={label}>
-        <Icon isActive={isActive} />
+        <Icon className={isActive ? 'text-green-400' : 'text-gray-400'} />
         {isActive && (
           <div className="absolute left-0 right-0 mx-auto -bottom-3 w-1.5 h-1.5 rounded-full bg-custom-green" />
         )}

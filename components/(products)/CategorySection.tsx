@@ -29,13 +29,13 @@ export default function CategorySection({
     if (key === 'main') {
       params.delete('search');
       params.delete('sub');
-      params.delete('page');
+      params.set('page', '0');
     }
 
     // 서브 카테고리 변경 시 페이지 초기화
     if (key === 'sub') {
       params.delete('search');
-      params.delete('page');
+      params.set('page', '0');
     }
 
     router.replace(`?${params.toString()}`);
@@ -55,9 +55,9 @@ export default function CategorySection({
 
   return (
     <>
-      <div className="px-4 py-4">
+      <div className="px-4 py-2">
         <div
-          className="flex gap-2 overflow-x-auto scrollbar-hide"
+          className="flex gap-1 overflow-x-auto scrollbar-hide"
           style={{
             scrollbarWidth: 'none',
           }}
@@ -66,7 +66,7 @@ export default function CategorySection({
             <button
               key={category.id}
               onClick={() => handleMainCategoryChange(category.id)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
+              className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
                 selectedMainCategory == category.id
                   ? 'bg-custom-green text-gray-900'
                   : 'bg-dark-blue text-gray-300 '
@@ -77,8 +77,10 @@ export default function CategorySection({
           ))}
         </div>
       </div>
+      {/* border */}
+      <div className="h-[1px] bg-white/10" />
       {selectedMainCategory !== '전체' && subCategories.length > 0 && (
-        <div className="px-4 pb-4">
+        <div className="px-4 py-2">
           <div
             className="flex gap-2 overflow-x-auto scrollbar-hide"
             style={{
@@ -89,10 +91,10 @@ export default function CategorySection({
               <button
                 key={subCategory.id}
                 onClick={() => handleSubCategoryChange(subCategory.id)}
-                className={`px-3 py-2 rounded-lg text-xs whitespace-nowrap transition-all ${
+                className={`px-4 py-2 rounded-full text-xs whitespace-nowrap transition-all ${
                   selectedSubCategory == subCategory.id
-                    ? 'bg-custom-green text-gray-900 font-medium'
-                    : 'bg-dark-blue text-gray-400  '
+                    ? 'font-medium text-custom-green'
+                    : 'text-gray-400'
                 }`}
               >
                 {subCategory.categoryName}
@@ -101,6 +103,7 @@ export default function CategorySection({
           </div>
         </div>
       )}
+      <div className="h-[1px] bg-white/10" />
     </>
   );
 }

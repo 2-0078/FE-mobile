@@ -4,24 +4,11 @@ import React from 'react';
 import BottomNavbar from '@/components/layout/BottomNavbar';
 import { usePathname } from 'next/navigation';
 
-export default function Layout({
+export default function ProductsLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const pathname = usePathname();
-  const hideBottomNavRoutes = [
-    '/charge',
-    '/withdraw',
-    '/other',
-    '/profile',
-    '/notice',
-    '/event',
-    '/faq',
-    '/sell',
-    '/my-products',
-    '/contact',
-    '/settings',
-    '/funding',
-  ];
+  const hideBottomNavRoutes = ['/funding', '/piece'];
   const shouldHideBottomNav = hideBottomNavRoutes.some((route) =>
     pathname.startsWith(route)
   );

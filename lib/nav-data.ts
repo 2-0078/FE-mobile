@@ -1,4 +1,4 @@
-import { LucideIcon } from 'lucide-react';
+import { ChartColumn, LucideIcon, User2, Wallet2Icon } from 'lucide-react';
 import { Puzzle } from 'lucide-react';
 import CardIcon from '@/repo/ui/Icons/CardIcon';
 import HomeIcon from '@/repo/ui/Icons/HomeIcon';
@@ -20,23 +20,23 @@ export const navItems: NavItem[] = [
   },
   {
     href: '/funding',
-    icon: CardIcon,
+    icon: ChartColumn,
     label: '펀딩',
+  },
+  {
+    href: '/mywallet',
+    icon: Wallet2Icon,
+    label: '내 지갑',
+    isSpecial: true,
   },
   {
     href: '/piece',
     icon: Puzzle,
-    isSpecial: true,
     label: '조각',
   },
   {
-    href: '/mywallet',
-    icon: MyPageIcon,
-    label: '내 지갑',
-  },
-  {
     href: '/other',
-    icon: OtherIcon,
+    icon: User2,
     label: '기타',
   },
-]; 
+];

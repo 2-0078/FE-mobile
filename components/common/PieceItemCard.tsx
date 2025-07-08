@@ -11,12 +11,14 @@ import { TrendingUp, TrendingDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { marketStorage } from '@/lib/market-storage';
 import { Skeleton } from '@/components/atoms';
+import { useRouter } from 'next/navigation';
 
 interface PieceItemCardProps {
   product: PieceProductType;
 }
 
 export default function PieceItemCard({ product }: PieceItemCardProps) {
+  const router = useRouter();
   const { piece } = product;
   const [marketData, setMarketData] = useState<MarketPriceData | null>(null);
   const [isLoadingMarketData, setIsLoadingMarketData] = useState(false);
@@ -111,8 +113,15 @@ export default function PieceItemCard({ product }: PieceItemCardProps) {
     return '';
   };
 
+  const handleClick = () => {
+    router.push(`/piece/${product.productUuid}`);
+  };
+
   return (
-    <div className="w-full rounded-lg shadow-lg bg-white overflow-hidden relative mx-auto items-center justify-center">
+    <div
+      onClick={handleClick}
+      className="w-full rounded-lg shadow-lg bg-white overflow-hidden relative mx-auto items-center justify-center"
+    >
       {/* 상한가 하한가를 표시하자 */}
       <ItemCardImage
         remainingTime={`${piece.tradeQuantity}개`}
