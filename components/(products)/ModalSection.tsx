@@ -69,9 +69,9 @@ export default function ModalSection({
         isOpen={currentModal === 'comments'}
         onClose={() => closeModal()}
       >
-        {(handleClose: () => void) => (
+        {() => (
           <>
-            <ModalHeader onClose={handleClose}>
+            <ModalHeader>
               <div className="px-6 pb-4">
                 <h1 className="text-gray-900 text-lg font-semibold">
                   {productData.productName}
@@ -115,9 +115,9 @@ export default function ModalSection({
         isOpen={currentModal === 'details'}
         onClose={() => closeModal()}
       >
-        {(handleClose: () => void) => (
+        {() => (
           <>
-            <ModalHeader onClose={handleClose} />
+            <ModalHeader />
             <div className="space-y-4 px-6">
               <PriceInfo
                 currentPrice={productData.funding.piecePrice}
