@@ -26,7 +26,6 @@ export default function ModalSection({
   console.log(type);
   const commentPage = useSearchParams().get('commentPage') || '1';
   const [replies, setReplies] = useState<ReplyType[]>([]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -50,7 +49,6 @@ export default function ModalSection({
   }, [itemUuid, commentPage, type]);
 
   const handleCommentSubmit = async () => {
-    setIsSubmitting(true);
     try {
       // Refresh comments after submission
       const repliesData = await getRepliesWithChildren(
@@ -61,8 +59,6 @@ export default function ModalSection({
       setReplies(repliesData || []);
     } catch (error) {
       console.error('Failed to refresh comments:', error);
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
