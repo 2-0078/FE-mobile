@@ -69,9 +69,9 @@ export default function ModalSection({
         isOpen={currentModal === 'comments'}
         onClose={() => closeModal()}
       >
-        {(handleClose: () => void) => (
+        {() => (
           <>
-            <ModalHeader onClose={handleClose}>
+            <ModalHeader>
               <div className="px-6 pb-4">
                 <h1 className="text-gray-900 text-lg font-semibold">
                   {productData.productName}
@@ -83,9 +83,9 @@ export default function ModalSection({
               </div>
             </ModalHeader>
             <div className="flex flex-col h-full">
-              <div className="flex-1 overflow-y-auto">
+              <div className="overflow-y-auto px-6" style={{ height: '70%' }}>
                 {isLoading ? (
-                  <div className="px-6 py-16 text-center">
+                  <div className="py-16 text-center">
                     <div className="text-gray-300 text-2xl mb-3">⏳</div>
                     <p className="text-gray-500 text-sm font-medium">
                       댓글을 불러오는 중...
@@ -95,7 +95,11 @@ export default function ModalSection({
                   <CommentsContent comments={replies} />
                 )}
               </div>
-              <div className="border-t border-gray-200">
+
+              <div
+                className="border-t border-gray-200 bg-white flex-shrink-0"
+                style={{ height: '40%' }}
+              >
                 <CommentForm
                   boardType={type}
                   boardUuid={itemUuid}
@@ -111,9 +115,9 @@ export default function ModalSection({
         isOpen={currentModal === 'details'}
         onClose={() => closeModal()}
       >
-        {(handleClose: () => void) => (
+        {() => (
           <>
-            <ModalHeader onClose={handleClose} />
+            <ModalHeader />
             <div className="space-y-4 px-6">
               <PriceInfo
                 currentPrice={productData.funding.piecePrice}

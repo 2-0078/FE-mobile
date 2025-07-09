@@ -4,10 +4,22 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { ReplyType } from '@/types/CommunityTypes';
 import { getMemberProfile } from '@/action/member-service';
-import { createChildReply } from '@/action/reply-service';
+import {
+  createChildReply,
+  updateReply,
+  deleteReply,
+} from '@/action/reply-service';
 import { useAlert } from '@/hooks/useAlert';
 import { Button } from '@/components/ui/button';
-import { Send, MessageCircle, Reply } from 'lucide-react';
+import {
+  Send,
+  MessageCircle,
+  Reply,
+  Edit,
+  Trash2,
+  X,
+  Check,
+} from 'lucide-react';
 
 export function CommentItem({
   replyUuid,
@@ -24,6 +36,9 @@ export function CommentItem({
   const [showReplyForm, setShowReplyForm] = useState(false);
   const [childReplyContent, setChildReplyContent] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editContent, setEditContent] = useState(replyContent);
+  const [isDeleting, setIsDeleting] = useState(false);
   const { success, error: showError } = useAlert();
 
   useEffect(() => {
@@ -76,8 +91,67 @@ export function CommentItem({
     }
   };
 
+  const handleEditSubmit = async () => {
+    if (!editContent.trim()) {
+      showError('댓글 내용을 입력해주세요.');
+      return;
+    }
+
+    if (editContent.length > 500) {
+      showError('댓글은 500자 이내로 작성해주세요.');
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      await updateReply({
+        replyUuid,
+        replyContent: editContent.trim(),
+      });
+
+      setIsEditing(false);
+      success('댓글이 수정되었습니다.');
+      // Refresh the page or trigger parent refresh
+      window.location.reload();
+    } catch (err) {
+      console.error('Failed to update reply:', err);
+      showError('댓글 수정에 실패했습니다.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!confirm('정말로 이 댓글을 삭제하시겠습니까?')) {
+      return;
+    }
+
+    setIsDeleting(true);
+    try {
+      await deleteReply(replyUuid);
+      success('댓글이 삭제되었습니다.');
+      // Refresh the page or trigger parent refresh
+      window.location.reload();
+    } catch (err) {
+      console.error('Failed to delete reply:', err);
+      showError('댓글 삭제에 실패했습니다.');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   const toggleChildReplies = () => {
     setShowChildReplies(!showChildReplies);
+  };
+
+  const startEdit = () => {
+    setEditContent(replyContent);
+    setIsEditing(true);
+  };
+
+  const cancelEdit = () => {
+    setEditContent(replyContent);
+    setIsEditing(false);
   };
 
   // 날짜 포맷팅
@@ -121,23 +195,82 @@ export function CommentItem({
               {loading ? '로딩 중...' : username}
             </p>
             {mine && (
-              <span className="px-2 py-0.5 text-xs bg-blue-50 text-blue-600 rounded-full font-medium">
+              <span className="px-2 py-0.5 text-xs bg-green-50 text-green-600 rounded-full font-medium">
                 나
               </span>
             )}
           </div>
-          <p className="text-gray-800 text-sm leading-relaxed break-words mb-2">
-            {replyContent}
-          </p>
+
+          {/* 수정 모드일 때 텍스트 영역 표시 */}
+          {isEditing ? (
+            <div className="mb-3">
+              <textarea
+                value={editContent}
+                onChange={(e) => setEditContent(e.target.value)}
+                className="w-full p-3 border border-gray-200 text-gray-900 text-sm rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white"
+                rows={3}
+                maxLength={500}
+                disabled={submitting}
+              />
+              <div className="flex justify-between items-center mt-2">
+                <span className="text-xs text-gray-400">
+                  {editContent.length}/500
+                </span>
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={cancelEdit}
+                    disabled={submitting}
+                    className="px-3 py-1 text-xs"
+                  >
+                    <X size={14} />
+                  </Button>
+                  <Button
+                    size="sm"
+                    onClick={handleEditSubmit}
+                    disabled={submitting || !editContent.trim()}
+                    className="px-3 py-1 text-xs bg-green-600 text-white"
+                  >
+                    <Check size={14} />
+                  </Button>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <p className="text-gray-800 text-sm leading-relaxed break-words mb-2">
+              {replyContent}
+            </p>
+          )}
+
           <div className="flex items-center gap-4">
             <p className="text-gray-400 text-xs">{formatDate(createdAt)}</p>
             <button
               onClick={() => setShowReplyForm(!showReplyForm)}
-              className="text-gray-400 text-xs hover:text-blue-600 flex items-center gap-1"
+              className="text-gray-400 text-xs hover:text-green-600 flex items-center gap-1"
             >
               <MessageCircle size={12} />
               답글
             </button>
+            {mine && (
+              <>
+                <button
+                  onClick={startEdit}
+                  className="text-gray-400 text-xs hover:text-green-600 flex items-center gap-1"
+                >
+                  <Edit size={12} />
+                  수정
+                </button>
+                <button
+                  onClick={handleDelete}
+                  disabled={isDeleting}
+                  className="text-gray-400 text-xs hover:text-red-600 flex items-center gap-1 disabled:opacity-50"
+                >
+                  <Trash2 size={12} />
+                  삭제
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -150,7 +283,7 @@ export function CommentItem({
               value={childReplyContent}
               onChange={(e) => setChildReplyContent(e.target.value)}
               placeholder="대댓글을 입력하세요..."
-              className="flex-1 p-2 border border-gray-200 text-gray-900 text-sm rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+              className="flex-1 p-2 border border-gray-200 text-gray-900 text-sm rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white"
               rows={2}
               maxLength={500}
               disabled={submitting}
@@ -158,7 +291,7 @@ export function CommentItem({
             <Button
               type="submit"
               disabled={submitting || !childReplyContent.trim()}
-              className="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
+              className="px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
             >
               <Send size={14} />
             </Button>
@@ -171,7 +304,7 @@ export function CommentItem({
         <div className="ml-12">
           <button
             onClick={toggleChildReplies}
-            className="text-gray-500 text-xs hover:text-blue-600 mb-3 flex items-center gap-1"
+            className="text-gray-500 text-xs hover:text-green-600 mb-3 flex items-center gap-1"
           >
             <Reply size={12} />
             {showChildReplies
@@ -201,7 +334,7 @@ export function CommentItem({
                         사용자
                       </p>
                       {childReply.mine && (
-                        <span className="px-1.5 py-0.5 text-xs bg-blue-50 text-blue-600 rounded-full font-medium">
+                        <span className="px-1.5 py-0.5 text-xs bg-blue-50 text-green-600 rounded-full font-medium">
                           나
                         </span>
                       )}
