@@ -11,7 +11,7 @@ import TempPriceIcon from '@/repo/ui/Icons/TempPriceIcon';
 import ClockIcon from '@/repo/ui/Icons/ClockIcon';
 import { generatePieceMetadata } from '@/lib/metadata';
 import { generatePieceProductJsonLd } from '@/lib/structured-data';
-import CommentSection from '@/components/common/CommentSection';
+import { CommentSection } from '@/components/common/CommentSection';
 
 export async function generateMetadata({
   params,
@@ -141,7 +141,7 @@ export default async function PiecePage({
 
         {/* 댓글 섹션 */}
         <div className="mt-8">
-          <CommentSection boardType="PIECE" boardUuid={param.pieceUuid} />
+          <CommentSection type="PIECE" productUuid={param.pieceUuid} />
         </div>
       </PageWrapper>
     </>
