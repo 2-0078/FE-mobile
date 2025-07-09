@@ -137,11 +137,6 @@ export default async function FundingPage({
             aiEstimatedPrice={data.aiEstimatedPrice}
             description={data.description}
           />
-
-          {/* 댓글 섹션 */}
-          <div className="mt-8">
-            <CommentSection type="FUNDING" productUuid={param.fundingUuid} />
-          </div>
         </PageWrapper>
       </FundingDetailClient>
     </>

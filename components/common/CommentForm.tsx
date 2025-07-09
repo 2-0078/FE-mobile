@@ -62,7 +62,7 @@ export default function CommentForm({
               value={content}
               onChange={(e) => setContent(e.target.value)}
               placeholder={`${boardType === 'FUNDING' ? '펀딩' : '조각'} 상품에 대한 의견을 남겨보세요...`}
-              className="w-full p-3 border border-gray-200 text-gray-900 text-sm rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50"
+              className="w-full p-3 border border-gray-200 text-gray-900 text-sm rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white"
               rows={2}
               maxLength={500}
               disabled={loading}
@@ -71,7 +71,7 @@ export default function CommentForm({
           <Button
             type="submit"
             disabled={loading || !content.trim()}
-            className="px-4 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
+            className="px-4 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
           >
             <Send size={16} />
           </Button>
@@ -79,7 +79,7 @@ export default function CommentForm({
         <div className="flex justify-between items-center mt-2 px-1">
           <span className="text-xs text-gray-400">{content.length}/500</span>
           {loading && (
-            <span className="text-xs text-blue-600 font-medium">
+            <span className="text-xs text-green-700 font-medium">
               작성 중...
             </span>
           )}

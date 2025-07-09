@@ -312,3 +312,106 @@ export async function createChildReply({
   console.log('Child reply success:', data);
   return data.result;
 }
+
+export async function updateReply({
+  replyUuid,
+  replyContent,
+}: {
+  replyUuid: string;
+  replyContent: string;
+}) {
+  const session = await auth();
+  const token = session?.user?.accessToken || null;
+  const memberUuid = session?.user?.memberUuid || null;
+
+  if (!token) {
+    throw new Error('인증이 필요합니다.');
+  }
+
+  if (!memberUuid) {
+    throw new Error('회원 정보가 필요합니다.');
+  }
+
+  console.log('Updating reply:', { replyUuid, replyContent });
+
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`,
+    'X-Member-Uuid': memberUuid,
+  };
+
+  const response = await fetch(
+    `${process.env.BASE_API_URL}/reply-service/api/v1/reply/${replyUuid}`,
+    {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify({
+        replyContent,
+      }),
+    }
+  );
+
+  console.log('Update reply response status:', response.status);
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error('Update reply API error:', {
+      status: response.status,
+      statusText: response.statusText,
+      errorText,
+    });
+    throw new Error(
+      `댓글 수정에 실패했습니다. (${response.status}: ${errorText})`
+    );
+  }
+
+  const data = (await response.json()) as CommonResponseType<ReplyType>;
+  console.log('Update reply success:', data);
+  return data.result;
+}
+
+export async function deleteReply(replyUuid: string) {
+  const session = await auth();
+  const token = session?.user?.accessToken || null;
+  const memberUuid = session?.user?.memberUuid || null;
+
+  if (!token) {
+    throw new Error('인증이 필요합니다.');
+  }
+
+  if (!memberUuid) {
+    throw new Error('회원 정보가 필요합니다.');
+  }
+
+  console.log('Deleting reply:', replyUuid);
+
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`,
+    'X-Member-Uuid': memberUuid,
+  };
+
+  const response = await fetch(
+    `${process.env.BASE_API_URL}/reply-service/api/v1/reply/${replyUuid}`,
+    {
+      method: 'DELETE',
+      headers,
+    }
+  );
+
+  console.log('Delete reply response status:', response.status);
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error('Delete reply API error:', {
+      status: response.status,
+      statusText: response.statusText,
+      errorText,
+    });
+    throw new Error(
+      `댓글 삭제에 실패했습니다. (${response.status}: ${errorText})`
+    );
+  }
+
+  return true;
+}
