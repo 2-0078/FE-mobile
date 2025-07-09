@@ -15,7 +15,6 @@ import { generateFundingProductJsonLd } from '@/lib/structured-data';
 import { cn } from '@/lib/utils';
 import Price from '@/components/layout/Price';
 import AIPricePrediction from '@/components/common/AIPricePrediction';
-import { CommentSection } from '@/components/common/CommentSection';
 
 export async function generateMetadata({
   params,
