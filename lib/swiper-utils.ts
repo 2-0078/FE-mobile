@@ -258,16 +258,20 @@ export function renderIndicators(
 
   return React.createElement(
     'div',
-    { className: 'flex justify-center items-center mt-4 space-x-2' },
+    {
+      className:
+        'absolute bottom-0 left-1/2 transform -translate-x-1/2 flex justify-center items-center space-x-2 z-50',
+    },
     Array.from({ length: itemsLength }).map((_, index) =>
       React.createElement('button', {
-        key: index,
-        className: `w-1 h-1 rounded-full transition-colors transition-all duration-300 ${
+        'key': index,
+        'className': `w-2 h-2 rounded-full transition-all duration-300 ${
           index === currentIndex
-            ? 'bg-custom-green w-4 h-4'
-            : 'bg-gray-300 opacity-50'
+            ? 'bg-custom-green w-6 h-2 shadow-lg'
+            : 'bg-white/50 hover:bg-white/70'
         }`,
-        onClick: () => onIndicatorClick(index),
+        'onClick': () => onIndicatorClick(index),
+        'aria-label': `이미지 ${index + 1}로 이동`,
       })
     )
   );

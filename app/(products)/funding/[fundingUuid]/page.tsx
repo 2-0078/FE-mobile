@@ -9,10 +9,16 @@ import { CountdownTimer } from '@/components/CountdownTimer';
 import InfoCardLayout from '@/components/layout/InfoCardLayout';
 import { BottomActions } from '@/components/BottomActions';
 import ModalSection from '@/components/(products)/ModalSection';
+import FundingDetailClient from '@/components/common/FundingDetailClient';
+import ImageSwiper from '@/components/common/ImageSwiper';
 import { Puzzle } from 'lucide-react';
 import ClockIcon from '@/repo/ui/Icons/ClockIcon';
 import { generateFundingMetadata } from '@/lib/metadata';
 import { generateFundingProductJsonLd } from '@/lib/structured-data';
+import CategorySection from '@/components/(products)/CategorySection';
+import { cn } from '@/lib/utils';
+import Price from '@/components/layout/Price';
+import AIPricePrediction from '@/components/common/AIPricePrediction';
 
 export async function generateMetadata({
   params,
@@ -71,78 +77,71 @@ export default async function FundingPage({
           ),
         }}
       />
-      <PageWrapper>
-        <div className="relative rounded-xl overflow-hidden w-full h-[50vh]">
-          <Image
-            src={data.images[0].imageUrl}
-            alt={data.productName}
-            fill={true}
-            sizes="100vw"
-            className="object-contain"
-          />
-        </div>
+      <FundingDetailClient
+        fundingUuid={param.fundingUuid}
+        productUuid={data.productUuid}
+        productData={data}
+      >
+        <PageWrapper className="pt-15">
+          <ImageSwiper images={data.images} alt={data.productName} />
 
-        <div className="mb-12">
-          <ProductTitleWrapper className="text-white whitespace-pre-line">
-            {data.productName}
-          </ProductTitleWrapper>
-          <ProductTitleWrapper className="text-custom-gray-200 text-base whitespace-pre-line font-medium">
-            {data.description}
-          </ProductTitleWrapper>
-        </div>
-
-        <CountdownTimer endDateTime={data.funding.fundingDeadline} />
-        <div className="flex justify-around gap-x-2">
-          <InfoCardLayout
-            className="border-white border-1"
-            title="현재 남은 조각"
-            icon={<Puzzle />}
+          <CountdownTimer endDateTime={data.funding.fundingDeadline} />
+          <div
+            className={cn(
+              'text-white',
+              'flex items-center gap-2  text-[0.725rem]'
+            )}
           >
-            <span className="text-base font-semibold text-white leading-none">
-              {data.funding.remainingPieces}개
+            <span className="text-custom-green">
+              #{data.mainCategory.categoryName}
             </span>
-          </InfoCardLayout>
-          <InfoCardLayout
-            className="border-white border-1"
-            title="현재 공모가"
-            icon={<ClockIcon />}
-          >
-            <span className="text-base font-semibold text-white leading-none">
-              {data.funding.fundingAmount.toLocaleString()}원
+            <span className="text-custom-green">
+              #{data.subCategory.categoryName}
             </span>
-          </InfoCardLayout>
-        </div>
-        <div className="text-center items-center gap-y-4 bg-[url('/Bgimage.svg')] bg-cover bg-no-repeat">
-          <Image
-            src="/Chatbot.png"
-            alt="chatbot"
-            width={126}
-            height={126}
-            className="mx-auto"
+          </div>
+          <div className="mb-12">
+            <ProductTitleWrapper className="text-white whitespace-pre-line">
+              {data.productName}
+            </ProductTitleWrapper>
+            <ProductTitleWrapper className="text-custom-gray-200 text-base whitespace-pre-line font-medium">
+              {data.description}
+            </ProductTitleWrapper>
+          </div>
+          {/* 조각당 가격  왼쪽정렬*/}
+          <Price
+            className="text-white text-3xl font-bold justify-start"
+            price={data.funding.piecePrice}
           />
-          <p className="text-custom-green text-4xl font-bold">
-            {data.aiEstimatedPrice.toLocaleString()}원
-          </p>
-          <p className="text-white text-base font-medium">AI예측가</p>
-        </div>
-        <div className="border-custom-green border-[1px] rounded-2xl p-4 w-full">
-          <p className="text-xs font-medium">
-            해당 상품은{' '}
-            <span className="font-bold">
-              약 {data.aiEstimatedPrice.toLocaleString()}원
-            </span>
-            의 가치가 있는 상품입니다.
-            <br />
-            {data.description}
-          </p>
-        </div>
-        <BottomActions />
-        <ModalSection
-          productData={data}
-          itemUuid={param.fundingUuid}
-          type="FUNDING"
-        />
-      </PageWrapper>
+
+          <div className="flex justify-around gap-x-2">
+            <InfoCardLayout
+              className="border-custom-green/50 border-1"
+              title="현재 남은 조각"
+              icon={<Puzzle />}
+            >
+              <p className="text-base font-semibold text-white leading-none">
+                <span className="text-custom-green">
+                  {data.funding.remainingPieces}
+                </span>
+                / {data.funding.totalPieces}개
+              </p>
+            </InfoCardLayout>
+            <InfoCardLayout
+              className="border-white/50 border-1"
+              title="현재 공모가"
+              icon={<ClockIcon />}
+            >
+              <span className="text-base font-semibold text-white leading-none">
+                {data.funding.fundingAmount.toLocaleString()}원
+              </span>
+            </InfoCardLayout>
+          </div>
+          <AIPricePrediction
+            aiEstimatedPrice={data.aiEstimatedPrice}
+            description={data.description}
+          />
+        </PageWrapper>
+      </FundingDetailClient>
     </>
   );
 }

@@ -40,10 +40,11 @@ export const metadata: Metadata = {
   },
 };
 
-export default function LoginPage({
+export default async function LoginPage({
   searchParams,
 }: {
   searchParams: Promise<{ callbackUrl: string }>;
 }) {
-  return <LoginSection searchParams={searchParams} />;
+  const resolvedSearchParams = await searchParams;
+  return <LoginSection searchParams={resolvedSearchParams} />;
 }

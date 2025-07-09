@@ -11,13 +11,13 @@ export function CommentItem({
   mine,
   replyContent,
 }: ReplyType) {
-  const [avatar, setAvatar] = useState<string>("/chatbot.png");
+  const [avatar, setAvatar] = useState<string>('/next.svg');
   const [username, setUsername] = useState<string | null>(null);
   console.log(mine);
   useEffect(() => {
     const fetchMemberProfile = async () => {
       const memberProfile = await getMemberProfile(memberUuid);
-      setAvatar(memberProfile.profileImageUrl || "/chatbot.png");
+      setAvatar(memberProfile.profileImageUrl || '/next.svg');
       setUsername(memberProfile.nickname);
     };
     fetchMemberProfile();
