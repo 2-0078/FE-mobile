@@ -1,11 +1,10 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Button } from '@/components/ui/button';
 import { MessageCircle } from 'lucide-react';
 import { useModal } from '@/stores/modal-store';
 import WishButton from './common/WishButton';
-import { fundingWish } from '@/action/funding-service';
 
 interface BottomActionsProps {
   fundingUuid: string;

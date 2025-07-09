@@ -1,18 +1,16 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { getFundingWish } from '@/action/funding-service';
+import React from 'react';
 import Header from '@/components/layout/Header';
-import WishButton from './WishButton';
 import ModalSection from '../(products)/ModalSection';
 import { BottomActions } from '../BottomActions';
-import { ProductType } from '@/types/ProductTypes';
+import { FundingProductType } from '@/types/ProductTypes';
 
 interface FundingDetailClientProps {
   fundingUuid: string;
   productUuid: string;
   children: React.ReactNode;
-  productData: ProductType;
+  productData: FundingProductType;
 }
 
 export default function FundingDetailClient({
@@ -21,24 +19,6 @@ export default function FundingDetailClient({
   children,
   productData,
 }: FundingDetailClientProps) {
-  const [isWished, setIsWished] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchWishStatus = async () => {
-      try {
-        const wishStatus = await getFundingWish(fundingUuid);
-        setIsWished(Boolean(wishStatus));
-      } catch (error) {
-        console.error('Failed to fetch wish status:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchWishStatus();
-  }, [fundingUuid]);
-
   return (
     <>
       <Header isCloseButton={true} />

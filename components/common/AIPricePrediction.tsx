@@ -57,7 +57,7 @@ export default function AIPricePrediction({
             }, 2500);
 
             // 가격 카운트업 애니메이션
-            const priceTimer = setTimeout(() => {
+            setTimeout(() => {
               const targetPrice = aiEstimatedPrice;
               const duration = 1500;
               const steps = 80;
