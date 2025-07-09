@@ -8,4 +8,5 @@ export interface ReplyType {
   mine: boolean;
   replyContent: string;
   replyUuid: string;
+  childReplies?: ReplyType[];
 }

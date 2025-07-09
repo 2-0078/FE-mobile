@@ -15,6 +15,7 @@ import { generateFundingProductJsonLd } from '@/lib/structured-data';
 import { cn } from '@/lib/utils';
 import Price from '@/components/layout/Price';
 import AIPricePrediction from '@/components/common/AIPricePrediction';
+import CommentSection from '@/components/common/CommentSection';
 
 export async function generateMetadata({
   params,
@@ -136,6 +137,11 @@ export default async function FundingPage({
             aiEstimatedPrice={data.aiEstimatedPrice}
             description={data.description}
           />
+
+          {/* 댓글 섹션 */}
+          <div className="mt-8">
+            <CommentSection boardType="FUNDING" boardUuid={param.fundingUuid} />
+          </div>
         </PageWrapper>
       </FundingDetailClient>
     </>

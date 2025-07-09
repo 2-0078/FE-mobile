@@ -5,11 +5,12 @@ import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { FundingProductType } from '@/types/ProductTypes';
 import { ReplyType } from '@/types/CommunityTypes';
-import { getRepliesUuid, getReplies } from '@/action/reply-service';
+import { getRepliesWithChildren } from '@/action/reply-service';
 import { useModal } from '@/stores/modal-store';
 import { ModalContainer } from '@/components/ModalContainer';
 import { ModalHeader } from '@/components/ModalHeader';
 import { CommentContent as CommentsContent } from '@/components/CommentContent';
+import CommentForm from '@/components/common/CommentForm';
 import { PriceInfo } from '@/components/PriceInfo';
 import { AmountSection } from '@/components/AmountSection';
 
@@ -20,29 +21,50 @@ export default function ModalSection({
 }: {
   productData: FundingProductType;
   itemUuid: string;
-  type: "FUNDING" | "PIECE";
+  type: 'FUNDING' | 'PIECE';
 }) {
   console.log(type);
-  const commentPage = useSearchParams().get("commentPage") || "1";
+  const commentPage = useSearchParams().get('commentPage') || '1';
   const [replies, setReplies] = useState<ReplyType[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     const fetchReplies = async () => {
-      const replyUuidList = await getRepliesUuid(
-        "PIECE",
+      setIsLoading(true);
+      try {
+        const repliesData = await getRepliesWithChildren(
+          type,
+          itemUuid,
+          commentPage
+        );
+        setReplies(repliesData || []);
+      } catch (error) {
+        console.error('Failed to fetch replies:', error);
+        setReplies([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchReplies();
+  }, [itemUuid, commentPage, type]);
+
+  const handleCommentSubmit = async () => {
+    setIsSubmitting(true);
+    try {
+      // Refresh comments after submission
+      const repliesData = await getRepliesWithChildren(
+        type,
         itemUuid,
         commentPage
       );
-
-      const replyData = await Promise.all(
-        replyUuidList.map(async (reply) => {
-          const replyData = await getReplies(reply.replyUuid);
-          return replyData;
-        })
-      );
-      setReplies(replyData);
-    };
-    fetchReplies();
-  }, [itemUuid, commentPage]);
+      setReplies(repliesData || []);
+    } catch (error) {
+      console.error('Failed to refresh comments:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const { currentModal, closeModal } = useModal();
   return (
@@ -54,17 +76,37 @@ export default function ModalSection({
         {(handleClose: () => void) => (
           <>
             <ModalHeader onClose={handleClose}>
-              <div className="px-6 pb-6">
-                <h1 className="text-black text-lg font-bold">
+              <div className="px-6 pb-4">
+                <h1 className="text-gray-900 text-lg font-semibold">
                   {productData.productName}
                 </h1>
-                <p className="text-black text-sm">
+                <p className="text-gray-500 text-sm mt-1">
                   {productData.mainCategory.categoryName} &gt;
                   {productData.subCategory.categoryName}
                 </p>
               </div>
             </ModalHeader>
-            <CommentsContent comments={replies} />
+            <div className="flex flex-col h-full">
+              <div className="flex-1 overflow-y-auto">
+                {isLoading ? (
+                  <div className="px-6 py-16 text-center">
+                    <div className="text-gray-300 text-2xl mb-3">⏳</div>
+                    <p className="text-gray-500 text-sm font-medium">
+                      댓글을 불러오는 중...
+                    </p>
+                  </div>
+                ) : (
+                  <CommentsContent comments={replies} />
+                )}
+              </div>
+              <div className="border-t border-gray-200">
+                <CommentForm
+                  boardType={type}
+                  boardUuid={itemUuid}
+                  onCommentAdded={handleCommentSubmit}
+                />
+              </div>
+            </div>
           </>
         )}
       </ModalContainer>
