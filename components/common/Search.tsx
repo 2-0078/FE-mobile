@@ -53,7 +53,7 @@ const Search = ({
           }
 
           onSearch?.(value.trim());
-        }, 2000); // 1초 디바운싱
+        }, 2000); // 2초 디바운싱
       };
     })(),
     [searchParams, router, onSearch]

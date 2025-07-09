@@ -139,12 +139,9 @@ export function CountdownTimer({
   if (!isClient || !timeLeft) {
     return (
       <div
-        className={`px-6 py-4 flex items-center justify-between h-10 bg-custom-green rounded-full ${className}`}
+        className={`bg-custom-green text-black px-3 py-1 flex items-center justify-center w-fit min-w-[110px] rounded-sm relative z-[1000] ${className}`}
       >
-        <span className="text-white text-base">마감까지</span>
-        <div className="text-custom-green text-base font-bold">
-          --d : --h : --m : --s
-        </div>
+        <span className="text-white text-xs">loading...</span>
       </div>
     );
   }
@@ -175,7 +172,7 @@ export function CountdownTimer({
       <div
         className={`border border-custom-light-red rounded-full px-6 py-4 flex items-center justify-center h-10 ${className}`}
       >
-        <span className="text-custom-red text-lg font-bold">경매 마감</span>
+        <span className="text-custom-red   font-bold">경매 마감</span>
       </div>
     );
   }

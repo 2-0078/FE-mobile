@@ -43,7 +43,9 @@ export default function Swiper<T>({
   }
 
   return (
-    <div className={`relative w-full overflow-hidden ${className}`}>
+    <div
+      className={`relative w-full overflow-hidden pt-1 pb-8 mb-2 ${className}`}
+    >
       <ul
         ref={containerRef}
         className="flex gap-[16px] cursor-grab active:cursor-grabbing"
@@ -79,6 +81,7 @@ export default function Swiper<T>({
 
       {/* 인디케이터 */}
       {showIndicators &&
+        items.length > 1 &&
         renderIndicators(
           items.length,
           state.currentIndex,

@@ -9,7 +9,7 @@ import { useAlert } from '@/hooks/useAlert';
 import Header from '@/components/layout/Header';
 
 interface LoginSectionProps {
-  searchParams: Promise<{ callbackUrl: string }>;
+  searchParams: { callbackUrl?: string };
 }
 
 export default function LoginSection({ searchParams }: LoginSectionProps) {
@@ -47,24 +47,13 @@ export default function LoginSection({ searchParams }: LoginSectionProps) {
 
         // 잠시 후 리다이렉트 (사용자가 메시지를 볼 수 있도록)
         setTimeout(async () => {
-          try {
-            const resolvedSearchParams = await searchParams;
-            const callbackUrl = resolvedSearchParams?.callbackUrl;
-            await signIn('credentials', {
-              email,
-              password,
-              redirect: true,
-              callbackUrl: callbackUrl || '/',
-            });
-          } catch {
-            // searchParams 처리 실패 시 홈으로 리다이렉트
-            await signIn('credentials', {
-              email,
-              password,
-              redirect: true,
-              callbackUrl: '/',
-            });
-          }
+          const callbackUrl = searchParams?.callbackUrl;
+          await signIn('credentials', {
+            email,
+            password,
+            redirect: true,
+            callbackUrl: callbackUrl || '/',
+          });
         }, 1500); // 1.5초 후 리다이렉트
       }
     } catch {
