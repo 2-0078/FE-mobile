@@ -56,9 +56,9 @@ export default function PurchaseModalSection() {
           closeModal();
         }}
       >
-        {(handleClose: () => void) => (
+        {() => (
           <>
-            <ModalHeader onClose={handleClose}>
+            <ModalHeader>
               <div className="px-6 pb-6">
                 <h1 className="text-black text-lg font-bold">충전하기</h1>
                 <p className="text-gray-600 text-sm">
