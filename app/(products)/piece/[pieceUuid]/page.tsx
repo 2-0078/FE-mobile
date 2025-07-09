@@ -11,6 +11,7 @@ import TempPriceIcon from '@/repo/ui/Icons/TempPriceIcon';
 import ClockIcon from '@/repo/ui/Icons/ClockIcon';
 import { generatePieceMetadata } from '@/lib/metadata';
 import { generatePieceProductJsonLd } from '@/lib/structured-data';
+import { CommentSection } from '@/components/common/CommentSection';
 
 export async function generateMetadata({
   params,
@@ -137,6 +138,11 @@ export default async function PiecePage({
           <div>입찰 정보가 여기에 표시됩니다.</div>
           <div>거래 내역이 여기에 표시됩니다.</div>
         </TabLayout>
+
+        {/* 댓글 섹션 */}
+        <div className="mt-8">
+          <CommentSection type="PIECE" productUuid={param.pieceUuid} />
+        </div>
       </PageWrapper>
     </>
   );

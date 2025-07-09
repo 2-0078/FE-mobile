@@ -106,10 +106,10 @@ export default function WishButton({
     <button
       onClick={handleWish}
       disabled={isLoading || isPending}
-      className={`flex items-center justify-center w-14 h-14 rounded-full transition-all duration-200 border-2 border-custom-green ${
+      className={`flex items-center justify-center w-14 h-14 rounded-full transition-all duration-200 border-2  ${
         wished
-          ? 'bg-red-500 text-white'
-          : 'bg-white/0 text-white hover:bg-white/30'
+          ? 'bg-red-500 text-white border-red-500'
+          : 'bg-white/0 text-white hover:bg-white/30 border-custom-green'
       } ${className}`}
     >
       <Heart className={`w-4 h-4 ${wished ? 'fill-current' : ''}`} size={12} />
