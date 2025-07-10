@@ -113,7 +113,7 @@ export default function PieceItemCard({ product }: PieceItemCardProps) {
             fetchMarketData();
           }
         }
-      } catch (error) {
+      } catch {
         // Ignore parsing errors
       }
     };
