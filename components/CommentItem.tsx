@@ -28,6 +28,7 @@ export function CommentItem({
   mine,
   replyContent,
   childReplies = [],
+  deleted = false,
 }: ReplyType) {
   const [avatar, setAvatar] = useState<string>('/next.svg');
   const [username, setUsername] = useState<string | null>(null);
@@ -201,58 +202,69 @@ export function CommentItem({
             )}
           </div>
 
-          {/* 수정 모드일 때 텍스트 영역 표시 */}
-          {isEditing ? (
-            <div className="mb-3">
-              <textarea
-                value={editContent}
-                onChange={(e) => setEditContent(e.target.value)}
-                className="w-full p-3 border border-gray-200 text-gray-900 text-sm rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white"
-                rows={3}
-                maxLength={500}
-                disabled={submitting}
-              />
-              <div className="flex justify-between items-center mt-2">
-                <span className="text-xs text-gray-400">
-                  {editContent.length}/500
-                </span>
-                <div className="flex gap-2">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={cancelEdit}
-                    disabled={submitting}
-                    className="px-3 py-1 text-xs"
-                  >
-                    <X size={14} />
-                  </Button>
-                  <Button
-                    size="sm"
-                    onClick={handleEditSubmit}
-                    disabled={submitting || !editContent.trim()}
-                    className="px-3 py-1 text-xs bg-green-600 text-white"
-                  >
-                    <Check size={14} />
-                  </Button>
-                </div>
-              </div>
+          {/* 삭제된 댓글 표시 */}
+          {deleted ? (
+            <div className="mb-2">
+              <p className="text-gray-400 text-sm italic">삭제된 댓글입니다</p>
             </div>
           ) : (
-            <p className="text-gray-800 text-sm leading-relaxed break-words mb-2">
-              {replyContent}
-            </p>
+            <>
+              {/* 수정 모드일 때 텍스트 영역 표시 */}
+              {isEditing ? (
+                <div className="mb-3">
+                  <textarea
+                    value={editContent}
+                    onChange={(e) => setEditContent(e.target.value)}
+                    className="w-full p-3 border border-gray-200 text-gray-900 text-sm rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white"
+                    rows={3}
+                    maxLength={500}
+                    disabled={submitting}
+                  />
+                  <div className="flex justify-between items-center mt-2">
+                    <span className="text-xs text-gray-400">
+                      {editContent.length}/500
+                    </span>
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={cancelEdit}
+                        disabled={submitting}
+                        className="px-3 py-1 text-xs"
+                      >
+                        <X size={14} />
+                      </Button>
+                      <Button
+                        size="sm"
+                        onClick={handleEditSubmit}
+                        disabled={submitting || !editContent.trim()}
+                        className="px-3 py-1 text-xs bg-green-600 text-white"
+                      >
+                        <Check size={14} />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-gray-800 text-sm leading-relaxed break-words mb-2">
+                  {replyContent}
+                </p>
+              )}
+            </>
           )}
 
           <div className="flex items-center gap-4">
             <p className="text-gray-400 text-xs">{formatDate(createdAt)}</p>
-            <button
-              onClick={() => setShowReplyForm(!showReplyForm)}
-              className="text-gray-400 text-xs hover:text-green-600 flex items-center gap-1"
-            >
-              <MessageCircle size={12} />
-              답글
-            </button>
-            {mine && (
+            {!deleted && (
+              <button
+                onClick={() => setShowReplyForm(!showReplyForm)}
+                className="text-gray-400 text-xs hover:text-green-600 flex items-center gap-1"
+              >
+                <MessageCircle size={12} />
+                답글
+              </button>
+            )}
+            {mine && !deleted && (
               <>
                 <button
                   onClick={startEdit}
@@ -275,8 +287,8 @@ export function CommentItem({
         </div>
       </div>
 
-      {/* 대댓글 작성 폼 */}
-      {showReplyForm && (
+      {/* 대댓글 작성 폼 - 삭제된 댓글에는 표시하지 않음 */}
+      {showReplyForm && !deleted && (
         <div className="ml-12 mb-4 bg-gray-50 rounded-lg p-3">
           <form onSubmit={handleReplySubmit} className="flex gap-2">
             <textarea
@@ -299,7 +311,7 @@ export function CommentItem({
         </div>
       )}
 
-      {/* 대댓글 목록 */}
+      {/* 대댓글 목록 - 삭제된 댓글에도 표시 (기존 대댓글은 유지) */}
       {childReplies && childReplies.length > 0 && (
         <div className="ml-12">
           <button
@@ -339,9 +351,15 @@ export function CommentItem({
                         </span>
                       )}
                     </div>
-                    <p className="text-gray-800 text-xs leading-relaxed break-words mb-1">
-                      {childReply.replyContent}
-                    </p>
+                    {childReply.deleted ? (
+                      <p className="text-gray-400 text-xs italic">
+                        삭제된 댓글입니다
+                      </p>
+                    ) : (
+                      <p className="text-gray-800 text-xs leading-relaxed break-words mb-1">
+                        {childReply.replyContent}
+                      </p>
+                    )}
                     <p className="text-gray-400 text-xs">
                       {formatDate(childReply.createdAt)}
                     </p>

@@ -142,7 +142,7 @@ export default function PieceItemCard({ product }: PieceItemCardProps) {
   };
 
   const handleClick = () => {
-    router.push(`/piece/${product.productUuid}`);
+    router.push(`/piece/${piece.pieceProductUuid}`);
   };
 
   return (
@@ -190,7 +190,6 @@ export default function PieceItemCard({ product }: PieceItemCardProps) {
                 )}
               >
                 {marketData.prdyVrss.toLocaleString()}원{' '}
-                {marketData.stckHgpr / marketData.stckLwpr}
               </p>
               <p
                 className={cn(
