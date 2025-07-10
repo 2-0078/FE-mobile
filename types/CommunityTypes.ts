@@ -9,4 +9,10 @@ export interface ReplyType {
   replyContent: string;
   replyUuid: string;
   childReplies?: ReplyType[];
+  deleted?: boolean;
+}
+
+export interface ReplyListItemType {
+  replyUuid: string;
+  deleted: boolean;
 }

@@ -2,7 +2,7 @@
 
 import { auth } from '@/auth';
 import { CommonResponseType } from '@/types/CommonTypes';
-import { ReplyType } from '@/types/CommunityTypes';
+import { ReplyType, ReplyListItemType } from '@/types/CommunityTypes';
 
 export async function getRepliesUuid(
   type: 'FUNDING' | 'PIECE',
@@ -62,7 +62,7 @@ export async function getRepliesWithChildren(
     headers['X-Member-Uuid'] = memberUuid;
   }
 
-  // Step 1: Get reply UUID list
+  // Step 1: Get reply UUID list with deleted status
   const response = await fetch(
     `${
       process.env.BASE_API_URL
@@ -86,7 +86,7 @@ export async function getRepliesWithChildren(
   }
 
   const listData = (await response.json()) as CommonResponseType<
-    { replyUuid: string }[]
+    ReplyListItemType[]
   >;
   console.log('Get replies list success:', listData);
 
@@ -96,12 +96,22 @@ export async function getRepliesWithChildren(
 
   // Step 2: Get individual reply details with children
   const replyDetails = await Promise.all(
-    listData.result.map(async (reply) => {
+    listData.result.map(async (replyItem) => {
       try {
-        const replyDetail = await getReplies(reply.replyUuid);
+        const replyDetail = await getReplies(replyItem.replyUuid);
+
+        // deleted 상태를 replyDetail에 추가
+        if (replyDetail) {
+          replyDetail.deleted = replyItem.deleted;
+        }
+
         return replyDetail;
       } catch (error) {
-        console.error('Failed to fetch reply detail:', reply.replyUuid, error);
+        console.error(
+          'Failed to fetch reply detail:',
+          replyItem.replyUuid,
+          error
+        );
         return null;
       }
     })
