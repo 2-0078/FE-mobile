@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import AlertProvider from '@/lib/Alert/AlertProvider';
+import { SessionProvider } from 'next-auth/react';
+import { auth } from '@/auth';
 
 export const metadata: Metadata = {
   title: {
@@ -83,11 +85,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
+
   return (
     <html lang="ko">
       <head>
@@ -137,7 +141,9 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased font-pretendard">
-        <AlertProvider>{children}</AlertProvider>
+        <SessionProvider session={session}>
+          <AlertProvider>{children}</AlertProvider>
+        </SessionProvider>
       </body>
     </html>
   );

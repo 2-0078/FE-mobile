@@ -136,7 +136,7 @@ export function ModalContainer({
         onTouchEnd={handleTouchEnd}
       >
         {/* 드래그 핸들 */}
-        <div className="flex justify-center pt-2 pb-1 flex-shrink-0">
+        <div className="flex justify-center pt-2 pb-5 flex-shrink-0">
           <div className="w-12 h-1 bg-gray-300 rounded-full"></div>
         </div>
         <div className="flex-1 overflow-hidden">

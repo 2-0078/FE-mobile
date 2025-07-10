@@ -59,6 +59,9 @@ export const getFundingProductsList = async (params: {
     headers: {
       'Content-Type': 'application/json',
     },
+    next: {
+      tags: ['funding-list'],
+    },
   });
 
   console.log('Funding products API response status:', response.status);
@@ -91,6 +94,9 @@ export const getFundingProduct = async (id: string) => {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
+    },
+    next: {
+      tags: [`funding-${id}`],
     },
   });
 
@@ -152,6 +158,9 @@ export const getPieceProductsList = async (params: {
     headers: {
       'Content-Type': 'application/json',
     },
+    next: {
+      tags: ['piece-list'],
+    },
   });
 
   console.log('Piece products API response status:', response.status);
@@ -182,6 +191,9 @@ export const getPieceProducts = async (productUuid: string) => {
       headers: {
         'Content-Type': 'application/json',
       },
+      next: {
+        tags: [`product-${productUuid}`],
+      },
     }
   );
   const data = (await response.json()) as CommonResponseType<PieceProductType>;
@@ -196,6 +208,9 @@ export const getPieceMarketPrice = async (pieceProductUuid: string) => {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
+      },
+      next: {
+        tags: [`market-data-${pieceProductUuid}`],
       },
     }
   );
