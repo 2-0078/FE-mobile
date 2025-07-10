@@ -17,6 +17,9 @@ export async function getMarketPrice(
         headers: {
           'Content-Type': 'application/json',
         },
+        next: {
+          tags: [`market-data-${productUuid}`],
+        },
       }
     );
 
@@ -29,7 +32,7 @@ export async function getMarketPrice(
     }
 
     const data: MarketPriceResponse = await response.json();
-    console.log('API response data:', data);
+    console.log('API response data market price:', data);
 
     return data;
   } catch (error) {

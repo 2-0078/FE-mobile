@@ -56,7 +56,7 @@ export default function PieceItemCard({ product }: PieceItemCardProps) {
         console.log('cachedData', cachedData);
 
         // 실시간 데이터 가져오기 시도
-        const response = await getMarketPrice(product.productUuid);
+        const response = await getMarketPrice(piece.pieceProductUuid);
         console.log('API response:', response);
 
         if (response?.isSuccess && response.result) {
@@ -64,7 +64,7 @@ export default function PieceItemCard({ product }: PieceItemCardProps) {
           console.log('response.result', response.result);
           setMarketData(response.result);
           setDataSource('live');
-          marketStorage.saveMarketData(product.productUuid, response.result);
+          marketStorage.saveMarketData(piece.pieceProductUuid, response.result);
         } else if (cachedData) {
           // 실시간 데이터가 없고 캐시된 데이터가 있으면 사용
           console.log('Using cached data:', cachedData);
@@ -96,6 +96,34 @@ export default function PieceItemCard({ product }: PieceItemCardProps) {
     };
 
     fetchMarketData();
+
+    // SSE 알림을 감지하여 데이터 새로고침
+    const handleSSEAlert = (event: MessageEvent) => {
+      try {
+        // Check if it's our SSE alert message
+        if (event.data && event.data.type === 'SSE_ALERT') {
+          const alertData = event.data.data;
+          if (
+            alertData.alertType === 'PIECE_PRICE_CHANGE' &&
+            alertData.key === product.productUuid
+          ) {
+            console.log(
+              'SSE alert received for this product, refreshing data...'
+            );
+            fetchMarketData();
+          }
+        }
+      } catch {
+        // Ignore parsing errors
+      }
+    };
+
+    // SSE 이벤트 리스너 추가
+    window.addEventListener('message', handleSSEAlert);
+
+    return () => {
+      window.removeEventListener('message', handleSSEAlert);
+    };
   }, [product.productUuid]); // isLoadingMarketData 제거
 
   // 주가 데이터가 있는 경우 표시 (더 명확한 조건)
@@ -161,7 +189,8 @@ export default function PieceItemCard({ product }: PieceItemCardProps) {
                   marketData.prdyVrss > 0 ? 'text-red-500' : 'text-blue-500'
                 )}
               >
-                {marketData.prdyVrss.toLocaleString()}원
+                {marketData.prdyVrss.toLocaleString()}원{' '}
+                {marketData.stckHgpr / marketData.stckLwpr}
               </p>
               <p
                 className={cn(
