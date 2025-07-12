@@ -11,8 +11,7 @@ import {
   MarketPriceData,
   QoutesData,
 } from '@/types/ProductTypes';
-import { Button } from '../ui/button';
-import { TrendingUp, TrendingDown, ArrowUp, ArrowDown } from 'lucide-react';
+import { TrendingUp, TrendingDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { marketStorage } from '@/lib/market-storage';
 import { Skeleton } from '@/components/atoms';

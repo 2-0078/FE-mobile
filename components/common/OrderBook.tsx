@@ -2,10 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import TradingModal from './TradingModal';
 import MarketDepthChart from './MarketDepthChart';
-import OrderBookService, {
-  OrderBookData,
-  OrderBookItem,
-} from '@/services/OrderBookService';
+import OrderBookService, { OrderBookData } from '@/services/OrderBookService';
 
 interface OrderBookProps {
   pieceUuid: string;

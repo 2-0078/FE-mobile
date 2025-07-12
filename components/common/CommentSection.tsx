@@ -4,11 +4,7 @@ import React, { useState, useEffect, useTransition } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { CommentList } from './CommentList';
 import CommentForm from './CommentForm';
-import {
-  getRepliesWithChildren,
-  revalidateRepliesCache,
-} from '@/action/reply-service';
-import { sortCommentsByLatest } from '@/lib/comment-utils';
+import { revalidateRepliesCache } from '@/action/reply-service';
 import { useModal } from '@/stores/modal-store';
 
 interface CommentSectionProps {
@@ -25,7 +21,7 @@ export function CommentSection({
   const [refreshKey, setRefreshKey] = useState(0);
   const searchParams = useSearchParams();
   const { openModal } = useModal();
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
 
   const handleCommentAdded = () => {
     // Trigger a refresh of the comment list
