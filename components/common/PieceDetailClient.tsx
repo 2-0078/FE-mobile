@@ -10,16 +10,12 @@ import { useModal } from '@/stores/modal-store';
 
 interface PieceDetailClientProps {
   pieceUuid: string;
-  productUuid: string;
   children: React.ReactNode;
-  productData: PieceProductType;
 }
 
 export default function PieceDetailClient({
   pieceUuid,
-  productUuid,
   children,
-  productData,
 }: PieceDetailClientProps) {
   const searchParams = useSearchParams();
   const { openModal } = useModal();
