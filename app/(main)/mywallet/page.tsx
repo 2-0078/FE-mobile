@@ -37,7 +37,7 @@ function DepositAndAssetsSection({
     <div className="space-y-4">
       {/* 예치금 카드 */}
       <div className="bg-gradient-to-r from-custom-green/20 to-custom-blue/20 rounded-2xl p-6 border border-custom-green/30">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex flex-col items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 bg-custom-green/20 rounded-full flex items-center justify-center">
               <Wallet className="w-6 h-6 text-custom-green" />
@@ -45,7 +45,7 @@ function DepositAndAssetsSection({
             <div>
               <p className="text-gray-400 text-sm">현재 예치금</p>
               {loading ? (
-                <AmountSkeleton className="h-8" />
+                <AmountSkeleton className="h-16 w-50" />
               ) : (
                 <ResponsiveAmount
                   amount={balance}
@@ -432,7 +432,7 @@ export default function MyWalletPage() {
         className="px-4 py-2 mt-4"
         title="내 자산"
         isAlert={false}
-        isCloseButton={true}
+        isCloseButton={false}
       />
 
       {/* 예치금 및 자산 섹션 */}

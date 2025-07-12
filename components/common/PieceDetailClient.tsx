@@ -33,8 +33,11 @@ export default function PieceDetailClient({
   }, [searchParams, openModal]);
 
   return (
-    <>
-      <Header isCloseButton={true} />
+    <div className="bg-white">
+      <Header
+        isCloseButton={true}
+        className="bg-none backdrop:blur-none bg-transparent"
+      />
 
       {children}
       <PieceBottomActions pieceUuid={pieceUuid} productUuid={productUuid} />
@@ -43,6 +46,6 @@ export default function PieceDetailClient({
         itemUuid={pieceUuid}
         type="PIECE"
       />
-    </>
+    </div>
   );
 }
