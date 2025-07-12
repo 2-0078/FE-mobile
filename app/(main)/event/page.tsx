@@ -59,9 +59,9 @@ export default async function EventPage() {
 
   return (
     <>
-      <Header title="이벤트" isAlert={false} />
+      <Header title="이벤트" isAlert={false} isCloseButton={true} />
       <PageWrapper>
-        <div className="space-y-4 px-4">
+        <div className="space-y-4 px-4 pt-20">
           {events.map((event) => (
             <div
               key={event.id}

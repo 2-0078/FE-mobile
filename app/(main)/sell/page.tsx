@@ -66,9 +66,9 @@ export default function SellPage() {
 
   return (
     <>
-      <Header title="상품 판매하기" isAlert={false} />
+      <Header title="상품 판매하기" isAlert={false} isCloseButton={true} />
       <PageWrapper>
-        <form onSubmit={handleSubmit} className="space-y-6 px-4">
+        <form onSubmit={handleSubmit} className="space-y-6 px-4 pt-20">
           <FloatingInput
             id="title"
             name="title"

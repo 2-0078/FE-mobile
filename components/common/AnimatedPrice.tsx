@@ -60,19 +60,19 @@ export default function AnimatedPrice({ price }: AnimatedPriceProps) {
   // 서버 사이드 렌더링 시 기본 가격 표시
   if (!isMounted) {
     return (
-      <p className="font-bold tracking-tighter text-3xl text-black">
+      <p className="font-bold tracking-tighter text-3xl text-white">
         {price.toLocaleString()}
-        <span className="text-sm text-gray-500 pl-1">원</span>
+        <span className="text-sm text-gray-400 pl-1">원</span>
       </p>
     );
   }
 
   return (
     <p
-      className={`font-bold tracking-tighter text-3xl ${isAnimating ? 'text-green-600' : 'text-black'}`}
+      className={`font-bold tracking-tighter text-3xl ${isAnimating ? 'text-green-400' : 'text-white'}`}
     >
       {displayPrice.toLocaleString()}
-      <span className="text-sm text-gray-500 pl-1">원</span>
+      <span className="text-sm text-gray-400 pl-1">원</span>
     </p>
   );
 }

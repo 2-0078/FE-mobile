@@ -2,9 +2,11 @@
 
 import { signOut, auth } from '@/auth';
 import { getMemberProfile } from '@/action/member-service';
+import { revalidatePath } from 'next/cache';
 
 export async function logoutAction() {
-  await signOut({ redirectTo: '/' });
+  await signOut();
+  revalidatePath('/', 'layout');
 }
 
 export async function getCurrentSession() {

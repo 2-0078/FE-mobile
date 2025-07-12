@@ -12,6 +12,7 @@ import {
 import Header from '@/components/layout/Header';
 import PageWrapper from '@/components/layout/PageWrapper';
 import LogoutButton from '@/components/common/LogoutButton';
+import BottomNavbar from '@/components/layout/BottomNavbar';
 import { auth } from '@/auth';
 import { getMemberProfile } from '@/action/member-service';
 import Link from 'next/link';
@@ -112,7 +113,7 @@ export default async function OtherPage() {
 
   return (
     <>
-      <Header title="더보기" isCloseButton={true} />
+      {/* <Header title="더보기" isCloseButton={false} /> */}
       <PageWrapper>
         {/* User Section */}
         {user && (
@@ -213,6 +214,7 @@ export default async function OtherPage() {
           {user && <LogoutButton />}
         </div>
       </PageWrapper>
+      <BottomNavbar />
     </>
   );
 }

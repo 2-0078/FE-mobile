@@ -85,7 +85,7 @@ export default function CommentForm({
   };
 
   return (
-    <div className="bg-white border-t border-gray-200">
+    <div className="bg-gray-900 border-t border-gray-700">
       {isAuth ? (
         // 로그인된 사용자: 댓글 입력 폼 표시
         <form onSubmit={handleSubmit} className="p-4">
@@ -95,7 +95,7 @@ export default function CommentForm({
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 placeholder={`${boardType === 'FUNDING' ? '펀딩' : '조각'} 상품에 대한 의견을 남겨보세요...`}
-                className="w-full p-3 border border-gray-200 text-gray-900 text-sm rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white"
+                className="w-full p-3 border border-gray-600 text-white text-sm rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-gray-800 placeholder-gray-400"
                 rows={2}
                 maxLength={500}
                 disabled={loading}
@@ -112,7 +112,7 @@ export default function CommentForm({
           <div className="flex justify-between items-center mt-2 px-1">
             <span className="text-xs text-gray-400">{content.length}/500</span>
             {loading && (
-              <span className="text-xs text-green-700 font-medium">
+              <span className="text-xs text-green-400 font-medium">
                 작성 중...
               </span>
             )}
@@ -122,7 +122,7 @@ export default function CommentForm({
         // 로그인되지 않은 사용자: 로그인 버튼 표시
         <div className="p-4">
           <div className="text-center">
-            <p className="text-gray-500 text-sm mb-3">
+            <p className="text-gray-400 text-sm mb-3">
               댓글 작성은 로그인 후 사용 가능합니다
             </p>
             <Button
