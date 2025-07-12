@@ -8,10 +8,11 @@ import PieceDetailClient from '@/components/common/PieceDetailClient';
 export async function generateMetadata({
   params,
 }: {
-  params: { pieceUuid: string };
+  params: Promise<{ pieceUuid: string }>;
 }): Promise<Metadata> {
   try {
-    const piece = await getPieceProducts(params.pieceUuid);
+    const { pieceUuid } = await params;
+    const piece = await getPieceProducts(pieceUuid);
     if (!piece) {
       return {
         title: '상품을 찾을 수 없습니다',
@@ -26,7 +27,7 @@ export async function generateMetadata({
       openGraph: {
         title: `${piece.productName} | Piece of Cake`,
         description: piece.description || '조각 투자 상품입니다.',
-        url: `https://pieceofcake.site/piece/${params.pieceUuid}`,
+        url: `https://pieceofcake.site/piece/${pieceUuid}`,
         siteName: 'Piece of Cake',
         images: [
           {
@@ -57,10 +58,11 @@ export async function generateMetadata({
 export default async function PiecePage({
   params,
 }: {
-  params: { pieceUuid: string };
+  params: Promise<{ pieceUuid: string }>;
 }) {
   try {
-    const piece = await getPieceProducts(params.pieceUuid);
+    const { pieceUuid } = await params;
+    const piece = await getPieceProducts(pieceUuid);
     if (!piece) {
       notFound();
     }
