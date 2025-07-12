@@ -20,7 +20,6 @@ export function AmountSection({
   piecePrice,
   remainingPieces,
   fundingUuid,
-  productUuid,
   onFundingParticipated,
 }: AmountSectionProps) {
   const [amount, setAmount] = useState('');

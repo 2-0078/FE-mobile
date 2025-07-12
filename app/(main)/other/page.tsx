@@ -9,7 +9,6 @@ import {
   HelpCircle,
   FileText,
 } from 'lucide-react';
-import Header from '@/components/layout/Header';
 import PageWrapper from '@/components/layout/PageWrapper';
 import LogoutButton from '@/components/common/LogoutButton';
 import BottomNavbar from '@/components/layout/BottomNavbar';
@@ -113,9 +112,7 @@ export default async function OtherPage() {
 
   return (
     <>
-      {/* <Header title="더보기" isCloseButton={false} /> */}
       <PageWrapper>
-        {/* User Section */}
         {user && (
           <div className="mb-8">
             <Link href="/profile">

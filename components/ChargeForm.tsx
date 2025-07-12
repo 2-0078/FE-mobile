@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 export function ChargeForm() {
   const [amount, setAmount] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { success, error: showError } = useAlert();
+  const { error: showError } = useAlert();
   const router = useRouter();
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,6 +61,7 @@ export function ChargeForm() {
       console.error('Payment failed:', err);
       if (err instanceof Error) {
         showError(err.message);
+        router.push('/');
       } else {
         showError('결제 처리 중 오류가 발생했습니다.');
       }

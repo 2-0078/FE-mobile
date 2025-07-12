@@ -2,8 +2,6 @@
 
 import React from 'react';
 import {
-  LineChart,
-  Line,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -107,7 +105,7 @@ export function PieceChart({
                 boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
                 fontSize: '12px',
               }}
-              formatter={(value: any) => [
+              formatter={(value: number) => [
                 `${value.toLocaleString()}원`,
                 '가격',
               ]}
@@ -152,7 +150,7 @@ export function PieceChart({
                 boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
                 fontSize: '12px',
               }}
-              formatter={(value: any) => [
+              formatter={(value: number) => [
                 `${value.toLocaleString()}`,
                 '거래량',
               ]}

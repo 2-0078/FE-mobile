@@ -1,13 +1,9 @@
 import React from 'react';
 import { Metadata } from 'next';
-import Image from 'next/image';
 import Script from 'next/script';
 import { getPieceProducts } from '@/action/product-service';
 import PageWrapper from '@/components/layout/PageWrapper';
 import TabLayout from '@/components/layout/TabLayout';
-import InfoCardLayout from '@/components/layout/InfoCardLayout';
-import TempPriceIcon from '@/repo/ui/Icons/TempPriceIcon';
-import ClockIcon from '@/repo/ui/Icons/ClockIcon';
 import { generatePieceMetadata } from '@/lib/metadata';
 import { generatePieceProductJsonLd } from '@/lib/structured-data';
 import OrderBook from '@/components/common/OrderBook';

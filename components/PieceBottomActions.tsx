@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { MessageCircle, TrendingUp, ShoppingCart } from 'lucide-react';
+import { MessageCircle, ShoppingCart } from 'lucide-react';
 import { useModal } from '@/stores/modal-store';
 import WishButton from './common/WishButton';
 

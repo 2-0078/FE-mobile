@@ -38,13 +38,11 @@ export default function ModalSection({
   const [isLoading, setIsLoading] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [currentProductData, setCurrentProductData] = useState(productData);
-  const [productDataLoading, setProductDataLoading] = useState(false);
 
   const { currentModal, closeModal } = useModal();
 
   // 실시간 데이터 가져오기
   const fetchLatestProductData = async () => {
-    setProductDataLoading(true);
     try {
       let latestData;
       if (type === 'FUNDING') {
@@ -56,8 +54,6 @@ export default function ModalSection({
     } catch (error) {
       console.error('Failed to fetch latest product data:', error);
       // 에러 발생 시 기존 데이터 유지
-    } finally {
-      setProductDataLoading(false);
     }
   };
 
