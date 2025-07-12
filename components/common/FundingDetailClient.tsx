@@ -38,11 +38,7 @@ export default function FundingDetailClient({
 
       {children}
       <BottomActions fundingUuid={fundingUuid} productUuid={productUuid} />
-      <ModalSection
-        productData={productData}
-        itemUuid={fundingUuid}
-        type="FUNDING"
-      />
+      <ModalSection fundingUuid={fundingUuid} boardType="FUNDING" />
     </>
   );
 }
