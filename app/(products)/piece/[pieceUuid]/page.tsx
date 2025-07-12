@@ -4,6 +4,7 @@ import { getPieceProducts } from '@/action/product-service';
 import { notFound } from 'next/navigation';
 import Header from '@/components/layout/Header';
 import PieceDetailClient from '@/components/common/PieceDetailClient';
+import PieceDetailCard from '@/components/common/PieceDetailCard';
 
 export async function generateMetadata({
   params,
@@ -74,7 +75,13 @@ export default async function PiecePage({
           isAlert={false}
           isCloseButton={true}
         />
-        <PieceDetailClient piece={piece} />
+        <PieceDetailClient
+          pieceUuid={pieceUuid}
+          productUuid={piece.productUuid}
+          productData={piece}
+        >
+          <PieceDetailCard product={piece} />
+        </PieceDetailClient>
       </div>
     );
   } catch {
