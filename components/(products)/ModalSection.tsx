@@ -66,13 +66,10 @@ export default function ModalSection({
   if (currentModal === 'comments') {
     return (
       <ModalContainer isOpen={true}>
-        <ModalHeader title="댓글" onClose={closeModal} />
+        <ModalHeader>댓글</ModalHeader>
         <CommentSection
-          boardType={boardType}
-          boardUuid={fundingUuid || pieceUuid || ''}
-          replies={replies}
-          loading={loading}
-          onRepliesUpdated={fetchReplies}
+          type={boardType}
+          productUuid={fundingUuid || pieceUuid || ''}
         />
       </ModalContainer>
     );
