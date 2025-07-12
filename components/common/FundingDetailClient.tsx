@@ -12,14 +12,12 @@ interface FundingDetailClientProps {
   fundingUuid: string;
   productUuid: string;
   children: React.ReactNode;
-  productData: FundingProductType;
 }
 
 export default function FundingDetailClient({
   fundingUuid,
   productUuid,
   children,
-  productData,
 }: FundingDetailClientProps) {
   const searchParams = useSearchParams();
   const { openModal } = useModal();
