@@ -5,7 +5,6 @@ import { useSearchParams } from 'next/navigation';
 import Header from '@/components/layout/Header';
 import ModalSection from '../(products)/ModalSection';
 import PieceBottomActions from '../../components/PieceBottomActions';
-import { PieceProductType } from '@/types/ProductTypes';
 import { useModal } from '@/stores/modal-store';
 
 interface PieceDetailClientProps {
