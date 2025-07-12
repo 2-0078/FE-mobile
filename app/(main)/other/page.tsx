@@ -1,7 +1,5 @@
 import React from 'react';
 import { Metadata } from 'next';
-import { Button } from '@/components/ui/button';
-import { Gem, Trophy, Heart, Gavel, Wallet, ShoppingBag } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: '기타',

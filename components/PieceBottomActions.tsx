@@ -7,12 +7,10 @@ import { Heart, MessageCircle } from 'lucide-react';
 
 interface PieceBottomActionsProps {
   pieceUuid: string;
-  productUuid: string;
 }
 
 export default function PieceBottomActions({
   pieceUuid,
-  productUuid,
 }: PieceBottomActionsProps) {
   const { openModal } = useModal();
 
