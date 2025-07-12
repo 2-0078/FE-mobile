@@ -200,7 +200,7 @@ export default function PieceItemCard({ product }: PieceItemCardProps) {
   return (
     <div
       onClick={handleClick}
-      className="w-full rounded-lg shadow-lg bg-white overflow-hidden relative mx-auto items-center justify-center"
+      className="w-full rounded-lg bg-white overflow-hidden relative mx-auto items-center justify-center"
     >
       {/* 상한가 하한가를 표시하자 */}
       <ItemCardImage

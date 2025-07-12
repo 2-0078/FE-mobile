@@ -186,7 +186,7 @@ export default function PieceDetailCard({ product }: PieceDetailCardProps) {
     typeof marketData.stckLwpr === 'number';
 
   return (
-    <div className="w-full rounded-lg shadow-lg bg-gray-900 overflow-hidden relative mx-auto items-center justify-center">
+    <div className="w-full rounded-lg bg-white overflow-hidden relative mx-auto items-center justify-center">
       {/* 상한가 하한가를 표시하자 */}
       <ItemCardImage
         remainingTime={`${piece.tradeQuantity}개`}

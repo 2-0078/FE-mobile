@@ -91,7 +91,7 @@ export default async function PiecePage({
         productData={data}
       >
         <PageWrapper>
-          <div className="space-y-3">
+          <div className="space-y-3 pt-20">
             <PieceDetailCard product={data} />
           </div>
 
