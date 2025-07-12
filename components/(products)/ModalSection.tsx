@@ -65,7 +65,7 @@ export default function ModalSection({
 
   if (currentModal === 'comments') {
     return (
-      <ModalContainer>
+      <ModalContainer isOpen={true}>
         <ModalHeader title="댓글" onClose={closeModal} />
         <CommentSection
           boardType={boardType}

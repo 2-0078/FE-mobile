@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Header from '@/components/layout/Header';
 import ModalSection from '../(products)/ModalSection';
-import { PieceBottomActions } from '../PieceBottomActions';
+import PieceBottomActions from '../../components/PieceBottomActions';
 import { PieceProductType } from '@/types/ProductTypes';
 import { useModal } from '@/stores/modal-store';
 
@@ -37,12 +37,8 @@ export default function PieceDetailClient({
       <Header isCloseButton={true} />
 
       {children}
-      <PieceBottomActions pieceUuid={pieceUuid} productUuid={productUuid} />
-      <ModalSection
-        productData={productData}
-        itemUuid={pieceUuid}
-        type="PIECE"
-      />
+      <PieceBottomActions pieceUuid={pieceUuid} />
+      <ModalSection pieceUuid={pieceUuid} boardType="PIECE" />
     </>
   );
 }
