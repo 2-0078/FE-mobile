@@ -11,8 +11,7 @@ import {
   MarketPriceData,
   QoutesData,
 } from '@/types/ProductTypes';
-import { Button } from '../ui/button';
-import { TrendingUp, TrendingDown, ArrowUp, ArrowDown } from 'lucide-react';
+import { TrendingUp, TrendingDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { marketStorage } from '@/lib/market-storage';
 import { Skeleton } from '@/components/atoms';
@@ -28,9 +27,9 @@ export default function PieceItemCard({ product }: PieceItemCardProps) {
   const [marketData, setMarketData] = useState<MarketPriceData | null>(null);
   const [qoutesData, setQoutesData] = useState<QoutesData | null>(null);
   const [isLoadingMarketData, setIsLoadingMarketData] = useState(false);
-  const [dataSource, setDataSource] = useState<'live' | 'cached' | 'none'>(
-    'none'
-  );
+  // const [dataSource, setDataSource] = useState<'live' | 'cached' | 'none'>(
+  //   'none'
+  // );
 
   // 이전 값들을 저장하여 변경 감지
   const prevMarketDataRef = useRef<MarketPriceData | null>(null);
@@ -78,7 +77,7 @@ export default function PieceItemCard({ product }: PieceItemCardProps) {
           }
           prevMarketDataRef.current = response.result;
           setMarketData(response.result);
-          setDataSource('live');
+          // setDataSource('live');
           marketStorage.saveMarketData(piece.pieceProductUuid, response.result);
         } else {
           console.log('Market price API failed or no data');
@@ -94,7 +93,7 @@ export default function PieceItemCard({ product }: PieceItemCardProps) {
           };
           console.log('Using dummy market data:', dummyMarketData);
           setMarketData(dummyMarketData);
-          setDataSource('live');
+          // setDataSource('live');
         }
       } catch (error) {
         console.error('Error fetching market price:', error);
@@ -110,7 +109,7 @@ export default function PieceItemCard({ product }: PieceItemCardProps) {
         };
         console.log('Using dummy market data due to error:', dummyMarketData);
         setMarketData(dummyMarketData);
-        setDataSource('live');
+        // setDataSource('live');
       }
 
       // qoutesData는 실시간으로 패칭

@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { auth } from '@/auth';
 import { getMemberProfile } from '@/action/member-service';
+import Image from 'next/image';
 
 export default async function ProfilePage() {
   const session = await auth();
@@ -83,10 +84,12 @@ export default async function ProfilePage() {
             <div className="flex items-center gap-4">
               <div className="w-16 h-16 bg-gray-700 rounded-full flex items-center justify-center">
                 {memberProfile?.profileImageUrl ? (
-                  <img
+                  <Image
                     src={memberProfile.profileImageUrl}
                     alt="프로필"
                     className="w-16 h-16 rounded-full object-cover"
+                    width={64}
+                    height={64}
                   />
                 ) : (
                   <User className="w-8 h-8 text-gray-300" />

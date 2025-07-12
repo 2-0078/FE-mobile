@@ -6,6 +6,7 @@ import PageWrapper from '@/components/layout/PageWrapper';
 import { Button } from '@/components/ui/button';
 import { FloatingInput } from '@/components/ui/floating-input';
 import { useState } from 'react';
+import Image from 'next/image';
 
 interface ProductForm {
   title: string;
@@ -160,10 +161,12 @@ export default function SellPage() {
               <div className="grid grid-cols-3 gap-2 mt-3">
                 {form.images.map((image, index) => (
                   <div key={index} className="relative">
-                    <img
+                    <Image
                       src={URL.createObjectURL(image)}
                       alt={`상품 이미지 ${index + 1}`}
                       className="w-full h-24 object-cover rounded-lg"
+                      width={100}
+                      height={100}
                     />
                     <button
                       type="button"
