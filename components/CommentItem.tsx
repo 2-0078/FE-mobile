@@ -1,13 +1,16 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useTransition } from 'react';
 import Image from 'next/image';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { ReplyType } from '@/types/CommunityTypes';
 import { getMemberProfile } from '@/action/member-service';
 import {
   createChildReply,
   updateReply,
   deleteReply,
+  getChildReplies,
 } from '@/action/reply-service';
 import { useAlert } from '@/hooks/useAlert';
 import { Button } from '@/components/ui/button';
@@ -20,6 +23,7 @@ import {
   X,
   Check,
 } from 'lucide-react';
+import { ChildReplyItem } from '@/components/common/ChildReplyItem';
 
 export function CommentItem({
   replyUuid,
@@ -29,7 +33,19 @@ export function CommentItem({
   replyContent,
   childReplies = [],
   deleted = false,
-}: ReplyType) {
+  boardType,
+  boardUuid,
+}: ReplyType & {
+  boardType?: 'FUNDING' | 'PIECE';
+  boardUuid?: string;
+}) {
+  // 삭제된 댓글의 경우 childReplies를 빈 배열로 처리
+  const effectiveChildReplies = deleted ? [] : childReplies;
+  const [localChildReplies, setLocalChildReplies] = useState(
+    effectiveChildReplies
+  );
+  const { data: session } = useSession();
+  const router = useRouter();
   const [avatar, setAvatar] = useState<string>('/next.svg');
   const [username, setUsername] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -41,8 +57,28 @@ export function CommentItem({
   const [editContent, setEditContent] = useState(replyContent);
   const [isDeleting, setIsDeleting] = useState(false);
   const { success, error: showError } = useAlert();
+  const [isPending, startTransition] = useTransition();
+
+  // 로그인 상태 확인 및 로그인 페이지로 이동
+  const checkLoginAndRedirect = () => {
+    if (!session?.user) {
+      showError('로그인이 필요합니다.');
+      const currentPath = window.location.pathname + window.location.search;
+      router.push(`/login?callbackUrl=${encodeURIComponent(currentPath)}`);
+      return false;
+    }
+    return true;
+  };
 
   useEffect(() => {
+    // 삭제된 댓글의 경우 아예 fetch하지 않음
+    if (deleted) {
+      setLoading(false);
+      setUsername('알 수 없음');
+      setAvatar('/next.svg');
+      return;
+    }
+
     const fetchMemberProfile = async () => {
       try {
         setLoading(true);
@@ -56,11 +92,36 @@ export function CommentItem({
         setLoading(false);
       }
     };
-    fetchMemberProfile();
-  }, [memberUuid]);
+
+    // 삭제되지 않은 댓글만 상세조회
+    if (!deleted && memberUuid) {
+      fetchMemberProfile();
+    }
+  }, [memberUuid, deleted]);
+
+  // childReplies props가 변경될 때 local state 업데이트
+  useEffect(() => {
+    const newEffectiveChildReplies = deleted ? [] : childReplies;
+    setLocalChildReplies(newEffectiveChildReplies);
+  }, [childReplies, deleted]);
+
+  // 대댓글 업데이트 콜백 함수
+  const handleChildReplyUpdated = async () => {
+    try {
+      const updatedChildReplies = await getChildReplies(replyUuid);
+      setLocalChildReplies(updatedChildReplies || []);
+    } catch (error) {
+      console.error('Failed to refresh child replies:', error);
+    }
+  };
 
   const handleReplySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // 로그인 상태 확인
+    if (!checkLoginAndRedirect()) {
+      return;
+    }
 
     if (!childReplyContent.trim()) {
       showError('대댓글 내용을 입력해주세요.');
@@ -74,16 +135,30 @@ export function CommentItem({
 
     setSubmitting(true);
     try {
+      if (!boardType || !boardUuid) {
+        throw new Error('게시판 정보가 필요합니다.');
+      }
       await createChildReply({
         parentReplyUuid: replyUuid,
         replyContent: childReplyContent.trim(),
+        boardType,
+        boardUuid,
       });
 
       setChildReplyContent('');
       setShowReplyForm(false);
       success('대댓글이 작성되었습니다.');
-      // Refresh the page or trigger parent refresh
-      window.location.reload();
+
+      // 대댓글 작성 후 해당 댓글의 대댓글 리스트만 다시 호출
+      // 전체 댓글 목록 새로고침은 하지 않음 (무한반복 방지)
+      startTransition(async () => {
+        try {
+          const updatedChildReplies = await getChildReplies(replyUuid);
+          setLocalChildReplies(updatedChildReplies || []);
+        } catch (error) {
+          console.error('Failed to refresh child replies:', error);
+        }
+      });
     } catch (err) {
       console.error('Failed to create child reply:', err);
       showError('대댓글 작성에 실패했습니다.');
@@ -93,6 +168,11 @@ export function CommentItem({
   };
 
   const handleEditSubmit = async () => {
+    // 로그인 상태 확인
+    if (!checkLoginAndRedirect()) {
+      return;
+    }
+
     if (!editContent.trim()) {
       showError('댓글 내용을 입력해주세요.');
       return;
@@ -105,15 +185,24 @@ export function CommentItem({
 
     setSubmitting(true);
     try {
+      if (!boardType || !boardUuid) {
+        throw new Error('게시판 정보가 필요합니다.');
+      }
       await updateReply({
         replyUuid,
         replyContent: editContent.trim(),
+        boardType,
+        boardUuid,
       });
 
       setIsEditing(false);
       success('댓글이 수정되었습니다.');
-      // Refresh the page or trigger parent refresh
-      window.location.reload();
+      // 커스텀 이벤트를 발생시켜 댓글 목록을 새로고침
+      startTransition(() => {
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('commentUpdated'));
+        }
+      });
     } catch (err) {
       console.error('Failed to update reply:', err);
       showError('댓글 수정에 실패했습니다.');
@@ -123,16 +212,32 @@ export function CommentItem({
   };
 
   const handleDelete = async () => {
+    // 로그인 상태 확인
+    if (!checkLoginAndRedirect()) {
+      return;
+    }
+
     if (!confirm('정말로 이 댓글을 삭제하시겠습니까?')) {
       return;
     }
 
     setIsDeleting(true);
     try {
-      await deleteReply(replyUuid);
+      if (!boardType || !boardUuid) {
+        throw new Error('게시판 정보가 필요합니다.');
+      }
+      await deleteReply({
+        replyUuid,
+        boardType,
+        boardUuid,
+      });
       success('댓글이 삭제되었습니다.');
-      // Refresh the page or trigger parent refresh
-      window.location.reload();
+      // 커스텀 이벤트를 발생시켜 댓글 목록을 새로고침
+      startTransition(() => {
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('commentUpdated'));
+        }
+      });
     } catch (err) {
       console.error('Failed to delete reply:', err);
       showError('댓글 삭제에 실패했습니다.');
@@ -176,40 +281,53 @@ export function CommentItem({
     <div className="border-b border-gray-100 last:border-b-0">
       {/* 부모 댓글 */}
       <div className="flex items-start gap-3 py-5">
-        <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 bg-gray-100">
-          {loading ? (
-            <div className="w-9 h-9 bg-gray-200 rounded-full animate-pulse" />
-          ) : (
-            <Image
-              src={avatar}
-              alt="avatar"
-              width={36}
-              height={36}
-              className="rounded-full object-cover"
-              onError={() => setAvatar('/next.svg')}
-            />
-          )}
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-1">
-            <p className="font-medium text-sm text-gray-900">
-              {loading ? '로딩 중...' : username}
-            </p>
-            {mine && (
-              <span className="px-2 py-0.5 text-xs bg-green-50 text-green-600 rounded-full font-medium">
-                나
-              </span>
-            )}
-          </div>
-
-          {/* 삭제된 댓글 표시 */}
-          {deleted ? (
-            <div className="mb-2">
-              <p className="text-gray-400 text-sm italic">삭제된 댓글입니다</p>
+        {deleted ? (
+          // 삭제된 댓글은 간단한 표시
+          <>
+            <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 bg-gray-300">
+              <div className="w-9 h-9 bg-gray-300 rounded-full" />
             </div>
-          ) : (
-            <>
-              {/* 수정 모드일 때 텍스트 영역 표시 */}
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1">
+                <p className="font-medium text-xs text-gray-500">알수없음</p>
+              </div>
+              <div className="mb-2">
+                <p className="text-gray-400 text-xs italic">
+                  삭제된 댓글입니다
+                </p>
+              </div>
+            </div>
+          </>
+        ) : (
+          // 정상 댓글은 기존 UI 표시
+          <>
+            <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 bg-gray-100">
+              {loading ? (
+                <div className="w-9 h-9 bg-gray-200 rounded-full animate-pulse" />
+              ) : (
+                <Image
+                  src={avatar}
+                  alt="avatar"
+                  width={36}
+                  height={36}
+                  className="rounded-full object-cover"
+                  onError={() => setAvatar('/next.svg')}
+                />
+              )}
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1">
+                <p className="font-medium text-sm text-gray-900">
+                  {loading ? '로딩 중...' : username}
+                </p>
+                {mine && (
+                  <span className="px-2 py-0.5 text-xs bg-green-50 text-green-600 rounded-full font-medium">
+                    나
+                  </span>
+                )}
+              </div>
+
+              {/* 댓글 내용 표시 */}
               {isEditing ? (
                 <div className="mb-3">
                   <textarea
@@ -250,41 +368,50 @@ export function CommentItem({
                   {replyContent}
                 </p>
               )}
-            </>
-          )}
 
-          <div className="flex items-center gap-4">
-            <p className="text-gray-400 text-xs">{formatDate(createdAt)}</p>
-            {!deleted && (
-              <button
-                onClick={() => setShowReplyForm(!showReplyForm)}
-                className="text-gray-400 text-xs hover:text-green-600 flex items-center gap-1"
-              >
-                <MessageCircle size={12} />
-                답글
-              </button>
-            )}
-            {mine && !deleted && (
-              <>
+              <div className="flex items-center gap-4">
+                <p className="text-gray-400 text-xs">{formatDate(createdAt)}</p>
                 <button
-                  onClick={startEdit}
+                  onClick={() => {
+                    if (!checkLoginAndRedirect()) {
+                      return;
+                    }
+                    setShowReplyForm(!showReplyForm);
+                  }}
                   className="text-gray-400 text-xs hover:text-green-600 flex items-center gap-1"
                 >
-                  <Edit size={12} />
-                  수정
+                  <MessageCircle size={12} />
+                  답글
                 </button>
-                <button
-                  onClick={handleDelete}
-                  disabled={isDeleting}
-                  className="text-gray-400 text-xs hover:text-red-600 flex items-center gap-1 disabled:opacity-50"
-                >
-                  <Trash2 size={12} />
-                  삭제
-                </button>
-              </>
-            )}
-          </div>
-        </div>
+                {mine && (
+                  <>
+                    <button
+                      onClick={() => {
+                        if (!checkLoginAndRedirect()) {
+                          return;
+                        }
+                        startEdit();
+                      }}
+                      disabled={isPending}
+                      className="text-gray-400 text-xs hover:text-green-600 flex items-center gap-1 disabled:opacity-50"
+                    >
+                      <Edit size={12} />
+                      수정
+                    </button>
+                    <button
+                      onClick={handleDelete}
+                      disabled={isDeleting || isPending}
+                      className="text-gray-400 text-xs hover:text-red-600 flex items-center gap-1 disabled:opacity-50"
+                    >
+                      <Trash2 size={12} />
+                      삭제
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+          </>
+        )}
       </div>
 
       {/* 대댓글 작성 폼 - 삭제된 댓글에는 표시하지 않음 */}
@@ -311,8 +438,8 @@ export function CommentItem({
         </div>
       )}
 
-      {/* 대댓글 목록 - 삭제된 댓글에도 표시 (기존 대댓글은 유지) */}
-      {childReplies && childReplies.length > 0 && (
+      {/* 대댓글 목록 - 삭제된 댓글에는 표시하지 않음 */}
+      {localChildReplies && localChildReplies.length > 0 && (
         <div className="ml-12">
           <button
             onClick={toggleChildReplies}
@@ -321,50 +448,19 @@ export function CommentItem({
             <Reply size={12} />
             {showChildReplies
               ? '대댓글 숨기기'
-              : `대댓글 ${childReplies.length}개 보기`}
+              : `대댓글 ${localChildReplies.length}개 보기`}
           </button>
           {showChildReplies && (
             <div className="space-y-3 border-l-2 border-gray-200 pl-4">
-              {childReplies.map((childReply: ReplyType) => (
-                <div
+              {localChildReplies.map((childReply: ReplyType) => (
+                <ChildReplyItem
                   key={childReply.replyUuid}
-                  className="flex items-start gap-3 py-3 bg-gray-50 rounded-lg p-3"
-                >
-                  <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 bg-white border border-gray-200">
-                    <Image
-                      src="/next.svg"
-                      alt="avatar"
-                      width={28}
-                      height={28}
-                      className="rounded-full object-cover"
-                      onError={() => {}}
-                    />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <p className="font-medium text-xs text-gray-900">
-                        사용자
-                      </p>
-                      {childReply.mine && (
-                        <span className="px-1.5 py-0.5 text-xs bg-blue-50 text-green-600 rounded-full font-medium">
-                          나
-                        </span>
-                      )}
-                    </div>
-                    {childReply.deleted ? (
-                      <p className="text-gray-400 text-xs italic">
-                        삭제된 댓글입니다
-                      </p>
-                    ) : (
-                      <p className="text-gray-800 text-xs leading-relaxed break-words mb-1">
-                        {childReply.replyContent}
-                      </p>
-                    )}
-                    <p className="text-gray-400 text-xs">
-                      {formatDate(childReply.createdAt)}
-                    </p>
-                  </div>
-                </div>
+                  childReply={childReply}
+                  onChildReplyUpdated={handleChildReplyUpdated}
+                  boardType={boardType}
+                  boardUuid={boardUuid}
+                  parentReplyUuid={replyUuid}
+                />
               ))}
             </div>
           )}

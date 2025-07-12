@@ -94,7 +94,7 @@ export default async function PiecePage({
 
   return (
     <div className="pb-20 pt-24">
-      <Header title="PIECES" isCloseButton={true} />
+      <Header title="PIECES" isCloseButton={false} />
 
       <div className="px-4 mb-4">
         <Search />

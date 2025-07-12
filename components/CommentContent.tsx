@@ -4,9 +4,15 @@ import { ReplyType } from '@/types/CommunityTypes';
 
 interface CommentContentProps {
   comments: ReplyType[];
+  boardType?: 'FUNDING' | 'PIECE';
+  boardUuid?: string;
 }
 
-export function CommentContent({ comments }: CommentContentProps) {
+export function CommentContent({
+  comments,
+  boardType,
+  boardUuid,
+}: CommentContentProps) {
   if (comments.length === 0) {
     return (
       <div className="px-6 py-16 text-center">
@@ -22,7 +28,11 @@ export function CommentContent({ comments }: CommentContentProps) {
   return (
     <div className="divide-y divide-gray-100">
       {comments.map((comment) => (
-        <CommentItem key={comment.replyUuid} {...comment} />
+        <CommentItem
+          key={comment.replyUuid}
+          {...comment}
+          {...(boardType && boardUuid ? { boardType, boardUuid } : {})}
+        />
       ))}
     </div>
   );

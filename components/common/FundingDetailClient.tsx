@@ -1,10 +1,12 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Header from '@/components/layout/Header';
 import ModalSection from '../(products)/ModalSection';
 import { BottomActions } from '../BottomActions';
 import { FundingProductType } from '@/types/ProductTypes';
+import { useModal } from '@/stores/modal-store';
 
 interface FundingDetailClientProps {
   fundingUuid: string;
@@ -19,6 +21,17 @@ export default function FundingDetailClient({
   children,
   productData,
 }: FundingDetailClientProps) {
+  const searchParams = useSearchParams();
+  const { openModal } = useModal();
+
+  // openComments 파라미터 감지하여 댓글 모달 자동 열기
+  useEffect(() => {
+    const openComments = searchParams.get('openComments');
+    if (openComments === 'true') {
+      openModal('comments');
+    }
+  }, [searchParams, openModal]);
+
   return (
     <>
       <Header isCloseButton={true} />

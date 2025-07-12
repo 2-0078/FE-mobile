@@ -5,7 +5,7 @@ export default function layout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <>
-      <Header isAlert={false} className="px-4 pt-6" />
+      <Header isAlert={false} isCloseButton={true} className="px-4 pt-6" />
       {children}
     </>
   );

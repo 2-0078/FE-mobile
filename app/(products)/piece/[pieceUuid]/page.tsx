@@ -12,6 +12,8 @@ import ClockIcon from '@/repo/ui/Icons/ClockIcon';
 import { generatePieceMetadata } from '@/lib/metadata';
 import { generatePieceProductJsonLd } from '@/lib/structured-data';
 import { CommentSection } from '@/components/common/CommentSection';
+import OrderBook from '@/components/common/OrderBook';
+import OrderHistory from '@/components/common/OrderHistory';
 
 export async function generateMetadata({
   params,
@@ -132,11 +134,15 @@ export default async function PiecePage({
           closingPrice={data.piece.closingPrice}
           tradeQuantity={data.piece.tradeQuantity}
         />
-        <TabLayout tabs={['Details', 'Owners', 'Bids', 'History']}>
+        <TabLayout tabs={['Details', 'Owners', '호가', 'History']}>
           <div>{data.description}</div>
           <div>소유자 정보가 여기에 표시됩니다.</div>
-          <div>입찰 정보가 여기에 표시됩니다.</div>
-          <div>거래 내역이 여기에 표시됩니다.</div>
+          <div>
+            <OrderBook pieceUuid={param.pieceUuid} />
+          </div>
+          <div>
+            <OrderHistory pieceUuid={param.pieceUuid} />
+          </div>
         </TabLayout>
 
         {/* 댓글 섹션 */}

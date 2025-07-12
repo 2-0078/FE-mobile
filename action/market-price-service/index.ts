@@ -1,24 +1,24 @@
 'use server';
 
-import { MarketPriceResponse } from '@/types/ProductTypes';
+import { MarketPriceResponse, QoutesResponse } from '@/types/ProductTypes';
 
 const API_BASE_URL = 'https://api.pieceofcake.site';
 
 export async function getMarketPrice(
-  productUuid: string
+  pieceProductUuid: string
 ): Promise<MarketPriceResponse | null> {
   try {
-    console.log('Fetching market price for:', productUuid);
+    console.log('Fetching market price for:', pieceProductUuid);
 
     const response = await fetch(
-      `${API_BASE_URL}/real-time-data-service/api/v1/kis-api/market-price/${productUuid}`,
+      `${API_BASE_URL}/real-time-data-service/api/v1/kis-api/market-price/${pieceProductUuid}`,
       {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
         next: {
-          tags: [`market-data-${productUuid}`],
+          tags: [`market-data-${pieceProductUuid}`],
         },
       }
     );
@@ -37,6 +37,35 @@ export async function getMarketPrice(
     return data;
   } catch (error) {
     console.error('Error fetching market price:', error);
+    return null;
+  }
+}
+
+export async function getQoutes(
+  pieceProductUuid: string
+): Promise<QoutesResponse | null> {
+  try {
+    console.log('Fetching qoutes for:', pieceProductUuid);
+
+    const response = await fetch(
+      `${API_BASE_URL}/real-time-data-service/api/v1/kis-api/quotes/${pieceProductUuid}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        next: {
+          tags: [`qoutes-${pieceProductUuid}`],
+        },
+      }
+    );
+
+    const data: QoutesResponse = await response.json();
+    console.log('API response data qoutes:', data);
+
+    return data;
+  } catch (error) {
+    console.error('Error fetching qoutes:', error);
     return null;
   }
 }
