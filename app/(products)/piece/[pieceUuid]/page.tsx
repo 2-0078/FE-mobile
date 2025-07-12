@@ -75,11 +75,7 @@ export default async function PiecePage({
           isAlert={false}
           isCloseButton={true}
         />
-        <PieceDetailClient
-          pieceUuid={pieceUuid}
-          productUuid={piece.productUuid}
-          productData={piece}
-        >
+        <PieceDetailClient pieceUuid={pieceUuid}>
           <PieceDetailCard product={piece} />
         </PieceDetailClient>
       </div>
