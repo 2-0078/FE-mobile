@@ -36,18 +36,18 @@ export function PieceChart({
     setIsPositive(priceChange >= 0);
   }, [priceChange]);
 
-  const formatPrice = (value: unknown) => {
+  const formatPrice = (value: any) => {
     if (typeof value === 'number') {
       return value.toLocaleString();
     }
-    return value;
+    return String(value);
   };
 
-  const formatTime = (value: unknown) => {
+  const formatTime = (value: any) => {
     if (typeof value === 'string') {
       return value;
     }
-    return value;
+    return String(value);
   };
 
   return (
