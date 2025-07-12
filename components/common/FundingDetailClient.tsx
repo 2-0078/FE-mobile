@@ -5,7 +5,6 @@ import { useSearchParams } from 'next/navigation';
 import Header from '@/components/layout/Header';
 import ModalSection from '../(products)/ModalSection';
 import { BottomActions } from '../BottomActions';
-import { FundingProductType } from '@/types/ProductTypes';
 import { useModal } from '@/stores/modal-store';
 
 interface FundingDetailClientProps {
