@@ -278,21 +278,21 @@ export function CommentItem({
   };
 
   return (
-    <div className="border-b border-gray-700 last:border-b-0">
+    <div className="border-b border-gray-100 last:border-b-0">
       {/* 부모 댓글 */}
       <div className="flex items-start gap-3 py-5">
         {deleted ? (
           // 삭제된 댓글은 간단한 표시
           <>
-            <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 bg-gray-600">
-              <div className="w-9 h-9 bg-gray-600 rounded-full" />
+            <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 bg-gray-300">
+              <div className="w-9 h-9 bg-gray-300 rounded-full" />
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
-                <p className="font-medium text-xs text-gray-400">알수없음</p>
+                <p className="font-medium text-xs text-gray-500">알수없음</p>
               </div>
               <div className="mb-2">
-                <p className="text-gray-500 text-xs italic">
+                <p className="text-gray-400 text-xs italic">
                   삭제된 댓글입니다
                 </p>
               </div>
@@ -301,9 +301,9 @@ export function CommentItem({
         ) : (
           // 정상 댓글은 기존 UI 표시
           <>
-            <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 bg-gray-700">
+            <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 bg-gray-100">
               {loading ? (
-                <div className="w-9 h-9 bg-gray-600 rounded-full animate-pulse" />
+                <div className="w-9 h-9 bg-gray-200 rounded-full animate-pulse" />
               ) : (
                 <Image
                   src={avatar}
@@ -317,11 +317,11 @@ export function CommentItem({
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
-                <p className="font-medium text-sm text-white">
+                <p className="font-medium text-sm text-gray-900">
                   {loading ? '로딩 중...' : username}
                 </p>
                 {mine && (
-                  <span className="px-2 py-0.5 text-xs bg-green-900 text-green-400 rounded-full font-medium">
+                  <span className="px-2 py-0.5 text-xs bg-green-50 text-green-600 rounded-full font-medium">
                     나
                   </span>
                 )}
@@ -333,7 +333,7 @@ export function CommentItem({
                   <textarea
                     value={editContent}
                     onChange={(e) => setEditContent(e.target.value)}
-                    className="w-full p-3 border border-gray-600 text-white text-sm rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-gray-800 placeholder-gray-400"
+                    className="w-full p-3 border border-gray-200 text-gray-900 text-sm rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white"
                     rows={3}
                     maxLength={500}
                     disabled={submitting}
@@ -364,7 +364,7 @@ export function CommentItem({
                   </div>
                 </div>
               ) : (
-                <p className="text-gray-200 text-sm leading-relaxed break-words mb-2">
+                <p className="text-gray-800 text-sm leading-relaxed break-words mb-2">
                   {replyContent}
                 </p>
               )}
@@ -416,13 +416,13 @@ export function CommentItem({
 
       {/* 대댓글 작성 폼 - 삭제된 댓글에는 표시하지 않음 */}
       {showReplyForm && !deleted && (
-        <div className="ml-12 mb-4 bg-gray-800 rounded-lg p-3">
+        <div className="ml-12 mb-4 bg-gray-50 rounded-lg p-3">
           <form onSubmit={handleReplySubmit} className="flex gap-2">
             <textarea
               value={childReplyContent}
               onChange={(e) => setChildReplyContent(e.target.value)}
               placeholder="대댓글을 입력하세요..."
-              className="flex-1 p-2 border border-gray-600 text-white text-sm rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-gray-700 placeholder-gray-400"
+              className="flex-1 p-2 border border-gray-200 text-gray-900 text-sm rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white"
               rows={2}
               maxLength={500}
               disabled={submitting}
@@ -443,7 +443,7 @@ export function CommentItem({
         <div className="ml-12">
           <button
             onClick={toggleChildReplies}
-            className="text-gray-400 text-xs hover:text-green-600 mb-3 flex items-center gap-1"
+            className="text-gray-500 text-xs hover:text-green-600 mb-3 flex items-center gap-1"
           >
             <Reply size={12} />
             {showChildReplies
@@ -451,7 +451,7 @@ export function CommentItem({
               : `대댓글 ${localChildReplies.length}개 보기`}
           </button>
           {showChildReplies && (
-            <div className="space-y-3 border-l-2 border-gray-600 pl-4">
+            <div className="space-y-3 border-l-2 border-gray-200 pl-4">
               {localChildReplies.map((childReply: ReplyType) => (
                 <ChildReplyItem
                   key={childReply.replyUuid}

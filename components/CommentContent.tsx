@@ -26,7 +26,7 @@ export function CommentContent({
   }
 
   return (
-    <div className="divide-y divide-gray-700">
+    <div className="divide-y divide-gray-100">
       {comments.map((comment) => (
         <CommentItem
           key={comment.replyUuid}

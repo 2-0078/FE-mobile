@@ -156,16 +156,16 @@ export function ChildReplyItem({
   };
 
   return (
-    <div className="flex items-start gap-3 py-3 bg-gray-800 rounded-lg p-3">
+    <div className="flex items-start gap-3 py-3 bg-gray-50 rounded-lg p-3">
       {childReply.deleted ? (
         // 삭제된 대댓글은 회색 배경 아바타
-        <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 bg-gray-600">
-          <div className="w-7 h-7 bg-gray-600 rounded-full" />
+        <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 bg-gray-300">
+          <div className="w-7 h-7 bg-gray-300 rounded-full" />
         </div>
       ) : (
-        <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 bg-gray-700 border border-gray-600">
+        <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 bg-white border border-gray-200">
           {loading ? (
-            <div className="w-7 h-7 bg-gray-600 rounded-full animate-pulse" />
+            <div className="w-7 h-7 bg-gray-200 rounded-full animate-pulse" />
           ) : (
             <Image
               src={avatar}
@@ -180,23 +180,23 @@ export function ChildReplyItem({
       )}
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1">
-          <p className="font-medium text-xs text-white">
+          <p className="font-medium text-xs text-gray-900">
             {loading ? '로딩 중...' : username}
           </p>
           {childReply.mine && !childReply.deleted && (
-            <span className="px-1.5 py-0.5 text-xs bg-green-900 text-green-400 rounded-full font-medium">
+            <span className="px-1.5 py-0.5 text-xs bg-blue-50 text-green-600 rounded-full font-medium">
               나
             </span>
           )}
         </div>
         {childReply.deleted ? (
-          <p className="text-gray-500 text-xs italic">삭제된 댓글입니다</p>
+          <p className="text-gray-400 text-xs italic">삭제된 댓글입니다</p>
         ) : isEditing ? (
           <div className="mb-2">
             <textarea
               value={editContent}
               onChange={(e) => setEditContent(e.target.value)}
-              className="w-full p-2 border border-gray-600 text-white text-xs rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-gray-700 placeholder-gray-400"
+              className="w-full p-2 border border-gray-200 text-gray-900 text-xs rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white"
               rows={2}
               maxLength={500}
               disabled={submitting}
@@ -227,7 +227,7 @@ export function ChildReplyItem({
             </div>
           </div>
         ) : (
-          <p className="text-gray-200 text-xs leading-relaxed break-words mb-1">
+          <p className="text-gray-800 text-xs leading-relaxed break-words mb-1">
             {childReply.replyContent}
           </p>
         )}

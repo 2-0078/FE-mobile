@@ -91,7 +91,7 @@ export default function ItemCardInfo({
       {/* 가격 표시 - 커스텀 컴포넌트가 있으면 사용, 없으면 기본 Price 컴포넌트 사용 */}
       {priceComponent || (
         <Price
-          className="text-white text-3xl font-bold"
+          className="text-black text-3xl font-bold"
           price={price || 15800000}
         />
       )}

@@ -11,7 +11,8 @@ import {
   MarketPriceData,
   QoutesData,
 } from '@/types/ProductTypes';
-import { TrendingUp, TrendingDown } from 'lucide-react';
+import { Button } from '../ui/button';
+import { TrendingUp, TrendingDown, ArrowUp, ArrowDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { marketStorage } from '@/lib/market-storage';
 import { Skeleton } from '@/components/atoms';
@@ -27,9 +28,9 @@ export default function PieceItemCard({ product }: PieceItemCardProps) {
   const [marketData, setMarketData] = useState<MarketPriceData | null>(null);
   const [qoutesData, setQoutesData] = useState<QoutesData | null>(null);
   const [isLoadingMarketData, setIsLoadingMarketData] = useState(false);
-  // const [dataSource, setDataSource] = useState<'live' | 'cached' | 'none'>(
-  //   'none'
-  // );
+  const [dataSource, setDataSource] = useState<'live' | 'cached' | 'none'>(
+    'none'
+  );
 
   // 이전 값들을 저장하여 변경 감지
   const prevMarketDataRef = useRef<MarketPriceData | null>(null);
@@ -77,6 +78,7 @@ export default function PieceItemCard({ product }: PieceItemCardProps) {
           }
           prevMarketDataRef.current = response.result;
           setMarketData(response.result);
+          setDataSource('live');
           marketStorage.saveMarketData(piece.pieceProductUuid, response.result);
         } else {
           console.log('Market price API failed or no data');
@@ -92,6 +94,7 @@ export default function PieceItemCard({ product }: PieceItemCardProps) {
           };
           console.log('Using dummy market data:', dummyMarketData);
           setMarketData(dummyMarketData);
+          setDataSource('live');
         }
       } catch (error) {
         console.error('Error fetching market price:', error);
@@ -107,6 +110,7 @@ export default function PieceItemCard({ product }: PieceItemCardProps) {
         };
         console.log('Using dummy market data due to error:', dummyMarketData);
         setMarketData(dummyMarketData);
+        setDataSource('live');
       }
 
       // qoutesData는 실시간으로 패칭
@@ -263,36 +267,25 @@ export default function PieceItemCard({ product }: PieceItemCardProps) {
           )}
         </div>
         <div className="px-4 pb-4 flex justify-start items-center gap-1 min-h-[20px]">
-          {isLoadingMarketData ? (
-            // 로딩 중일 때 스켈레톤
-            <div className="flex items-center gap-1">
-              <Skeleton width="w-12" height="h-5" rounded="sm" />
-              <Skeleton width="w-12" height="h-5" rounded="sm" />
+          {qoutesData?.askp[0] && (
+            <div className="inline-flex items-center px-2 h-5 rounded-xs text-[0.6rem] font-medium bg-red-50 text-red-700 border border-red-200">
+              <span className="mr-1">매도</span>
+              <AnimatedValue
+                value={qoutesData.askp[0]}
+                className="font-bold"
+                formatValue={(value) => value.toLocaleString()}
+              />
             </div>
-          ) : (
-            // 데이터가 있을 때 실제 배지 표시
-            <>
-              {qoutesData?.askp[0] && (
-                <div className="inline-flex items-center px-2 h-5 rounded-xs text-[0.6rem] font-medium bg-red-50 text-red-700 border border-red-200">
-                  <span className="mr-1">매도</span>
-                  <AnimatedValue
-                    value={qoutesData.askp[0]}
-                    className="font-bold"
-                    formatValue={(value) => value.toLocaleString()}
-                  />
-                </div>
-              )}
-              {qoutesData?.bidp[0] && (
-                <div className="inline-flex items-center px-2 h-5 rounded-xs text-[0.6rem] font-medium bg-blue-50 text-blue-700 border border-blue-200">
-                  <span className="mr-1">매수</span>
-                  <AnimatedValue
-                    value={qoutesData.bidp[0]}
-                    className="font-bold"
-                    formatValue={(value) => value.toLocaleString()}
-                  />
-                </div>
-              )}
-            </>
+          )}
+          {qoutesData?.bidp[0] && (
+            <div className="inline-flex items-center px-2 h-5 rounded-xs text-[0.6rem] font-medium bg-blue-50 text-blue-700 border border-blue-200">
+              <span className="mr-1">매수</span>
+              <AnimatedValue
+                value={qoutesData.bidp[0]}
+                className="font-bold"
+                formatValue={(value) => value.toLocaleString()}
+              />
+            </div>
           )}
         </div>
       </div>

@@ -85,7 +85,7 @@ export default function CommentForm({
   };
 
   return (
-    <div className="bg-gray-900 border-t border-gray-700">
+    <div className="bg-white border-t border-gray-100">
       {isAuth ? (
         // 로그인된 사용자: 댓글 입력 폼 표시
         <form onSubmit={handleSubmit} className="p-4">
@@ -95,7 +95,7 @@ export default function CommentForm({
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 placeholder={`${boardType === 'FUNDING' ? '펀딩' : '조각'} 상품에 대한 의견을 남겨보세요...`}
-                className="w-full p-3 border border-gray-600 text-white text-sm rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-gray-800 placeholder-gray-400"
+                className="w-full p-3 border border-gray-200 text-black text-sm rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-gray-100 placeholder-gray-400"
                 rows={2}
                 maxLength={500}
                 disabled={loading}

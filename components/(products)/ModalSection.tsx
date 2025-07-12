@@ -157,7 +157,7 @@ export default function ModalSection({
           <>
             <ModalHeader>
               <div className="px-6 pb-4">
-                <h1 className="text-white text-lg font-semibold">
+                <h1 className="text-black text-lg font-semibold">
                   {currentProductData.productName}
                 </h1>
                 <p className="text-gray-400 text-sm mt-1">
@@ -185,7 +185,7 @@ export default function ModalSection({
               </div>
 
               <div
-                className="border-t border-gray-700 bg-gray-900 flex-shrink-0"
+                className="border-t border-gray-200 bg-white flex-shrink-0"
                 style={{ height: '40%' }}
               >
                 <CommentForm
