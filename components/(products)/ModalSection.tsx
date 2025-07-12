@@ -5,7 +5,7 @@ import { ModalContainer } from '../ModalContainer';
 import { ModalHeader } from '../ModalHeader';
 import { useModal } from '@/stores/modal-store';
 import { CommentSection } from '../common/CommentSection';
-import { getFundingReplies } from '@/action/reply-service';
+import { getRepliesWithChildren } from '@/action/reply-service';
 import { ReplyType } from '@/types/CommunityTypes';
 
 interface ModalSectionProps {
@@ -31,7 +31,11 @@ export default function ModalSection({
       const boardUuid = fundingUuid || pieceUuid;
       if (!boardUuid) return;
 
-      const repliesData = await getFundingReplies(boardUuid);
+      const repliesData = await getRepliesWithChildren(
+        boardType,
+        boardUuid,
+        '1'
+      );
       setReplies(repliesData || []);
     } catch (error) {
       console.error('Failed to fetch replies:', error);
