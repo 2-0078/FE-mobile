@@ -72,9 +72,9 @@ export default function ContactPage() {
 
   return (
     <>
-      <Header title="문의하기" isAlert={false} />
+      <Header title="문의하기" isAlert={false} isCloseButton={true} />
       <PageWrapper>
-        <div className="space-y-6 px-4">
+        <div className="space-y-6 px-4 pt-20">
           {/* 문의 방법 */}
           <div className="space-y-3">
             <h2 className="text-white font-medium text-lg">문의 방법</h2>

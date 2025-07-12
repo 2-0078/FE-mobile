@@ -16,7 +16,7 @@ export function CommentContent({
   if (comments.length === 0) {
     return (
       <div className="px-6 py-16 text-center">
-        <div className="text-gray-300 text-2xl mb-3">💬</div>
+        <div className="text-gray-400 text-2xl mb-3">💬</div>
         <p className="text-gray-500 text-sm font-medium">
           아직 댓글이 없습니다
         </p>

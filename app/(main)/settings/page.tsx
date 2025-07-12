@@ -204,9 +204,9 @@ export default async function SettingsPage() {
 
   return (
     <>
-      <Header title="설정" isAlert={false} />
+      <Header title="설정" isAlert={false} isCloseButton={true} />
       <PageWrapper>
-        <div className="space-y-6">
+        <div className="space-y-6 pt-20">
           {/* Notification Settings */}
           <div>
             <h3 className="text-gray-300 text-sm font-medium mb-3">

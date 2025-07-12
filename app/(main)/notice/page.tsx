@@ -49,9 +49,9 @@ export default async function NoticePage() {
 
   return (
     <>
-      <Header title="공지사항" isAlert={false} />
+      <Header title="공지사항" isAlert={false} isCloseButton={true} />
       <PageWrapper>
-        <div className="space-y-4 px-4">
+        <div className="space-y-4 px-4 pt-20">
           {notices.map((notice) => (
             <div
               key={notice.id}

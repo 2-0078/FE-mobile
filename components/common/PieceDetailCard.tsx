@@ -15,21 +15,16 @@ import { TrendingUp, TrendingDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { marketStorage } from '@/lib/market-storage';
 import { Skeleton } from '@/components/atoms';
-import { useRouter } from 'next/navigation';
 
-interface PieceItemCardProps {
+interface PieceDetailCardProps {
   product: PieceProductType;
 }
 
-export default function PieceItemCard({ product }: PieceItemCardProps) {
-  const router = useRouter();
+export default function PieceDetailCard({ product }: PieceDetailCardProps) {
   const { piece } = product;
   const [marketData, setMarketData] = useState<MarketPriceData | null>(null);
   const [qoutesData, setQoutesData] = useState<QoutesData | null>(null);
   const [isLoadingMarketData, setIsLoadingMarketData] = useState(false);
-  // const [dataSource, setDataSource] = useState<'live' | 'cached' | 'none'>(
-  //   'none'
-  // );
 
   // 이전 값들을 저장하여 변경 감지
   const prevMarketDataRef = useRef<MarketPriceData | null>(null);
@@ -77,7 +72,6 @@ export default function PieceItemCard({ product }: PieceItemCardProps) {
           }
           prevMarketDataRef.current = response.result;
           setMarketData(response.result);
-          // setDataSource('live');
           marketStorage.saveMarketData(piece.pieceProductUuid, response.result);
         } else {
           console.log('Market price API failed or no data');
@@ -93,7 +87,6 @@ export default function PieceItemCard({ product }: PieceItemCardProps) {
           };
           console.log('Using dummy market data:', dummyMarketData);
           setMarketData(dummyMarketData);
-          // setDataSource('live');
         }
       } catch (error) {
         console.error('Error fetching market price:', error);
@@ -109,7 +102,6 @@ export default function PieceItemCard({ product }: PieceItemCardProps) {
         };
         console.log('Using dummy market data due to error:', dummyMarketData);
         setMarketData(dummyMarketData);
-        // setDataSource('live');
       }
 
       // qoutesData는 실시간으로 패칭
@@ -184,7 +176,7 @@ export default function PieceItemCard({ product }: PieceItemCardProps) {
     return () => {
       window.removeEventListener('message', handleSSEAlert);
     };
-  }, [piece.pieceProductUuid]); // isLoadingMarketData 제거
+  }, [piece.pieceProductUuid]);
 
   // 주가 데이터가 있는 경우 표시 (더 명확한 조건)
   const hasMarketData =
@@ -193,15 +185,8 @@ export default function PieceItemCard({ product }: PieceItemCardProps) {
     typeof marketData.stckHgpr === 'number' &&
     typeof marketData.stckLwpr === 'number';
 
-  const handleClick = () => {
-    router.push(`/piece/${piece.pieceProductUuid}`);
-  };
-
   return (
-    <div
-      onClick={handleClick}
-      className="w-full rounded-lg shadow-lg bg-white overflow-hidden relative mx-auto items-center justify-center"
-    >
+    <div className="w-full rounded-lg shadow-lg bg-gray-900 overflow-hidden relative mx-auto items-center justify-center">
       {/* 상한가 하한가를 표시하자 */}
       <ItemCardImage
         remainingTime={`${piece.tradeQuantity}개`}
@@ -257,7 +242,7 @@ export default function PieceItemCard({ product }: PieceItemCardProps) {
           ) : (
             // 데이터가 없을 때 기본 정보 표시
             <div className="flex items-center gap-2">
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-gray-400">
                 {piece.closingPrice
                   ? `종가: ${piece.closingPrice.toLocaleString()}원`
                   : '거래값을 요청중입니다'}
@@ -266,32 +251,39 @@ export default function PieceItemCard({ product }: PieceItemCardProps) {
           )}
         </div>
         <div className="px-4 pb-4 flex justify-start items-center gap-1 min-h-[20px]">
-          {qoutesData?.askp[0] && (
-            <div className="inline-flex items-center px-2 h-5 rounded-xs text-[0.6rem] font-medium bg-red-50 text-red-700 border border-red-200">
-              <span className="mr-1">매도</span>
-              <AnimatedValue
-                value={qoutesData.askp[0]}
-                className="font-bold"
-                formatValue={(value) => value.toLocaleString()}
-              />
+          {isLoadingMarketData ? (
+            // 로딩 중일 때 스켈레톤
+            <div className="flex items-center gap-1">
+              <Skeleton width="w-12" height="h-5" rounded="sm" />
+              <Skeleton width="w-12" height="h-5" rounded="sm" />
             </div>
-          )}
-          {qoutesData?.bidp[0] && (
-            <div className="inline-flex items-center px-2 h-5 rounded-xs text-[0.6rem] font-medium bg-blue-50 text-blue-700 border border-blue-200">
-              <span className="mr-1">매수</span>
-              <AnimatedValue
-                value={qoutesData.bidp[0]}
-                className="font-bold"
-                formatValue={(value) => value.toLocaleString()}
-              />
-            </div>
+          ) : (
+            // 데이터가 있을 때 실제 배지 표시
+            <>
+              {qoutesData?.askp[0] && (
+                <div className="inline-flex items-center px-2 h-5 rounded-xs text-[0.6rem] font-medium bg-red-900 text-red-400 border border-red-700">
+                  <span className="mr-1">매도</span>
+                  <AnimatedValue
+                    value={qoutesData.askp[0]}
+                    className="font-bold"
+                    formatValue={(value) => value.toLocaleString()}
+                  />
+                </div>
+              )}
+              {qoutesData?.bidp[0] && (
+                <div className="inline-flex items-center px-2 h-5 rounded-xs text-[0.6rem] font-medium bg-blue-900 text-blue-400 border border-blue-700">
+                  <span className="mr-1">매수</span>
+                  <AnimatedValue
+                    value={qoutesData.bidp[0]}
+                    className="font-bold"
+                    formatValue={(value) => value.toLocaleString()}
+                  />
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>
-      {/* 상세보기 버튼
-      <div className="absolute bottom-0 right-0 p-4 flex justify-center items-center">
-        <Button className="w-fit">상세보기</Button>
-      </div> */}
     </div>
   );
 }

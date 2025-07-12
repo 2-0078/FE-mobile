@@ -83,9 +83,9 @@ export default function FAQPage() {
 
   return (
     <>
-      <Header title="자주하는 질문" isAlert={false} />
+      <Header title="자주하는 질문" isAlert={false} isCloseButton={true} />
       <PageWrapper>
-        <div className="space-y-4">
+        <div className="space-y-4 pt-20">
           {/* 검색 */}
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />

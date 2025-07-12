@@ -62,17 +62,17 @@ export default function AnimatedPrice({ price }: AnimatedPriceProps) {
     return (
       <p className="font-bold tracking-tighter text-3xl text-black">
         {price.toLocaleString()}
-        <span className="text-sm text-gray-500 pl-1">원</span>
+        <span className="text-sm text-gray-400 pl-1">원</span>
       </p>
     );
   }
 
   return (
     <p
-      className={`font-bold tracking-tighter text-3xl ${isAnimating ? 'text-green-600' : 'text-black'}`}
+      className={`font-bold tracking-tighter text-3xl ${isAnimating ? 'text-green-400' : 'text-black'}`}
     >
       {displayPrice.toLocaleString()}
-      <span className="text-sm text-gray-500 pl-1">원</span>
+      <span className="text-sm text-gray-400 pl-1">원</span>
     </p>
   );
 }

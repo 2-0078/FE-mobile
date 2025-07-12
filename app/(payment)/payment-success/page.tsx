@@ -1,44 +1,102 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { confirmPayment } from '@/action/payment-service';
-import { useSearchParams } from 'next/navigation';
-import { useEffect, useState, Suspense } from 'react';
+import { useAlert } from '@/hooks/useAlert';
+import { Button } from '@/components/ui/button';
+import { CheckCircle } from 'lucide-react';
 
-function PaymentSuccessContent() {
+export default function PaymentSuccessPage() {
   const searchParams = useSearchParams();
-  const [message, setMessage] = useState('결제를 처리하고 있습니다...');
+  const router = useRouter();
+  const { success, error: showError } = useAlert();
+  const [isProcessing, setIsProcessing] = useState(true);
+  const [isConfirmed, setIsConfirmed] = useState(false);
 
   useEffect(() => {
-    const confirm = async () => {
-      const paymentKey = searchParams.get('paymentKey') || '';
-      const orderId = searchParams.get('orderId') || '';
-      const amount = searchParams.get('amount') || '0';
-      const result = await confirmPayment({ orderId, paymentKey, amount: Number(amount) });
+    const processPayment = async () => {
+      try {
+        const paymentKey = searchParams.get('paymentKey');
+        const orderId = searchParams.get('orderId');
+        const amount = searchParams.get('amount');
 
-      if (result) {
-        setMessage(`결제가 성공적으로 완료되었습니다. 주문번호: ${result}`);
-        // TODO: 사용자를 마이페이지나 다른 완료 페이지로 리디렉션할 수 있습니다.
-        window.location.href = '/main';
-      } else {
-        setMessage(`결제 실패: ${result}`);
+        if (!paymentKey || !orderId || !amount) {
+          showError('결제 정보가 올바르지 않습니다.');
+          router.push('/charge');
+          return;
+        }
+
+        // 결제 확인 API 호출
+        await confirmPayment({
+          paymentType: 'CARD',
+          orderId,
+          paymentKey,
+          amount: parseInt(amount),
+        });
+
+        setIsConfirmed(true);
+        success('결제가 성공적으로 완료되었습니다!');
+      } catch (err) {
+        console.error('Payment confirmation failed:', err);
+        showError('결제 확인에 실패했습니다.');
+        router.push('/charge');
+      } finally {
+        setIsProcessing(false);
       }
     };
 
-    confirm();
-  }, [searchParams]);
+    processPayment();
+  }, [searchParams, router, success, showError]);
+
+  const handleGoToCharge = () => {
+    router.push('/charge');
+  };
+
+  const handleGoToHome = () => {
+    router.push('/');
+  };
+
+  if (isProcessing) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-custom-green mx-auto mb-4"></div>
+          <p className="text-gray-600">결제를 확인하는 중...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div>
-      <h1>결제 상태</h1>
-      <p>{message}</p>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full mx-4">
+        <div className="text-center">
+          <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">결제 성공!</h1>
+          <p className="text-gray-600 mb-6">
+            {isConfirmed
+              ? '결제가 성공적으로 완료되었습니다.'
+              : '결제 확인 중 오류가 발생했습니다.'}
+          </p>
+
+          <div className="space-y-3">
+            <Button
+              onClick={handleGoToCharge}
+              className="w-full bg-custom-green text-black font-bold"
+            >
+              추가 충전하기
+            </Button>
+            <Button
+              onClick={handleGoToHome}
+              variant="outline"
+              className="w-full"
+            >
+              홈으로 돌아가기
+            </Button>
+          </div>
+        </div>
+      </div>
     </div>
-  );
-}
-
-export default function PaymentSuccessPage() {
-  return (
-    <Suspense fallback={<div>로딩 중...</div>}>
-      <PaymentSuccessContent />
-    </Suspense>
   );
 }

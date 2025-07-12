@@ -61,7 +61,7 @@ export default function AnimatedValue({
             // 애니메이션 완료 후 색상 초기화
             setTimeout(() => {
               setAnimationColor('none');
-            }, 800);
+            }, 500);
           }
         };
 
@@ -89,11 +89,11 @@ export default function AnimatedValue({
 
     switch (animationColor) {
       case 'green':
-        return 'animate-value-increase font-bold';
+        return 'animate-pulse text-green-600 font-bold';
       case 'red':
-        return 'animate-value-decrease font-bold';
+        return 'animate-pulse text-red-600 font-bold';
       default:
-        return 'animate-value-change';
+        return '';
     }
   };
 
@@ -101,7 +101,7 @@ export default function AnimatedValue({
     ? formatValue(displayValue)
     : typeof displayValue === 'number'
       ? displayValue.toLocaleString()
-      : String(displayValue);
+      : displayValue;
 
   return (
     <span className={cn(getAnimationClasses(), className)}>

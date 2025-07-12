@@ -52,7 +52,7 @@ export default async function MyProductsPage() {
 
   return (
     <>
-      <Header title="내 상품" isAlert={false} />
+      <Header title="내 상품" isAlert={false} isCloseButton={true} />
       <PageWrapper>
         {/* Add Product Button */}
         <div className="mb-6">
@@ -64,7 +64,7 @@ export default async function MyProductsPage() {
         </div>
 
         {/* Product List */}
-        <div className="space-y-4">
+        <div className="space-y-4 pt-20">
           {mockProducts.length === 0 ? (
             <div className="text-center py-12">
               <Package className="w-16 h-16 text-gray-400 mx-auto mb-4" />

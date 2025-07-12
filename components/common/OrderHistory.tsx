@@ -1,107 +1,104 @@
 'use client';
+
 import React, { useState, useEffect } from 'react';
-import OrderBookService, { TradingOrder } from '@/services/OrderBookService';
+
+interface TradeData {
+  time: string;
+  price: number;
+  quantity: number;
+  type: 'buy' | 'sell';
+}
 
 interface OrderHistoryProps {
   pieceUuid: string;
 }
 
 export default function OrderHistory({ pieceUuid }: OrderHistoryProps) {
-  const [orders, setOrders] = useState<TradingOrder[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [trades, setTrades] = useState<TradeData[]>([]);
 
+  // 임시 데이터 (실제로는 API에서 가져와야 함)
   useEffect(() => {
-    const fetchOrderHistory = async () => {
-      try {
-        const orderBookService = OrderBookService.getInstance();
-        const history = await orderBookService.getOrderHistory(pieceUuid);
-        setOrders(history);
-      } catch (error) {
-        console.error('Failed to fetch order history:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchOrderHistory();
+    const mockData: TradeData[] = [
+      { time: '14:30:25', price: 14500, quantity: 5, type: 'buy' },
+      { time: '14:29:18', price: 14450, quantity: 3, type: 'sell' },
+      { time: '14:28:42', price: 14500, quantity: 8, type: 'buy' },
+      { time: '14:27:15', price: 14400, quantity: 12, type: 'sell' },
+      { time: '14:26:33', price: 14550, quantity: 6, type: 'buy' },
+      { time: '14:25:47', price: 14450, quantity: 4, type: 'sell' },
+      { time: '14:24:12', price: 14500, quantity: 10, type: 'buy' },
+      { time: '14:23:28', price: 14400, quantity: 7, type: 'sell' },
+      { time: '14:22:55', price: 14550, quantity: 9, type: 'buy' },
+      { time: '14:21:33', price: 14450, quantity: 15, type: 'sell' },
+    ];
+    setTrades(mockData);
   }, [pieceUuid]);
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
-      </div>
-    );
-  }
-
-  if (orders.length === 0) {
-    return (
-      <div className="text-center py-8">
-        <div className="text-custom-gray-400 text-sm">
-          거래 내역이 없습니다.
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="space-y-4">
-      <div className="bg-custom-gray-800 rounded-lg overflow-hidden">
-        <div className="grid grid-cols-5 text-xs text-custom-gray-300 bg-custom-gray-700 px-4 py-2">
-          <div>유형</div>
-          <div>가격</div>
-          <div>수량</div>
-          <div>총액</div>
-          <div>시간</div>
-        </div>
+    <div className="bg-gray-900 rounded-lg p-4">
+      <h3 className="text-base font-semibold text-white mb-3">체결 내역</h3>
 
-        <div className="space-y-1">
-          {orders.map((order, index) => (
-            <div
-              key={index}
-              className="grid grid-cols-5 text-sm px-4 py-2 hover:bg-custom-gray-700"
-            >
-              <div
-                className={`font-medium ${
-                  order.type === 'buy' ? 'text-blue-500' : 'text-red-500'
+      <div className="space-y-2">
+        {trades.map((trade, index) => (
+          <div
+            key={index}
+            className="flex justify-between items-center py-2 border-b border-gray-700 last:border-b-0"
+          >
+            <div className="flex items-center space-x-2">
+              <span className="text-xs text-gray-500">{trade.time}</span>
+              <span
+                className={`text-xs font-medium ${
+                  trade.type === 'buy' ? 'text-blue-500' : 'text-red-500'
                 }`}
               >
-                {order.type === 'buy' ? '매수' : '매도'}
+                {trade.type === 'buy' ? '매수' : '매도'}
+              </span>
+            </div>
+            <div className="text-right">
+              <div
+                className={`text-xs font-medium ${
+                  trade.type === 'buy' ? 'text-blue-500' : 'text-red-500'
+                }`}
+              >
+                {trade.price.toLocaleString()}원
               </div>
-              <div className="text-white">{order.price.toLocaleString()}원</div>
-              <div className="text-white">
-                {order.quantity.toLocaleString()}
-              </div>
-              <div className="text-custom-gray-300">
-                {order.totalAmount.toLocaleString()}원
-              </div>
-              <div className="text-custom-gray-300 text-xs">
-                {new Date().toLocaleTimeString()}
+              <div className="text-xs text-gray-500">
+                {trade.quantity.toLocaleString()}개
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
 
-      {/* Summary */}
-      <div className="bg-custom-gray-800 rounded-lg p-4">
-        <div className="text-sm font-medium text-white mb-3">거래 요약</div>
-        <div className="grid grid-cols-2 gap-4 text-sm">
+      {/* 거래량 요약 */}
+      <div className="mt-3 pt-3 border-t border-gray-200">
+        <div className="grid grid-cols-3 gap-3 text-center">
           <div>
-            <div className="text-custom-gray-300">총 거래량</div>
-            <div className="text-white font-medium">
-              {orders
-                .reduce((sum, order) => sum + order.quantity, 0)
+            <div className="text-xs text-gray-500">총 거래량</div>
+            <div className="text-xs font-medium text-gray-900">
+              {trades
+                .reduce((sum, trade) => sum + trade.quantity, 0)
                 .toLocaleString()}
+              개
             </div>
           </div>
           <div>
-            <div className="text-custom-gray-300">총 거래금액</div>
-            <div className="text-white font-medium">
-              {orders
-                .reduce((sum, order) => sum + order.totalAmount, 0)
+            <div className="text-xs text-gray-500">매수 거래량</div>
+            <div className="text-xs font-medium text-blue-500">
+              {trades
+                .filter((trade) => trade.type === 'buy')
+                .reduce((sum, trade) => sum + trade.quantity, 0)
                 .toLocaleString()}
-              원
+              개
+            </div>
+          </div>
+          <div>
+            <div className="text-xs text-gray-500">매도 거래량</div>
+            <div className="text-xs font-medium text-red-500">
+              {trades
+                .filter((trade) => trade.type === 'sell')
+                .reduce((sum, trade) => sum + trade.quantity, 0)
+                .toLocaleString()}
+              개
             </div>
           </div>
         </div>
