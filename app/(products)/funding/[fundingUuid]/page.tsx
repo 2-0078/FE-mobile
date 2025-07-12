@@ -76,6 +76,7 @@ export default async function FundingPage({
       <FundingDetailClient
         fundingUuid={param.fundingUuid}
         productUuid={data.productUuid}
+        productData={data}
       >
         <PageWrapper className="pt-15">
           <ImageSwiper images={data.images} alt={data.productName} />

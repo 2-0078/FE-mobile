@@ -5,18 +5,21 @@ import { useSearchParams } from 'next/navigation';
 import Header from '@/components/layout/Header';
 import ModalSection from '../(products)/ModalSection';
 import { BottomActions } from '../BottomActions';
+import { FundingProductType } from '@/types/ProductTypes';
 import { useModal } from '@/stores/modal-store';
 
 interface FundingDetailClientProps {
   fundingUuid: string;
   productUuid: string;
   children: React.ReactNode;
+  productData: FundingProductType;
 }
 
 export default function FundingDetailClient({
   fundingUuid,
   productUuid,
   children,
+  productData,
 }: FundingDetailClientProps) {
   const searchParams = useSearchParams();
   const { openModal } = useModal();
@@ -35,7 +38,11 @@ export default function FundingDetailClient({
 
       {children}
       <BottomActions fundingUuid={fundingUuid} productUuid={productUuid} />
-      <ModalSection fundingUuid={fundingUuid} boardType="FUNDING" />
+      <ModalSection
+        productData={productData}
+        itemUuid={fundingUuid}
+        type="FUNDING"
+      />
     </>
   );
 }

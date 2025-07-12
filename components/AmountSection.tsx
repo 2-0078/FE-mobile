@@ -12,6 +12,7 @@ interface AmountSectionProps {
   piecePrice: number;
   remainingPieces: number;
   fundingUuid?: string;
+  productUuid?: string;
   onFundingParticipated?: () => void; // Funding 참여 완료 시 호출될 콜백
 }
 
@@ -19,6 +20,7 @@ export function AmountSection({
   piecePrice,
   remainingPieces,
   fundingUuid,
+  productUuid,
   onFundingParticipated,
 }: AmountSectionProps) {
   const [amount, setAmount] = useState('');
@@ -161,36 +163,41 @@ export function AmountSection({
         )}
       </div>
 
-      <div className="space-y-4">
-        <div>
-          <label className="block text-gray-600 text-sm mb-2">매수 수량</label>
+      <div className="px-6 mb-6">
+        <div className="mb-4">
+          <div className="text-gray-600 text-xs mb-1">구매 수량</div>
           <input
             type="number"
             value={amount}
             onChange={handleAmountChange}
-            placeholder="매수할 수량을 입력하세요"
-            className="w-full text-center text-black text-2xl font-bold border-b border-gray-300 pb-2 h-12 bg-transparent focus:outline-none focus:border-custom-green"
-            min="1"
+            placeholder="수량을 입력하세요"
+            className="w-full text-center text-black text-2xl font-bold border-b border-gray-300 pb-2 h-10 bg-transparent focus:outline-none focus:border-custom-green"
+            min="0"
             max={remainingPieces}
             disabled={hasNoRemainingPieces}
           />
-          <p className="text-gray-500 text-xs mt-1 text-center">
-            최대 {remainingPieces.toLocaleString()}개
-          </p>
+          <div className="text-right text-gray-400 text-sm mt-1">
+            최대 {remainingPieces}개
+          </div>
         </div>
-
-        <Button
-          onClick={handleParticipate}
-          disabled={isParticipateDisabled}
-          className="w-full h-14 bg-custom-green text-black text-lg font-bold rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {isPending
-            ? '처리중...'
-            : hasNoRemainingPieces
-              ? '매수 완료'
-              : `${Number(amount || 0).toLocaleString()}개 매수하기`}
-        </Button>
       </div>
+
+      {/* Funding 참여 버튼 */}
+      {fundingUuid && (
+        <div className="px-6 mt-4">
+          <Button
+            onClick={handleParticipate}
+            disabled={isParticipateDisabled}
+            className="w-full h-14 bg-custom-green text-black text-lg font-bold rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isPending
+              ? '처리중...'
+              : hasNoRemainingPieces
+                ? '공모가능한 조각이 없습니다'
+                : '펀딩에 참여하기'}
+          </Button>
+        </div>
+      )}
     </>
   );
 }

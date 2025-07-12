@@ -4,11 +4,13 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { createPayment } from '@/action/payment-service';
 import { useAlert } from '@/hooks/useAlert';
+import { useRouter } from 'next/navigation';
 
 export function ChargeForm() {
   const [amount, setAmount] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { error: showError } = useAlert();
+  const { success, error: showError } = useAlert();
+  const router = useRouter();
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;

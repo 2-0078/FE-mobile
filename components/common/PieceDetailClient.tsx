@@ -4,17 +4,22 @@ import React, { useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Header from '@/components/layout/Header';
 import ModalSection from '../(products)/ModalSection';
-import PieceBottomActions from '../../components/PieceBottomActions';
+import { PieceBottomActions } from '../PieceBottomActions';
+import { PieceProductType } from '@/types/ProductTypes';
 import { useModal } from '@/stores/modal-store';
 
 interface PieceDetailClientProps {
   pieceUuid: string;
+  productUuid: string;
   children: React.ReactNode;
+  productData: PieceProductType;
 }
 
 export default function PieceDetailClient({
   pieceUuid,
+  productUuid,
   children,
+  productData,
 }: PieceDetailClientProps) {
   const searchParams = useSearchParams();
   const { openModal } = useModal();
@@ -32,8 +37,12 @@ export default function PieceDetailClient({
       <Header isCloseButton={true} />
 
       {children}
-      <PieceBottomActions pieceUuid={pieceUuid} />
-      <ModalSection pieceUuid={pieceUuid} boardType="PIECE" />
+      <PieceBottomActions pieceUuid={pieceUuid} productUuid={productUuid} />
+      <ModalSection
+        productData={productData}
+        itemUuid={pieceUuid}
+        type="PIECE"
+      />
     </>
   );
 }
