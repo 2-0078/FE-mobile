@@ -36,14 +36,14 @@ export function PieceChart({
     setIsPositive(priceChange >= 0);
   }, [priceChange]);
 
-  const formatPrice = (value: any) => {
+  const formatPrice = (value: string | number) => {
     if (typeof value === 'number') {
       return value.toLocaleString();
     }
     return String(value);
   };
 
-  const formatTime = (value: any) => {
+  const formatTime = (value: string | number) => {
     if (typeof value === 'string') {
       return value;
     }
@@ -88,8 +88,13 @@ export function PieceChart({
                 borderRadius: '8px',
                 color: '#F9FAFB',
               }}
-              formatter={(value: unknown) => [formatPrice(value), '가격']}
-              labelFormatter={(label: unknown) => `시간: ${formatTime(label)}`}
+              formatter={(value) => [
+                formatPrice(value as string | number),
+                '가격',
+              ]}
+              labelFormatter={(label) =>
+                `시간: ${formatTime(label as string | number)}`
+              }
             />
             <Area
               type="monotone"
