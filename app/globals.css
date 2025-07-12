@@ -361,3 +361,61 @@ input:autofill {
   background-color: transparent !important;
   color: white !important;
 }
+
+/* 값 변경 애니메이션 */
+@keyframes valueChange {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes valueIncrease {
+  0% {
+    transform: scale(1);
+    color: inherit;
+  }
+  50% {
+    transform: scale(1.15);
+    color: #10b981; /* green-500 */
+  }
+  100% {
+    transform: scale(1);
+    color: inherit;
+  }
+}
+
+@keyframes valueDecrease {
+  0% {
+    transform: scale(1);
+    color: inherit;
+  }
+  50% {
+    transform: scale(1.15);
+    color: #ef4444; /* red-500 */
+  }
+  100% {
+    transform: scale(1);
+    color: inherit;
+  }
+}
+
+.animate-value-change {
+  animation: valueChange 0.6s ease-in-out;
+}
+
+.animate-value-increase {
+  animation: valueIncrease 0.8s ease-in-out;
+}
+
+.animate-value-decrease {
+  animation: valueDecrease 0.8s ease-in-out;
+}

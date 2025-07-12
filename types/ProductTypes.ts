@@ -76,3 +76,18 @@ export interface MarketPriceResponse {
   code: number;
   result: MarketPriceData;
 }
+
+export interface QoutesData {
+  askp: number[]; // 매도호가
+  bidp: number[]; // 매수호가
+  askpRsq: number[]; // 매도호가 대비 등락률
+  bidpRsq: number[]; // 매수호가 대비 등락률
+}
+
+export interface QoutesResponse {
+  httpStatus: string;
+  isSuccess: boolean;
+  message: string;
+  code: number;
+  result: QoutesData;
+}

@@ -61,13 +61,16 @@ export const marketStorage = {
 
       console.log('Stored data:', storedData, 'Today:', today);
 
-      // 오늘 데이터가 아닌 경우 (전일 데이터)만 반환
-      if (storedData.date !== today) {
-        console.log('Returning cached data (not today)');
+      // 데이터가 24시간 이내인지 확인
+      const dataAge = Date.now() - storedData.timestamp;
+      const oneDay = 24 * 60 * 60 * 1000; // 24시간 (밀리초)
+
+      if (dataAge < oneDay) {
+        console.log('Returning cached data (within 24 hours)');
         return storedData.data;
       }
 
-      console.log('Data is from today, not returning cached data');
+      console.log('Data is too old, not returning cached data');
       return null;
     } catch (error) {
       console.error('Failed to get market data from localStorage:', error);

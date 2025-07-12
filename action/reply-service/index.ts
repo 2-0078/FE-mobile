@@ -1,6 +1,7 @@
 'use server';
 
 import { auth } from '@/auth';
+import { revalidateTag } from 'next/cache';
 import { CommonResponseType } from '@/types/CommonTypes';
 import { ReplyType, ReplyListItemType } from '@/types/CommunityTypes';
 
@@ -20,6 +21,9 @@ export async function getRepliesUuid(
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
+      },
+      next: {
+        tags: [`replies-${type}-${productUuid}`],
       },
     }
   );
@@ -70,6 +74,9 @@ export async function getRepliesWithChildren(
     {
       method: 'GET',
       headers,
+      next: {
+        tags: [`replies-${type}-${productUuid}`],
+      },
     }
   );
 
@@ -98,6 +105,17 @@ export async function getRepliesWithChildren(
   const replyDetails = await Promise.all(
     listData.result.map(async (replyItem) => {
       try {
+        if (replyItem.deleted) {
+          return {
+            replyUuid: replyItem.replyUuid,
+            replyContent: '삭제된 댓글입니다.',
+            createdAt: new Date().toISOString(),
+            memberUuid: '',
+            mine: false,
+            childReplies: [],
+            deleted: true,
+          };
+        }
         const replyDetail = await getReplies(replyItem.replyUuid);
 
         // deleted 상태를 replyDetail에 추가
@@ -150,6 +168,9 @@ export async function getReplies(replyUuid: string) {
     {
       method: 'GET',
       headers,
+      next: {
+        tags: [`reply-${replyUuid}`],
+      },
     }
   );
 
@@ -203,6 +224,9 @@ export async function getChildReplies(parentReplyUuid: string) {
     {
       method: 'GET',
       headers,
+      next: {
+        tags: [`child-replies-${parentReplyUuid}`],
+      },
     }
   );
 
@@ -262,15 +286,29 @@ export async function createReply({
   }
 
   const data = (await response.json()) as CommonResponseType<ReplyType>;
+
+  // 댓글 작성 후 관련 캐시 무효화
+  revalidateTag(`replies-${boardType}-${boardUuid}`);
+
+  // 댓글 목록 캐시도 무효화하여 전체 댓글 데이터 갱신
+  revalidateRepliesCache({
+    boardType,
+    boardUuid,
+  });
+
   return data.result;
 }
 
 export async function createChildReply({
   parentReplyUuid,
   replyContent,
+  boardType,
+  boardUuid,
 }: {
   parentReplyUuid: string;
   replyContent: string;
+  boardType: 'FUNDING' | 'PIECE';
+  boardUuid: string;
 }) {
   const session = await auth();
   const token = session?.user?.accessToken || null;
@@ -320,15 +358,30 @@ export async function createChildReply({
 
   const data = (await response.json()) as CommonResponseType<ReplyType>;
   console.log('Child reply success:', data);
+
+  // 대댓글 작성 후 해당 부모 댓글만 캐시 무효화
+  revalidateTag(`reply-${parentReplyUuid}`);
+  revalidateTag(`child-replies-${parentReplyUuid}`);
+
+  // 댓글 목록 캐시도 무효화하여 전체 댓글 데이터 갱신
+  revalidateRepliesCache({
+    boardType,
+    boardUuid,
+  });
+
   return data.result;
 }
 
 export async function updateReply({
   replyUuid,
   replyContent,
+  boardType,
+  boardUuid,
 }: {
   replyUuid: string;
   replyContent: string;
+  boardType: 'FUNDING' | 'PIECE';
+  boardUuid: string;
 }) {
   const session = await auth();
   const token = session?.user?.accessToken || null;
@@ -377,10 +430,29 @@ export async function updateReply({
 
   const data = (await response.json()) as CommonResponseType<ReplyType>;
   console.log('Update reply success:', data);
+
+  // 댓글 수정 후 관련 캐시 무효화
+  revalidateTag(`reply-${replyUuid}`);
+  revalidateTag(`replies-${boardType}-${boardUuid}`);
+
+  // 댓글 목록 캐시도 무효화하여 전체 댓글 데이터 갱신
+  revalidateRepliesCache({
+    boardType,
+    boardUuid,
+  });
+
   return data.result;
 }
 
-export async function deleteReply(replyUuid: string) {
+export async function deleteReply({
+  replyUuid,
+  boardType,
+  boardUuid,
+}: {
+  replyUuid: string;
+  boardType: 'FUNDING' | 'PIECE';
+  boardUuid: string;
+}) {
   const session = await auth();
   const token = session?.user?.accessToken || null;
   const memberUuid = session?.user?.memberUuid || null;
@@ -422,6 +494,169 @@ export async function deleteReply(replyUuid: string) {
       `댓글 삭제에 실패했습니다. (${response.status}: ${errorText})`
     );
   }
+
+  // 댓글 삭제 후 관련 캐시 무효화
+  revalidateTag(`reply-${replyUuid}`);
+  revalidateTag(`replies-${boardType}-${boardUuid}`);
+
+  // 댓글 목록 캐시도 무효화하여 전체 댓글 데이터 갱신
+  revalidateRepliesCache({
+    boardType,
+    boardUuid,
+  });
+
+  return true;
+}
+
+export async function deleteChildReply({
+  replyUuid,
+  parentReplyUuid,
+  boardType,
+  boardUuid,
+}: {
+  replyUuid: string;
+  parentReplyUuid: string;
+  boardType: 'FUNDING' | 'PIECE';
+  boardUuid: string;
+}) {
+  const session = await auth();
+  const token = session?.user?.accessToken || null;
+  const memberUuid = session?.user?.memberUuid || null;
+
+  if (!token) {
+    throw new Error('인증이 필요합니다.');
+  }
+
+  if (!memberUuid) {
+    throw new Error('회원 정보가 필요합니다.');
+  }
+
+  console.log('Deleting child reply:', replyUuid);
+
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`,
+    'X-Member-Uuid': memberUuid,
+  };
+
+  const response = await fetch(
+    `${process.env.BASE_API_URL}/reply-service/api/v1/reply/${replyUuid}`,
+    {
+      method: 'DELETE',
+      headers,
+    }
+  );
+
+  console.log('Delete child reply response status:', response.status);
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error('Delete child reply API error:', {
+      status: response.status,
+      statusText: response.statusText,
+      errorText,
+    });
+    throw new Error(
+      `대댓글 삭제에 실패했습니다. (${response.status}: ${errorText})`
+    );
+  }
+
+  // 대댓글 삭제 후 해당 부모 댓글만 캐시 무효화
+  revalidateTag(`reply-${parentReplyUuid}`);
+  revalidateTag(`child-replies-${parentReplyUuid}`);
+
+  // 댓글 목록 캐시도 무효화하여 전체 댓글 데이터 갱신
+  revalidateRepliesCache({
+    boardType,
+    boardUuid,
+  });
+
+  return true;
+}
+
+export async function updateChildReply({
+  replyUuid,
+  replyContent,
+  parentReplyUuid,
+  boardType,
+  boardUuid,
+}: {
+  replyUuid: string;
+  replyContent: string;
+  parentReplyUuid: string;
+  boardType: 'FUNDING' | 'PIECE';
+  boardUuid: string;
+}) {
+  const session = await auth();
+  const token = session?.user?.accessToken || null;
+  const memberUuid = session?.user?.memberUuid || null;
+
+  if (!token) {
+    throw new Error('인증이 필요합니다.');
+  }
+
+  if (!memberUuid) {
+    throw new Error('회원 정보가 필요합니다.');
+  }
+
+  console.log('Updating child reply:', { replyUuid, replyContent });
+
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`,
+    'X-Member-Uuid': memberUuid,
+  };
+
+  const response = await fetch(
+    `${process.env.BASE_API_URL}/reply-service/api/v1/reply/${replyUuid}`,
+    {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify({
+        replyContent,
+      }),
+    }
+  );
+
+  console.log('Update child reply response status:', response.status);
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error('Update child reply API error:', {
+      status: response.status,
+      statusText: response.statusText,
+      errorText,
+    });
+    throw new Error(
+      `대댓글 수정에 실패했습니다. (${response.status}: ${errorText})`
+    );
+  }
+
+  const data = (await response.json()) as CommonResponseType<ReplyType>;
+  console.log('Update child reply success:', data);
+
+  // 대댓글 수정 후 해당 부모 댓글만 캐시 무효화
+  revalidateTag(`reply-${parentReplyUuid}`);
+  revalidateTag(`child-replies-${parentReplyUuid}`);
+
+  // 댓글 목록 캐시도 무효화하여 전체 댓글 데이터 갱신
+  revalidateRepliesCache({
+    boardType,
+    boardUuid,
+  });
+
+  return data.result;
+}
+
+export async function revalidateRepliesCache({
+  boardType,
+  boardUuid,
+}: {
+  boardType: 'FUNDING' | 'PIECE';
+  boardUuid: string;
+}) {
+  // 댓글 목록 캐시 무효화
+  revalidateTag(`replies-${boardType}-${boardUuid}`);
 
   return true;
 }

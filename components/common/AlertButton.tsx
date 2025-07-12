@@ -15,6 +15,9 @@ interface AlertData {
 export default function AlertButton() {
   const { data: session } = useSession();
   const eventSourceRef = useRef<EventSource | null>(null);
+  const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const reconnectAttemptsRef = useRef(0);
+  const maxReconnectAttempts = 5;
 
   useEffect(() => {
     const connectSSE = () => {
@@ -27,6 +30,9 @@ export default function AlertButton() {
 
       console.log('Connecting to SSE with URL:', url);
       eventSourceRef.current = new EventSource(url);
+
+      // Reset reconnection attempts on successful connection
+      reconnectAttemptsRef.current = 0;
 
       eventSourceRef.current.onopen = () => {
         console.log('SSE connection opened');
@@ -53,8 +59,30 @@ export default function AlertButton() {
 
         // Check if the connection was closed
         if (eventSourceRef.current?.readyState === EventSource.CLOSED) {
-          console.log('SSE connection closed, attempting to reconnect...');
-          setTimeout(connectSSE, 5000);
+          if (reconnectAttemptsRef.current < maxReconnectAttempts) {
+            console.log(
+              `SSE connection closed, attempting to reconnect... (attempt ${reconnectAttemptsRef.current + 1}/${maxReconnectAttempts})`
+            );
+            reconnectAttemptsRef.current++;
+
+            // Clear existing timeout
+            if (reconnectTimeoutRef.current) {
+              clearTimeout(reconnectTimeoutRef.current);
+            }
+
+            // Exponential backoff: 5s, 10s, 20s, 40s, 80s
+            const delay = Math.min(
+              5000 * Math.pow(2, reconnectAttemptsRef.current - 1),
+              30000
+            );
+            reconnectTimeoutRef.current = setTimeout(() => {
+              connectSSE();
+            }, delay);
+          } else {
+            console.log(
+              'Max reconnection attempts reached, stopping reconnection'
+            );
+          }
         }
       };
     };
@@ -69,6 +97,9 @@ export default function AlertButton() {
       if (eventSourceRef.current) {
         eventSourceRef.current.close();
       }
+      if (reconnectTimeoutRef.current) {
+        clearTimeout(reconnectTimeoutRef.current);
+      }
     };
   }, [session?.user?.memberUuid, session]);
 
@@ -81,8 +112,8 @@ export default function AlertButton() {
       switch (alertType) {
         case 'PIECE_PRICE_CHANGE':
           // Revalidate market data for piece products
-          tagToRevalidate = `market-data-${key}`;
-          console.log(`Revalidating market data for product: ${key}`);
+          tagToRevalidate = `qoutes-${key}`;
+          console.log(`Revalidating qoutes data for product: ${key}`);
           break;
 
         case 'FUNDING_START':

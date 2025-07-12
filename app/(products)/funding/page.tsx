@@ -94,7 +94,7 @@ export default async function FundingPage({
 
   return (
     <div className="pb-20 pt-24">
-      <Header title="FUNDINGS" isCloseButton={true} />
+      <Header title="FUNDINGS" isCloseButton={false} />
       <div className="px-4 my-4">
         <Search />
       </div>

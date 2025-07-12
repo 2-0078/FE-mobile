@@ -1,11 +1,14 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useTransition } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { FundingProductType } from '@/types/ProductTypes';
 import { ReplyType } from '@/types/CommunityTypes';
-import { getRepliesWithChildren } from '@/action/reply-service';
+import {
+  getRepliesWithChildren,
+  revalidateRepliesCache,
+} from '@/action/reply-service';
 import { useModal } from '@/stores/modal-store';
 import { ModalContainer } from '@/components/ModalContainer';
 import { ModalHeader } from '@/components/ModalHeader';
@@ -13,6 +16,7 @@ import { CommentContent as CommentsContent } from '@/components/CommentContent';
 import CommentForm from '@/components/common/CommentForm';
 import { PriceInfo } from '@/components/PriceInfo';
 import { AmountSection } from '@/components/AmountSection';
+import { sortCommentsByLatest } from '@/lib/comment-utils';
 
 export default function ModalSection({
   productData,
@@ -27,42 +31,93 @@ export default function ModalSection({
   const commentPage = useSearchParams().get('commentPage') || '1';
   const [replies, setReplies] = useState<ReplyType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
-  useEffect(() => {
-    const fetchReplies = async () => {
-      setIsLoading(true);
-      try {
-        const repliesData = await getRepliesWithChildren(
-          type,
-          itemUuid,
-          commentPage
-        );
-        setReplies(repliesData || []);
-      } catch (error) {
-        console.error('Failed to fetch replies:', error);
-        setReplies([]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchReplies();
-  }, [itemUuid, commentPage, type]);
+  const { currentModal, closeModal } = useModal();
 
-  const handleCommentSubmit = async () => {
+  const fetchReplies = async () => {
+    setIsLoading(true);
     try {
-      // Refresh comments after submission
+      // 모달이 열릴 때 캐시를 무효화하여 최신 데이터를 가져옴
+      await revalidateRepliesCache({
+        boardType: type,
+        boardUuid: itemUuid,
+      });
+
       const repliesData = await getRepliesWithChildren(
         type,
         itemUuid,
         commentPage
       );
-      setReplies(repliesData || []);
+
+      // 댓글을 최신순으로 정렬
+      const sortedReplies = sortCommentsByLatest(repliesData || []);
+      setReplies(sortedReplies);
     } catch (error) {
-      console.error('Failed to refresh comments:', error);
+      console.error('Failed to fetch replies:', error);
+      setReplies([]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const { currentModal, closeModal } = useModal();
+  useEffect(() => {
+    // 댓글 모달이 열릴 때마다 데이터를 새로 가져옴
+    if (currentModal === 'comments') {
+      startTransition(() => {
+        fetchReplies();
+      });
+    }
+  }, [currentModal, itemUuid, commentPage, type]);
+
+  // commentUpdated 이벤트 처리
+  useEffect(() => {
+    const handleCommentUpdated = async () => {
+      if (currentModal === 'comments') {
+        startTransition(async () => {
+          try {
+            setIsLoading(true);
+            const repliesData = await getRepliesWithChildren(
+              type,
+              itemUuid,
+              commentPage
+            );
+            const sortedReplies = sortCommentsByLatest(repliesData || []);
+            setReplies(sortedReplies);
+          } catch (error) {
+            console.error('Failed to refresh comments:', error);
+          } finally {
+            setIsLoading(false);
+          }
+        });
+      }
+    };
+
+    window.addEventListener('commentUpdated', handleCommentUpdated);
+    return () => {
+      window.removeEventListener('commentUpdated', handleCommentUpdated);
+    };
+  }, [currentModal, type, itemUuid, commentPage]);
+
+  const handleCommentSubmit = async () => {
+    startTransition(async () => {
+      try {
+        // Refresh comments after submission
+        const repliesData = await getRepliesWithChildren(
+          type,
+          itemUuid,
+          commentPage
+        );
+
+        // 댓글을 최신순으로 정렬
+        const sortedReplies = sortCommentsByLatest(repliesData || []);
+        setReplies(sortedReplies);
+      } catch (error) {
+        console.error('Failed to refresh comments:', error);
+      }
+    });
+  };
+
   return (
     <>
       <ModalContainer
@@ -84,7 +139,7 @@ export default function ModalSection({
             </ModalHeader>
             <div className="flex flex-col h-full">
               <div className="overflow-y-auto px-6" style={{ height: '70%' }}>
-                {isLoading ? (
+                {isLoading || isPending ? (
                   <div className="py-16 text-center">
                     <div className="text-gray-300 text-2xl mb-3">⏳</div>
                     <p className="text-gray-500 text-sm font-medium">
@@ -92,7 +147,11 @@ export default function ModalSection({
                     </p>
                   </div>
                 ) : (
-                  <CommentsContent comments={replies} />
+                  <CommentsContent
+                    comments={replies}
+                    boardType={type}
+                    boardUuid={itemUuid}
+                  />
                 )}
               </div>
 
