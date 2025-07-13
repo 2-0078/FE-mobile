@@ -1,18 +1,7 @@
-export interface OrderBookItem {
-  price: number;
-  quantity: number;
-  total: number;
-}
-
-export interface OrderBookData {
-  bids: OrderBookItem[];
-  asks: OrderBookItem[];
-  lastPrice: number;
-  change: number;
-  changePercent: number;
-  spread: number;
-  volume: number;
-}
+import { getOrderBook } from '@/action/market-price-service';
+import { OrderBookData, OrderBookItem } from '@/types/ProductTypes';
+import { RealTimeQuotesData } from '@/types/ProductTypes';
+import QuotesStreamService from '@/services/QuotesStreamService';
 
 export interface TradingOrder {
   pieceUuid: string;
@@ -26,8 +15,11 @@ class OrderBookService {
   private static instance: OrderBookService;
   private eventSource: EventSource | null = null;
   private listeners: Map<string, (data: OrderBookData) => void> = new Map();
+  private quotesService: QuotesStreamService;
 
-  private constructor() {}
+  private constructor() {
+    this.quotesService = QuotesStreamService.getInstance();
+  }
 
   static getInstance(): OrderBookService {
     if (!OrderBookService.instance) {
@@ -36,7 +28,24 @@ class OrderBookService {
     return OrderBookService.instance;
   }
 
-  // Mock data generation for demonstration
+  async getOrderBook(pieceUuid: string): Promise<OrderBookData> {
+    try {
+      const response = await getOrderBook(pieceUuid);
+
+      if (response && response.result) {
+        return response.result;
+      } else {
+        // API 응답이 없거나 실패한 경우 기본 데이터 사용
+        return this.generateMockOrderBook(pieceUuid);
+      }
+    } catch (error) {
+      console.error('Failed to fetch order book:', error);
+      // 에러 시에도 기본 데이터 반환
+      return this.generateMockOrderBook(pieceUuid);
+    }
+  }
+
+  // Mock data generation for fallback
   private generateMockOrderBook(pieceUuid: string): OrderBookData {
     const basePrice = 50000 + Math.floor(Math.random() * 10000);
     const bids: OrderBookItem[] = [];
@@ -81,20 +90,6 @@ class OrderBookService {
     };
   }
 
-  async getOrderBook(pieceUuid: string): Promise<OrderBookData> {
-    try {
-      // TODO: Replace with actual API call
-      // const response = await fetch(`/api/orderbook/${pieceUuid}`);
-      // return await response.json();
-
-      // For now, return mock data
-      return this.generateMockOrderBook(pieceUuid);
-    } catch (error) {
-      console.error('Failed to fetch order book:', error);
-      throw error;
-    }
-  }
-
   subscribeToUpdates(
     pieceUuid: string,
     callback: (data: OrderBookData) => void
@@ -102,15 +97,53 @@ class OrderBookService {
     const key = `orderbook-${pieceUuid}`;
     this.listeners.set(key, callback);
 
-    // Simulate real-time updates
-    const interval = setInterval(() => {
-      const data = this.generateMockOrderBook(pieceUuid);
-      callback(data);
-    }, 2000);
+    // SSE를 통한 실시간 업데이트
+    const handleQuotesUpdate = (quotesData: RealTimeQuotesData) => {
+      const asks: OrderBookItem[] = quotesData.askp
+        .map((price, index) => ({
+          price,
+          quantity: quotesData.askpRsqn[index] || 0,
+          total: price * (quotesData.askpRsqn[index] || 0),
+        }))
+        .filter((item) => item.quantity > 0);
+
+      const bids: OrderBookItem[] = quotesData.bidp
+        .map((price, index) => ({
+          price,
+          quantity: quotesData.bidRsqn[index] || 0,
+          total: price * (quotesData.bidRsqn[index] || 0),
+        }))
+        .filter((item) => item.quantity > 0);
+
+      const spread =
+        asks.length > 0 && bids.length > 0 ? asks[0].price - bids[0].price : 0;
+      const volume = [...asks, ...bids].reduce(
+        (sum, item) => sum + item.quantity,
+        0
+      );
+
+      const orderBookData: OrderBookData = {
+        asks: asks.sort((a, b) => a.price - b.price),
+        bids: bids.sort((a, b) => b.price - a.price),
+        lastPrice: bids.length > 0 ? bids[0].price : 0,
+        change: 0,
+        changePercent: 0,
+        spread,
+        volume,
+      };
+
+      callback(orderBookData);
+    };
+
+    // SSE 연결
+    const disconnect = this.quotesService.connectToQuotesStream(
+      pieceUuid,
+      handleQuotesUpdate
+    );
 
     // Return unsubscribe function
     return () => {
-      clearInterval(interval);
+      disconnect();
       this.listeners.delete(key);
     };
   }
@@ -188,13 +221,6 @@ class OrderBookService {
 
     // For now, we'll use the interval-based approach above
     console.log('SSE connection would be established here');
-  }
-
-  disconnect(): void {
-    if (this.eventSource) {
-      this.eventSource.close();
-      this.eventSource = null;
-    }
   }
 }
 

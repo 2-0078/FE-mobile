@@ -90,10 +90,7 @@ export default function ItemCardInfo({
       )}
       {/* 가격 표시 - 커스텀 컴포넌트가 있으면 사용, 없으면 기본 Price 컴포넌트 사용 */}
       {priceComponent || (
-        <Price
-          className="text-black text-3xl font-bold"
-          price={price || 15800000}
-        />
+        <Price className="text-3xl font-bold" price={price || 15800000} />
       )}
       {fundingStatus === 'FUNDING' && (
         <Badge className="text-custom-green text-[0.6rem] bg-black absolute top-4 right-4 border border-custom-green py-1">

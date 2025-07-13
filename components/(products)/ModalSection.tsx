@@ -10,6 +10,7 @@ import {
   revalidateRepliesCache,
 } from '@/action/reply-service';
 import { getFundingProduct, getPieceProducts } from '@/action/product-service';
+
 import { useModal } from '@/stores/modal-store';
 import { ModalContainer } from '@/components/ModalContainer';
 import { ModalHeader } from '@/components/ModalHeader';
@@ -17,11 +18,13 @@ import { CommentContent as CommentsContent } from '@/components/CommentContent';
 import CommentForm from '@/components/common/CommentForm';
 import { PriceInfo } from '@/components/PriceInfo';
 import { AmountSection } from '@/components/AmountSection';
+import { PieceTradingSection } from '@/components/PieceTradingSection';
 import { sortCommentsByLatest } from '@/lib/comment-utils';
 import Image from 'next/image';
 import InfoCardLayout from '@/components/layout/InfoCardLayout';
 import TempPriceIcon from '@/repo/ui/Icons/TempPriceIcon';
 import ClockIcon from '@/repo/ui/Icons/ClockIcon';
+import { useAlert } from '@/hooks/useAlert';
 
 export default function ModalSection({
   productData,
@@ -40,6 +43,7 @@ export default function ModalSection({
   const [currentProductData, setCurrentProductData] = useState(productData);
 
   const { currentModal, closeModal } = useModal();
+  const alert = useAlert();
 
   // 실시간 데이터 가져오기
   const fetchLatestProductData = async () => {
@@ -49,6 +53,42 @@ export default function ModalSection({
         latestData = await getFundingProduct(itemUuid);
       } else {
         latestData = await getPieceProducts(itemUuid);
+
+        // Piece 상품의 경우 전일 마지막 가격도 가져오기
+        if (latestData && !latestData.piece.closingPrice) {
+          try {
+            const { getPreviousDayQuotes } = await import(
+              '@/action/market-price-service'
+            );
+            const previousDayQuotesResponse =
+              await getPreviousDayQuotes(itemUuid);
+
+            if (
+              previousDayQuotesResponse?.isSuccess &&
+              previousDayQuotesResponse.result
+            ) {
+              // 전일 마지막 가격을 계산 (매수/매도 호가의 중간값)
+              const askp = previousDayQuotesResponse.result.askp[0] || 0;
+              const bidp = previousDayQuotesResponse.result.bidp[0] || 0;
+              const previousClosingPrice =
+                askp > 0 && bidp > 0
+                  ? Math.round((askp + bidp) / 2)
+                  : askp || bidp;
+
+              if (previousClosingPrice > 0) {
+                latestData = {
+                  ...latestData,
+                  piece: {
+                    ...latestData.piece,
+                    previousClosingPrice: previousClosingPrice,
+                  },
+                };
+              }
+            }
+          } catch (error) {
+            console.error('Failed to fetch previous day quotes:', error);
+          }
+        }
       }
       setCurrentProductData(latestData);
     } catch (error) {
@@ -145,6 +185,12 @@ export default function ModalSection({
         console.error('Failed to refresh comments:', error);
       }
     });
+  };
+
+  // 거래 완료 후 데이터 새로고침
+  const handleTradingCompleted = async () => {
+    await fetchLatestProductData();
+    closeModal();
   };
 
   return (
@@ -244,72 +290,28 @@ export default function ModalSection({
               ) : (
                 // Piece 매수/매도 모달
                 <div className="space-y-6">
-                  {/* 작품 이미지 및 제목 */}
-                  <div className="relative">
-                    <Image
-                      src={
-                        (currentProductData as PieceProductType).images[0]
-                          ?.imageUrl || '/example.png'
-                      }
-                      alt={(currentProductData as PieceProductType).productName}
-                      width={400}
-                      height={256}
-                      className="w-full h-48 object-cover rounded-lg"
-                    />
-                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                      <h2 className="text-white text-lg font-semibold">
-                        {(currentProductData as PieceProductType).productName}
-                      </h2>
-                    </div>
-                  </div>
-
-                  {/* 가격 및 거래량 정보 */}
-                  <div className="flex justify-around gap-x-3">
-                    <InfoCardLayout
-                      className="h-12 border-gray-600 border-1"
-                      title="현재가"
-                      icon={<TempPriceIcon />}
-                    >
-                      <span className="text-base font-semibold text-white leading-none">
-                        {(
-                          currentProductData as PieceProductType
-                        ).piece.closingPrice?.toLocaleString() || '0'}
-                      </span>
-                    </InfoCardLayout>
-                    <InfoCardLayout
-                      className="h-12 border-gray-600 border-1"
-                      title="거래량"
-                      icon={<ClockIcon />}
-                    >
-                      <span className="text-base font-semibold text-white leading-none">
-                        {
-                          (currentProductData as PieceProductType).piece
-                            .tradeQuantity
-                        }
-                      </span>
-                    </InfoCardLayout>
-                  </div>
-
-                  {/* TODO: 사용자의 piece 보유 현황에 따라 매수/매도 구분 */}
-                  {/* 보유하지 않은 경우: 매수 */}
-                  {/* 보유한 경우: 매도 (보유 수량 표시) */}
-
-                  {/* 매수/매도 수량 입력 */}
-                  <div>
-                    <h3 className="text-lg font-semibold text-white mb-3">
-                      매수 수량
-                    </h3>
-                    <input
-                      type="number"
-                      placeholder="매수할 수량을 입력하세요"
-                      className="w-full text-center text-white text-2xl font-bold border-b border-gray-600 pb-2 h-12 bg-transparent focus:outline-none focus:border-custom-green placeholder-gray-400"
-                      min="1"
-                    />
-                  </div>
-
-                  <Button className="w-full h-14 bg-custom-green text-black text-lg font-bold rounded-full">
-                    매수하기
-                  </Button>
+                  {/* Piece Trading Section */}
+                  <PieceTradingSection
+                    pieceUuid={itemUuid}
+                    currentPrice={
+                      (currentProductData as PieceProductType).piece
+                        .closingPrice ||
+                      (currentProductData as PieceProductType).piece
+                        .previousClosingPrice ||
+                      0
+                    }
+                    tradeQuantity={
+                      (currentProductData as PieceProductType).piece
+                        .tradeQuantity
+                    }
+                    onTradingCompleted={handleTradingCompleted}
+                    isPreviousPrice={
+                      !(currentProductData as PieceProductType).piece
+                        .closingPrice &&
+                      !!(currentProductData as PieceProductType).piece
+                        .previousClosingPrice
+                    }
+                  />
                 </div>
               )}
             </div>

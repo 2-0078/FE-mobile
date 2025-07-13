@@ -33,7 +33,7 @@ export default function PieceDetailClient({
   }, [searchParams, openModal]);
 
   return (
-    <div className="bg-white">
+    <div className="bg-custom-black">
       <Header
         isCloseButton={true}
         className="bg-none backdrop:blur-none bg-transparent"

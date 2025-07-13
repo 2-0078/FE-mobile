@@ -1,10 +1,11 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { MessageCircle, ShoppingCart } from 'lucide-react';
 import { useModal } from '@/stores/modal-store';
-import WishButton from './common/WishButton';
+import WishButton from '@/components/common/WishButton';
+import { getUserPieceHoldings } from '@/action/trading-service';
 
 interface PieceBottomActionsProps {
   pieceUuid: string;
@@ -16,10 +17,32 @@ export function PieceBottomActions({
   productUuid,
 }: PieceBottomActionsProps) {
   const { openModal } = useModal();
+  const [userHoldings, setUserHoldings] = useState<{
+    quantity: number;
+    averagePrice: number;
+  } | null>(null);
+  const [isLoadingHoldings, setIsLoadingHoldings] = useState(false);
 
-  // TODO: 사용자의 piece 보유 현황을 확인하는 API 추가 필요
-  // const [isHolding, setIsHolding] = useState(false);
-  // const [holdQuantity, setHoldQuantity] = useState(0);
+  // 사용자 보유 현황 조회
+  const fetchUserHoldings = async () => {
+    setIsLoadingHoldings(true);
+    try {
+      const holdings = await getUserPieceHoldings(pieceUuid);
+      setUserHoldings(holdings);
+    } catch (error) {
+      console.error('Failed to fetch user holdings:', error);
+      setUserHoldings(null);
+    } finally {
+      setIsLoadingHoldings(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserHoldings();
+  }, [pieceUuid]);
+
+  const buttonText =
+    userHoldings && userHoldings.quantity > 0 ? '매도하기' : '매수하기';
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50">
@@ -40,7 +63,7 @@ export function PieceBottomActions({
           onClick={() => openModal('details')}
         >
           <ShoppingCart className="w-5 h-5 mr-2" />
-          매수하기
+          {buttonText}
         </Button>
       </div>
     </div>

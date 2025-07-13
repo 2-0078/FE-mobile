@@ -15,7 +15,7 @@ export default function TabLayout({
   return (
     <>
       <div
-        className="flex flex-nowrap overflow-x-auto border-b border-custom-gray-300 px-4"
+        className="flex justify-between flex-nowrap overflow-x-auto border-b border-custom-gray-300"
         style={{
           scrollbarWidth: 'none',
         }}
@@ -30,7 +30,7 @@ export default function TabLayout({
           </button>
         ))}
       </div>
-      <div className="px-4 py-3 text-sm">
+      <div className="py-3 text-sm">
         {Array.isArray(children) ? children[selectedTab] : children}
       </div>
     </>

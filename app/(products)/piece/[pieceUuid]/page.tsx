@@ -44,22 +44,6 @@ export default async function PiecePage({
   const param = await params;
   const data = await getPieceProducts(param.pieceUuid);
 
-  // 임시 차트 데이터 (실제로는 API에서 가져와야 함)
-  const chartData = [
-    { time: '09:00', price: 14000, volume: 100 },
-    { time: '10:00', price: 14200, volume: 150 },
-    { time: '11:00', price: 14100, volume: 120 },
-    { time: '12:00', price: 14300, volume: 200 },
-    { time: '13:00', price: 14500, volume: 180 },
-    { time: '14:00', price: 14400, volume: 160 },
-    { time: '15:00', price: 14600, volume: 220 },
-    { time: '16:00', price: 14500, volume: 190 },
-  ];
-
-  const currentPrice = data.piece.closingPrice || 14500;
-  const priceChange = 500; // 임시 데이터
-  const priceChangePercent = 3.57; // 임시 데이터
-
   return (
     <>
       <Script
@@ -97,24 +81,19 @@ export default async function PiecePage({
 
           {/* 차트 섹션 - 모바일 최적화 */}
           <div className="mt-4">
-            <PieceChart
-              data={chartData}
-              currentPrice={currentPrice}
-              priceChange={priceChange}
-              priceChangePercent={priceChangePercent}
-            />
+            <PieceChart pieceUuid={param.pieceUuid} />
           </div>
 
-          <TabLayout tabs={['Details', 'Owners', '호가', 'History']}>
-            <div className="text-sm text-gray-300 leading-relaxed">
-              {data.description}
-            </div>
-            <div className="text-sm text-gray-300">
-              소유자 정보가 여기에 표시됩니다.
-            </div>
+          <TabLayout tabs={['호가', 'details', 'History']}>
             <div>
               <OrderBook pieceUuid={param.pieceUuid} />
             </div>
+            <div className="text-sm text-gray-300 leading-relaxed">
+              {data.description}
+            </div>
+            {/* <div className="text-sm text-gray-300">
+              소유자 정보가 여기에 표시됩니다.
+            </div> */}
             <div>
               <OrderHistory pieceUuid={param.pieceUuid} />
             </div>
