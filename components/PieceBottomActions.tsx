@@ -21,19 +21,15 @@ export function PieceBottomActions({
     quantity: number;
     averagePrice: number;
   } | null>(null);
-  const [isLoadingHoldings, setIsLoadingHoldings] = useState(false);
 
   // 사용자 보유 현황 조회
   const fetchUserHoldings = async () => {
-    setIsLoadingHoldings(true);
     try {
       const holdings = await getUserPieceHoldings(pieceUuid);
       setUserHoldings(holdings);
     } catch (error) {
       console.error('Failed to fetch user holdings:', error);
       setUserHoldings(null);
-    } finally {
-      setIsLoadingHoldings(false);
     }
   };
 

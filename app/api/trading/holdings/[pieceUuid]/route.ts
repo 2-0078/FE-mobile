@@ -3,7 +3,7 @@ import { auth } from '@/auth';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { pieceUuid: string } }
+  { params }: { params: Promise<{ pieceUuid: string }> }
 ) {
   try {
     const session = await auth();
@@ -13,7 +13,7 @@ export async function GET(
 
     const { memberUuid } = session.user;
     const token = session?.user?.accessToken;
-    const { pieceUuid } = params;
+    const { pieceUuid } = await params;
 
     const response = await fetch(
       `${process.env.BASE_API_URL}/trading-service/api/v1/holdings/${pieceUuid}`,

@@ -1,11 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { pieceUuid: string } }
-) {
+export async function GET() {
   try {
-    const { pieceUuid } = params;
+    // pieceUuid는 향후 실제 API 호출 시 사용 예정
 
     // TODO: 실제 API 호출로 교체
     // const response = await fetch(`${process.env.BASE_API_URL}/trading-service/api/v1/history/${pieceUuid}`);

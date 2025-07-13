@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useTransition } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Button } from '@/components/ui/button';
 import { FundingProductType, PieceProductType } from '@/types/ProductTypes';
 import { ReplyType } from '@/types/CommunityTypes';
 import {
@@ -20,11 +19,6 @@ import { PriceInfo } from '@/components/PriceInfo';
 import { AmountSection } from '@/components/AmountSection';
 import { PieceTradingSection } from '@/components/PieceTradingSection';
 import { sortCommentsByLatest } from '@/lib/comment-utils';
-import Image from 'next/image';
-import InfoCardLayout from '@/components/layout/InfoCardLayout';
-import TempPriceIcon from '@/repo/ui/Icons/TempPriceIcon';
-import ClockIcon from '@/repo/ui/Icons/ClockIcon';
-import { useAlert } from '@/hooks/useAlert';
 
 export default function ModalSection({
   productData,
@@ -43,7 +37,6 @@ export default function ModalSection({
   const [currentProductData, setCurrentProductData] = useState(productData);
 
   const { currentModal, closeModal } = useModal();
-  const alert = useAlert();
 
   // 실시간 데이터 가져오기
   const fetchLatestProductData = async () => {

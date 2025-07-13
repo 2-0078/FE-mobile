@@ -5,7 +5,7 @@ import {
   getOrderBook,
   getPreviousDayQuotes,
 } from '@/action/market-price-service';
-import { OrderBookData, OrderBookItem } from '@/types/ProductTypes';
+import { OrderBookItem } from '@/types/ProductTypes';
 import { RealTimeQuotesData } from '@/types/ProductTypes';
 import QuotesStreamService from '@/services/QuotesStreamService';
 

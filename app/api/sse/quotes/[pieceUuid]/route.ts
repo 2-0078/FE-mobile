@@ -2,9 +2,9 @@ import { NextRequest } from 'next/server';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { pieceUuid: string } }
+  { params }: { params: Promise<{ pieceUuid: string }> }
 ) {
-  const { pieceUuid } = params;
+  const { pieceUuid } = await params;
 
   const baseUrl = process.env.BASE_API_URL || 'https://api.pieceofcake.site';
   const sseUrl = `${baseUrl}/real-time-data-service/api/v1/kis-api/stream/quotes-update/${pieceUuid}`;
