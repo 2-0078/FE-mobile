@@ -10,7 +10,7 @@ export default function Price({
   return (
     <div
       className={cn(
-        'w-full flex justify-end text-xl font-bold text-black mt-2',
+        'w-full flex justify-end text-xl font-bold text-white mt-2',
         className
       )}
     >

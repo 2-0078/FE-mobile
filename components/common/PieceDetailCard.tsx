@@ -5,7 +5,11 @@ import AnimatedPrice from './AnimatedPrice';
 import AnimatedValue from './AnimatedValue';
 import ItemCardImage from './ItemCardImage';
 import ItemCardInfo from './ItemCardInfo';
-import { getMarketPrice, getQoutes } from '@/action/market-price-service';
+import {
+  getMarketPrice,
+  getQoutes,
+  getPreviousDayQuotes,
+} from '@/action/market-price-service';
 import {
   PieceProductType,
   MarketPriceData,
@@ -24,7 +28,11 @@ export default function PieceDetailCard({ product }: PieceDetailCardProps) {
   const { piece } = product;
   const [marketData, setMarketData] = useState<MarketPriceData | null>(null);
   const [qoutesData, setQoutesData] = useState<QoutesData | null>(null);
+  const [previousDayQuotesData, setPreviousDayQuotesData] =
+    useState<QoutesData | null>(null);
   const [isLoadingMarketData, setIsLoadingMarketData] = useState(false);
+  const [isLoadingPreviousDayData, setIsLoadingPreviousDayData] =
+    useState(false);
 
   // 이전 값들을 저장하여 변경 감지
   const prevMarketDataRef = useRef<MarketPriceData | null>(null);
@@ -142,6 +150,54 @@ export default function PieceDetailCard({ product }: PieceDetailCardProps) {
         };
         console.log('Using dummy qoutes data due to error:', dummyQoutesData);
         setQoutesData(dummyQoutesData);
+      }
+
+      // 전날 업데이트된 마지막 호가 데이터 가져오기
+      setIsLoadingPreviousDayData(true);
+      try {
+        const previousDayQuotesResponse = await getPreviousDayQuotes(
+          piece.pieceProductUuid
+        );
+        console.log(
+          'API response previous day quotes:',
+          previousDayQuotesResponse
+        );
+        if (
+          previousDayQuotesResponse?.isSuccess &&
+          previousDayQuotesResponse.result
+        ) {
+          setPreviousDayQuotesData(previousDayQuotesResponse.result);
+        } else {
+          console.log('Previous day quotes API failed or no data');
+          // 전날 데이터가 없으면 현재 종가 기준으로 더미 데이터 생성
+          const dummyPreviousDayQuotesData: QoutesData = {
+            askp: [piece.closingPrice ? piece.closingPrice + 5 : 1005],
+            bidp: [piece.closingPrice ? piece.closingPrice - 5 : 995],
+            askpRsq: [0.5],
+            bidpRsq: [-0.5],
+          };
+          console.log(
+            'Using dummy previous day quotes data:',
+            dummyPreviousDayQuotesData
+          );
+          setPreviousDayQuotesData(dummyPreviousDayQuotesData);
+        }
+      } catch (error) {
+        console.error('Error fetching previous day quotes:', error);
+        // 에러 시에도 더미 데이터 사용
+        const dummyPreviousDayQuotesData: QoutesData = {
+          askp: [piece.closingPrice ? piece.closingPrice + 5 : 1005],
+          bidp: [piece.closingPrice ? piece.closingPrice - 5 : 995],
+          askpRsq: [0.5],
+          bidpRsq: [-0.5],
+        };
+        console.log(
+          'Using dummy previous day quotes data due to error:',
+          dummyPreviousDayQuotesData
+        );
+        setPreviousDayQuotesData(dummyPreviousDayQuotesData);
+      } finally {
+        setIsLoadingPreviousDayData(false);
       }
 
       setIsLoadingMarketData(false);
@@ -283,6 +339,41 @@ export default function PieceDetailCard({ product }: PieceDetailCardProps) {
             </>
           )}
         </div>
+
+        {/* 전날 업데이트된 마지막 호가 데이터 표시 */}
+        {isLoadingPreviousDayData ? (
+          <div className="px-4 pb-2 flex justify-start items-center gap-1 min-h-[16px]">
+            <span className="text-[0.5rem] text-gray-500 mr-1">전일</span>
+            <div className="inline-flex items-center gap-1">
+              <div className="h-3 bg-gray-700 rounded w-12 animate-pulse"></div>
+              <div className="h-3 bg-gray-700 rounded w-12 animate-pulse"></div>
+            </div>
+          </div>
+        ) : previousDayQuotesData ? (
+          <div className="px-4 pb-2 flex justify-start items-center gap-1 min-h-[16px]">
+            <span className="text-[0.5rem] text-gray-500 mr-1">전일</span>
+            {previousDayQuotesData.askp[0] && (
+              <div className="inline-flex items-center px-1.5 h-4 rounded-xs text-[0.5rem] font-medium bg-gray-800 text-gray-300 border border-gray-600">
+                <span className="mr-0.5">매도</span>
+                <AnimatedValue
+                  value={previousDayQuotesData.askp[0]}
+                  className="font-bold"
+                  formatValue={(value) => value.toLocaleString()}
+                />
+              </div>
+            )}
+            {previousDayQuotesData.bidp[0] && (
+              <div className="inline-flex items-center px-1.5 h-4 rounded-xs text-[0.5rem] font-medium bg-gray-800 text-gray-300 border border-gray-600">
+                <span className="mr-0.5">매수</span>
+                <AnimatedValue
+                  value={previousDayQuotesData.bidp[0]}
+                  className="font-bold"
+                  formatValue={(value) => value.toLocaleString()}
+                />
+              </div>
+            )}
+          </div>
+        ) : null}
       </div>
     </div>
   );
