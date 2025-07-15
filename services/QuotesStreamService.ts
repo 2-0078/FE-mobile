@@ -25,8 +25,58 @@ class QuotesStreamService {
   ): () => void {
     const key = `quotes-${pieceProductUuid}`;
 
-    // 기존 연결이 있다면 제거
-    this.disconnectFromQuotesStream(pieceProductUuid);
+    // 기존 EventSource가 있으면 재사용, 없으면 새로 생성
+    let eventSource = this.eventSources.get(key);
+
+    if (!eventSource) {
+      // 새로운 EventSource 생성
+      const sseUrl = `/api/sse/quotes/${pieceProductUuid}`;
+      console.log(`SSE 연결 시도: ${sseUrl}`);
+
+      eventSource = new EventSource(sseUrl);
+
+      eventSource.onopen = () => {
+        console.log(`SSE 연결 성공: ${pieceProductUuid}`);
+      };
+
+      eventSource.onmessage = (event) => {
+        try {
+          const data: RealTimeQuotesData = JSON.parse(event.data);
+          console.log('실시간 호가 데이터 수신:', data);
+
+          // 등록된 모든 콜백 호출
+          const callbacks = this.callbacks.get(key);
+          if (callbacks) {
+            callbacks.forEach((cb) => cb(data));
+          }
+        } catch (error) {
+          console.error(
+            'SSE 데이터 파싱 오류:',
+            error,
+            'Raw data:',
+            event.data
+          );
+        }
+      };
+
+      eventSource.onerror = (error) => {
+        console.error(`SSE 연결 오류 (${pieceProductUuid}):`, error);
+        if (eventSource) {
+          console.error('EventSource readyState:', eventSource.readyState);
+
+          // 연결 상태에 따른 처리
+          if (eventSource.readyState === EventSource.CLOSED) {
+            console.log(`SSE 연결이 닫힘: ${pieceProductUuid}`);
+          } else if (eventSource.readyState === EventSource.CONNECTING) {
+            console.log(`SSE 재연결 시도 중: ${pieceProductUuid}`);
+          }
+        }
+      };
+
+      this.eventSources.set(key, eventSource);
+    } else {
+      console.log(`기존 SSE 연결 재사용: ${pieceProductUuid}`);
+    }
 
     // 콜백 등록
     if (!this.callbacks.has(key)) {
@@ -34,39 +84,34 @@ class QuotesStreamService {
     }
     this.callbacks.get(key)!.push(callback);
 
-    // 내부 API를 통해 SSE 연결 생성
-    const eventSource = new EventSource(`/api/sse/quotes/${pieceProductUuid}`);
-
-    eventSource.onopen = () => {
-      console.log(`SSE 연결 시작: ${pieceProductUuid}`);
-    };
-
-    eventSource.onmessage = (event) => {
-      try {
-        const data: RealTimeQuotesData = JSON.parse(event.data);
-        console.log('실시간 호가 데이터 수신:', data);
-
-        // 등록된 모든 콜백 호출
-        const callbacks = this.callbacks.get(key);
-        if (callbacks) {
-          callbacks.forEach((cb) => cb(data));
-        }
-      } catch (error) {
-        console.error('SSE 데이터 파싱 오류:', error);
-      }
-    };
-
-    eventSource.onerror = (error) => {
-      console.error(`SSE 연결 오류 (${pieceProductUuid}):`, error);
-      this.disconnectFromQuotesStream(pieceProductUuid);
-    };
-
-    this.eventSources.set(key, eventSource);
-
-    // 연결 해제 함수 반환
+    // 연결 해제 함수 반환 (특정 콜백만 제거)
     return () => {
-      this.disconnectFromQuotesStream(pieceProductUuid);
+      this.removeCallback(pieceProductUuid, callback);
     };
+  }
+
+  // 특정 콜백 제거
+  private removeCallback(
+    pieceProductUuid: string,
+    callback: QuotesUpdateCallback
+  ): void {
+    const key = `quotes-${pieceProductUuid}`;
+    const callbacks = this.callbacks.get(key);
+
+    if (callbacks) {
+      const index = callbacks.indexOf(callback);
+      if (index > -1) {
+        callbacks.splice(index, 1);
+        console.log(
+          `콜백 제거: ${pieceProductUuid} (남은 콜백: ${callbacks.length}개)`
+        );
+      }
+
+      // 콜백이 없으면 EventSource도 해제
+      if (callbacks.length === 0) {
+        this.disconnectFromQuotesStream(pieceProductUuid);
+      }
+    }
   }
 
   // SSE 연결 해제

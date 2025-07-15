@@ -130,6 +130,8 @@ export default function OrderBook({ pieceUuid }: OrderBookProps) {
   };
 
   useEffect(() => {
+    console.log(`OrderBook 컴포넌트 마운트: ${pieceUuid}`);
+
     const fetchOrderBook = async () => {
       try {
         setLoading(true);
@@ -216,6 +218,7 @@ export default function OrderBook({ pieceUuid }: OrderBookProps) {
 
     // 컴포넌트 언마운트 시 연결 해제
     return () => {
+      console.log(`OrderBook 컴포넌트 언마운트: ${pieceUuid}`);
       disconnect();
     };
   }, [pieceUuid]);
