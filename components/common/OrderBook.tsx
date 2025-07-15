@@ -87,6 +87,12 @@ export default function OrderBook({ pieceUuid }: OrderBookProps) {
   const handleQuotesUpdate = (data: RealTimeQuotesData) => {
     console.log('실시간 호가 업데이트:', data);
 
+    // 데이터 유효성 검사
+    if (!data || !data.askp || !data.bidp) {
+      console.warn('유효하지 않은 호가 데이터:', data);
+      return;
+    }
+
     const asks: OrderBookItem[] = data.askp
       .map((price, index) => ({
         price,
@@ -113,7 +119,7 @@ export default function OrderBook({ pieceUuid }: OrderBookProps) {
       0
     );
 
-    setOrderBook({
+    const newOrderBook = {
       asks: asks.sort((a, b) => a.price - b.price), // 매도는 낮은 가격부터
       bids: bids.sort((a, b) => b.price - a.price), // 매수는 높은 가격부터
       lastPrice: bids.length > 0 ? bids[0].price : 0,
@@ -121,8 +127,17 @@ export default function OrderBook({ pieceUuid }: OrderBookProps) {
       changePercent: 0,
       spread,
       volume: totalVolume,
+    };
+
+    console.log('호가창 상태 업데이트:', {
+      asksCount: newOrderBook.asks.length,
+      bidsCount: newOrderBook.bids.length,
+      lastPrice: newOrderBook.lastPrice,
+      spread: newOrderBook.spread,
+      volume: newOrderBook.volume,
     });
 
+    setOrderBook(newOrderBook);
     setIsConnected(true);
     setIsMarketOpen(true);
     setLoading(false);
@@ -211,6 +226,7 @@ export default function OrderBook({ pieceUuid }: OrderBookProps) {
 
     // SSE 실시간 연결
     const quotesService = QuotesStreamService.getInstance();
+    console.log(`SSE 연결 시작: ${pieceUuid}`);
     const disconnect = quotesService.connectToQuotesStream(
       pieceUuid,
       handleQuotesUpdate
@@ -228,6 +244,7 @@ export default function OrderBook({ pieceUuid }: OrderBookProps) {
     if (isConnected) {
       // 연결이 성공했으면 타임아웃 제거
       if (connectionTimeout) {
+        console.log('연결 성공으로 타임아웃 제거');
         clearTimeout(connectionTimeout);
         setConnectionTimeout(null);
       }
@@ -236,9 +253,12 @@ export default function OrderBook({ pieceUuid }: OrderBookProps) {
 
     // 연결되지 않은 상태에서만 타임아웃 설정
     if (!isConnected && !connectionTimeout) {
+      console.log('연결 타임아웃 설정 (8초)');
       const timeout = setTimeout(async () => {
+        console.log('연결 타임아웃 발생');
         // 장 시간을 체크하여 실제로 장이 닫혀있는지 확인
         if (!isMarketOpenTime()) {
+          console.log('장이 닫혀있음 - 전날 데이터 로드');
           setIsMarketOpen(false);
           setError(
             '장이 닫혀있습니다. 장 시간(09:00-15:30)에 다시 시도해주세요.'
@@ -262,6 +282,7 @@ export default function OrderBook({ pieceUuid }: OrderBookProps) {
           }
         } else {
           // 장이 열려있지만 연결이 안된 경우 에러 메시지 표시
+          console.log('장이 열려있지만 연결 실패');
           setError(
             '호가 데이터를 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요.'
           );
@@ -274,6 +295,7 @@ export default function OrderBook({ pieceUuid }: OrderBookProps) {
 
     return () => {
       if (connectionTimeout) {
+        console.log('타임아웃 정리');
         clearTimeout(connectionTimeout);
       }
     };
