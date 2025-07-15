@@ -22,7 +22,7 @@ export const marketStorage = {
         date: today,
       };
 
-      //console.log('Saving market data:', { productUuid, storedData });
+      console.log('Saving market data:', { productUuid, storedData });
 
       localStorage.setItem(
         `${MARKET_DATA_PREFIX}${productUuid}`,
@@ -35,7 +35,7 @@ export const marketStorage = {
         Date.now().toString()
       );
 
-      //console.log('Market data saved successfully');
+      console.log('Market data saved successfully');
     } catch (error) {
       console.error('Failed to save market data to localStorage:', error);
     }
@@ -49,10 +49,10 @@ export const marketStorage = {
       const stored = localStorage.getItem(
         `${MARKET_DATA_PREFIX}${productUuid}`
       );
-      //console.log('Getting market data for:', productUuid, 'stored:', stored);
+      console.log('Getting market data for:', productUuid, 'stored:', stored);
 
       if (!stored) {
-        //console.log('No stored data found');
+        console.log('No stored data found');
         return null;
       }
 
@@ -66,11 +66,11 @@ export const marketStorage = {
       const oneDay = 24 * 60 * 60 * 1000; // 24시간 (밀리초)
 
       if (dataAge < oneDay) {
-        //console.log('Returning cached data (within 24 hours)');
+        console.log('Returning cached data (within 24 hours)');
         return storedData.data;
       }
 
-      //console.log('Data is too old, not returning cached data');
+      console.log('Data is too old, not returning cached data');
       return null;
     } catch (error) {
       console.error('Failed to get market data from localStorage:', error);

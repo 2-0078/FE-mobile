@@ -29,7 +29,7 @@ export default function ModalSection({
   itemUuid: string;
   type: 'FUNDING' | 'PIECE';
 }) {
-  //console.log(type);
+  console.log(type);
   const commentPage = useSearchParams().get('commentPage') || '1';
   const [replies, setReplies] = useState<ReplyType[]>([]);
   const [isLoading, setIsLoading] = useState(false);

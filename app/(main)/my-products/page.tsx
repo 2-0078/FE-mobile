@@ -128,7 +128,7 @@ export default async function MyProductsPage() {
                           className="p-2 text-gray-400 hover:text-red-400 transition-colors"
                           onClick={() => {
                             if (confirm('정말로 이 상품을 삭제하시겠습니까?')) {
-                              //console.log('Delete product:', product.id);
+                              console.log('Delete product:', product.id);
                             }
                           }}
                         >

@@ -12,7 +12,7 @@ export const getMainCategories = async () => {
   const response = await fetch(
     `${process.env.BASE_API_URL}/product-service/api/v1/main-category/list`
   );
-  //console.log(response);
+  console.log(response);
   const data = (await response.json()) as CommonResponseType<CategoryType[]>;
   return data.result;
 };
@@ -51,8 +51,8 @@ export const getFundingProductsList = async (params: {
   const baseUrl = process.env.BASE_API_URL || 'http://localhost:8080';
   const url = `${baseUrl}/product-read-service/api/v1/funding/list?${queryParams.toString()}`;
 
-  //console.log('Funding products API URL:', url);
-  //console.log('Funding products API params:', params);
+  console.log('Funding products API URL:', url);
+  console.log('Funding products API params:', params);
 
   const response = await fetch(url, {
     method: 'GET',
@@ -64,7 +64,7 @@ export const getFundingProductsList = async (params: {
     },
   });
 
-  //console.log('Funding products API response status:', response.status);
+  console.log('Funding products API response status:', response.status);
 
   if (!response.ok) {
     console.error('API response not ok:', response.status, response.statusText);
@@ -74,7 +74,7 @@ export const getFundingProductsList = async (params: {
   const data =
     (await response.json()) as CommonResponseType<FundingListResponseType>;
 
-  //console.log('Funding products API response data:', data);
+  console.log('Funding products API response data:', data);
 
   if (!data.result) {
     console.error('No result in API response');
@@ -88,7 +88,7 @@ export const getFundingProduct = async (id: string) => {
   const baseUrl = process.env.BASE_API_URL || 'http://localhost:8080';
   const url = `${baseUrl}/product-read-service/api/v1/funding/list/${id}`;
 
-  //console.log('Individual funding product API URL:', url);
+  console.log('Individual funding product API URL:', url);
 
   const response = await fetch(url, {
     method: 'GET',
@@ -100,7 +100,7 @@ export const getFundingProduct = async (id: string) => {
     },
   });
 
-  //console.log(
+  console.log(
     'Individual funding product API response status:',
     response.status
   );
@@ -113,8 +113,8 @@ export const getFundingProduct = async (id: string) => {
   const data =
     (await response.json()) as CommonResponseType<FundingProductType>;
 
-  //console.log('Individual funding product API response data:', data);
-  //console.log('Individual funding product result:', data.result);
+  console.log('Individual funding product API response data:', data);
+  console.log('Individual funding product result:', data.result);
 
   if (!data.result) {
     console.error('No result in API response');
@@ -150,8 +150,8 @@ export const getPieceProductsList = async (params: {
   const baseUrl = process.env.BASE_API_URL || 'http://localhost:8080';
   const url = `${baseUrl}/product-read-service/api/v1/piece/list?${queryParams.toString()}`;
 
-  //console.log('Piece products API URL:', url);
-  //console.log('Piece products API params:', params);
+  console.log('Piece products API URL:', url);
+  console.log('Piece products API params:', params);
 
   const response = await fetch(url, {
     method: 'GET',
@@ -163,7 +163,7 @@ export const getPieceProductsList = async (params: {
     },
   });
 
-  //console.log('Piece products API response status:', response.status);
+  console.log('Piece products API response status:', response.status);
 
   if (!response.ok) {
     console.error('API response not ok:', response.status, response.statusText);
@@ -173,7 +173,7 @@ export const getPieceProductsList = async (params: {
   const data =
     (await response.json()) as CommonResponseType<PieceProductListResponseType>;
 
-  //console.log('Piece products API response data:', data);
+  console.log('Piece products API response data:', data);
 
   if (!data.result) {
     console.error('No result in API response');
@@ -197,7 +197,7 @@ export const getPieceProducts = async (productUuid: string) => {
     }
   );
   const data = (await response.json()) as CommonResponseType<PieceProductType>;
-  // //console.log(data.result);
+  // console.log(data.result);
   return data.result;
 };
 
@@ -218,8 +218,8 @@ export const getPieceMarketPrice = async (pieceProductUuid: string) => {
   const data = (await response.json()) as CommonResponseType<
     MarketPriceApiResponse | number
   >;
-  //console.log('Market price raw response:', data);
-  //console.log('Market price result:', data.result);
+  console.log('Market price raw response:', data);
+  console.log('Market price result:', data.result);
 
   // 응답 구조에 따라 적절히 처리
   if (typeof data.result === 'number') {

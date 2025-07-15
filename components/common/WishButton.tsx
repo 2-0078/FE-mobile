@@ -55,8 +55,8 @@ export default function WishButton({
     startTransition(async () => {
       try {
         setIsLoading(true);
-        //console.log('fundingUuid', fundingUuid);
-        //console.log('productUuid', productUuid);
+        console.log('fundingUuid', fundingUuid);
+        console.log('productUuid', productUuid);
 
         // 유저가 로그인상태라면 fundingWish 호출
         // fundingWish에 revalidateTag가 추가되어 있음

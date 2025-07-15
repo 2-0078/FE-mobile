@@ -50,30 +50,30 @@ export default function PieceDetailCard({ product }: PieceDetailCardProps) {
 
   // 주가 데이터 가져오기
   useEffect(() => {
-    //console.log('piece.pieceProductUuid', piece.pieceProductUuid);
-    //console.log('Effect triggered for product:', product.productName);
+    console.log('piece.pieceProductUuid', piece.pieceProductUuid);
+    console.log('Effect triggered for product:', product.productName);
 
     const fetchMarketData = async () => {
       // 이미 로딩 중이면 중복 호출 방지
       if (isLoadingMarketData) {
-        //console.log('Already loading, skipping...');
+        console.log('Already loading, skipping...');
         return;
       }
 
-      //console.log('Starting to fetch market data for:', piece.pieceProductUuid);
+      console.log('Starting to fetch market data for:', piece.pieceProductUuid);
       setIsLoadingMarketData(true);
 
       // marketData는 항상 API에서 가져오기 (테스트용)
-      //console.log('Fetching market data from API for:', piece.pieceProductUuid);
+      console.log('Fetching market data from API for:', piece.pieceProductUuid);
       try {
         const response = await getMarketPrice(piece.pieceProductUuid);
-        //console.log('API response market price:', response);
+        console.log('API response market price:', response);
         if (response?.isSuccess && response.result) {
-          //console.log('response.result', response.result);
+          console.log('response.result', response.result);
           // 이전 값과 비교하여 변경 감지
           const prevMarket = prevMarketDataRef.current;
           if (prevMarket) {
-            //console.log('Market data changed:', {
+            console.log('Market data changed:', {
               prev: prevMarket,
               current: response.result,
             });
@@ -82,7 +82,7 @@ export default function PieceDetailCard({ product }: PieceDetailCardProps) {
           setMarketData(response.result);
           marketStorage.saveMarketData(piece.pieceProductUuid, response.result);
         } else {
-          //console.log('Market price API failed or no data');
+          console.log('Market price API failed or no data');
           // 임시로 더미 데이터 사용 (테스트용)
           const dummyMarketData: MarketPriceData = {
             stckPrpr: piece.closingPrice || 1000,
@@ -93,7 +93,7 @@ export default function PieceDetailCard({ product }: PieceDetailCardProps) {
             prdyVrss: 50,
             prdyCrt: 5.0,
           };
-          //console.log('Using dummy market data:', dummyMarketData);
+          console.log('Using dummy market data:', dummyMarketData);
           setMarketData(dummyMarketData);
         }
       } catch (error) {
@@ -108,19 +108,19 @@ export default function PieceDetailCard({ product }: PieceDetailCardProps) {
           prdyVrss: 50,
           prdyCrt: 5.0,
         };
-        //console.log('Using dummy market data due to error:', dummyMarketData);
+        console.log('Using dummy market data due to error:', dummyMarketData);
         setMarketData(dummyMarketData);
       }
 
       // qoutesData는 실시간으로 패칭
       try {
         const qoutesResponse = await getQoutes(piece.pieceProductUuid);
-        //console.log('API response qoutes:', qoutesResponse);
+        console.log('API response qoutes:', qoutesResponse);
         if (qoutesResponse?.isSuccess && qoutesResponse.result) {
           // 이전 값과 비교하여 변경 감지
           const prevQoutes = prevQoutesDataRef.current;
           if (prevQoutes) {
-            //console.log('Qoutes data changed:', {
+            console.log('Qoutes data changed:', {
               prev: prevQoutes,
               current: qoutesResponse.result,
             });
@@ -128,7 +128,7 @@ export default function PieceDetailCard({ product }: PieceDetailCardProps) {
           prevQoutesDataRef.current = qoutesResponse.result;
           setQoutesData(qoutesResponse.result);
         } else {
-          //console.log('Qoutes API failed or no data');
+          console.log('Qoutes API failed or no data');
           // 임시로 더미 데이터 사용 (테스트용)
           const dummyQoutesData: QoutesData = {
             askp: [piece.closingPrice ? piece.closingPrice + 10 : 1010],
@@ -136,7 +136,7 @@ export default function PieceDetailCard({ product }: PieceDetailCardProps) {
             askpRsq: [1.0],
             bidpRsq: [-1.0],
           };
-          //console.log('Using dummy qoutes data:', dummyQoutesData);
+          console.log('Using dummy qoutes data:', dummyQoutesData);
           setQoutesData(dummyQoutesData);
         }
       } catch (error) {
@@ -148,7 +148,7 @@ export default function PieceDetailCard({ product }: PieceDetailCardProps) {
           askpRsq: [1.0],
           bidpRsq: [-1.0],
         };
-        //console.log('Using dummy qoutes data due to error:', dummyQoutesData);
+        console.log('Using dummy qoutes data due to error:', dummyQoutesData);
         setQoutesData(dummyQoutesData);
       }
 
@@ -158,7 +158,7 @@ export default function PieceDetailCard({ product }: PieceDetailCardProps) {
         const previousDayQuotesResponse = await getPreviousDayQuotes(
           piece.pieceProductUuid
         );
-        //console.log(
+        console.log(
           'API response previous day quotes:',
           previousDayQuotesResponse
         );
@@ -168,7 +168,7 @@ export default function PieceDetailCard({ product }: PieceDetailCardProps) {
         ) {
           setPreviousDayQuotesData(previousDayQuotesResponse.result);
         } else {
-          //console.log('Previous day quotes API failed or no data');
+          console.log('Previous day quotes API failed or no data');
           // 전날 데이터가 없으면 현재 종가 기준으로 더미 데이터 생성
           const dummyPreviousDayQuotesData: QoutesData = {
             askp: [piece.closingPrice ? piece.closingPrice + 5 : 1005],
@@ -176,7 +176,7 @@ export default function PieceDetailCard({ product }: PieceDetailCardProps) {
             askpRsq: [0.5],
             bidpRsq: [-0.5],
           };
-          //console.log(
+          console.log(
             'Using dummy previous day quotes data:',
             dummyPreviousDayQuotesData
           );
@@ -191,7 +191,7 @@ export default function PieceDetailCard({ product }: PieceDetailCardProps) {
           askpRsq: [0.5],
           bidpRsq: [-0.5],
         };
-        //console.log(
+        console.log(
           'Using dummy previous day quotes data due to error:',
           dummyPreviousDayQuotesData
         );
@@ -215,7 +215,7 @@ export default function PieceDetailCard({ product }: PieceDetailCardProps) {
             alertData.alertType === 'PIECE_PRICE_CHANGE' &&
             alertData.key === piece.pieceProductUuid
           ) {
-            //console.log(
+            console.log(
               'SSE alert received for this product, refreshing data...'
             );
             fetchMarketData();

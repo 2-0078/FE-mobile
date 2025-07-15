@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Tag is required' }, { status: 400 });
     }
 
-    //console.log('Revalidating tag:', tag);
+    console.log('Revalidating tag:', tag);
     revalidateTag(tag);
 
     return NextResponse.json({ success: true, revalidated: tag });

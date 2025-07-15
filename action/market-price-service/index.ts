@@ -14,7 +14,7 @@ export async function getMarketPrice(
   pieceProductUuid: string
 ): Promise<MarketPriceResponse | null> {
   try {
-    //console.log('Fetching market price for:', pieceProductUuid);
+    console.log('Fetching market price for:', pieceProductUuid);
 
     const response = await fetch(
       `${API_BASE_URL}/real-time-data-service/api/v1/kis-api/market-price/${pieceProductUuid}`,
@@ -29,8 +29,8 @@ export async function getMarketPrice(
       }
     );
 
-    //console.log('Response status:', response.status);
-    //console.log('Response ok:', response.ok);
+    console.log('Response status:', response.status);
+    console.log('Response ok:', response.ok);
 
     if (!response.ok) {
       console.error('Failed to fetch market price:', response.status);
@@ -38,7 +38,7 @@ export async function getMarketPrice(
     }
 
     const data: MarketPriceResponse = await response.json();
-    //console.log('API response data market price:', data);
+    console.log('API response data market price:', data);
 
     return data;
   } catch (error) {
@@ -51,7 +51,7 @@ export async function getQoutes(
   pieceProductUuid: string
 ): Promise<QoutesResponse | null> {
   try {
-    //console.log('Fetching qoutes for:', pieceProductUuid);
+    console.log('Fetching qoutes for:', pieceProductUuid);
 
     const response = await fetch(
       `${API_BASE_URL}/real-time-data-service/api/v1/kis-api/quotes/${pieceProductUuid}`,
@@ -67,7 +67,7 @@ export async function getQoutes(
     );
 
     const data: QoutesResponse = await response.json();
-    //console.log('API response data qoutes:', data);
+    console.log('API response data qoutes:', data);
 
     return data;
   } catch (error) {
@@ -81,7 +81,7 @@ export async function getOrderBook(
   pieceProductUuid: string
 ): Promise<OrderBookResponse | null> {
   try {
-    //console.log('Fetching order book for:', pieceProductUuid);
+    console.log('Fetching order book for:', pieceProductUuid);
 
     const response = await fetch(
       `${API_BASE_URL}/real-time-data-service/api/v1/kis-api/orderbook/${pieceProductUuid}`,
@@ -102,7 +102,7 @@ export async function getOrderBook(
     }
 
     const data: OrderBookResponse = await response.json();
-    //console.log('API response data order book:', data);
+    console.log('API response data order book:', data);
 
     return data;
   } catch (error) {
@@ -119,7 +119,7 @@ export async function getPeriodMarketPrices(
   divCode: string = '1'
 ): Promise<PeriodMarketPriceResponse | null> {
   try {
-    //console.log(
+    console.log(
       'Fetching period market prices for:',
       pieceProductUuid,
       'from',
@@ -147,7 +147,7 @@ export async function getPeriodMarketPrices(
     }
 
     const data: PeriodMarketPriceResponse = await response.json();
-    //console.log('API response data period market prices:', data);
+    console.log('API response data period market prices:', data);
 
     return data;
   } catch (error) {
@@ -198,7 +198,7 @@ export async function getHistoricalPrices(
     const startDateStr = formatDate(startDate);
     const endDateStr = formatDate(endDate);
 
-    //console.log(
+    console.log(
       'Fetching historical prices for:',
       pieceProductUuid,
       'period:',
@@ -225,7 +225,7 @@ export async function getRealTimePrice(
   pieceProductUuid: string
 ): Promise<RealTimePriceResponse | null> {
   try {
-    //console.log('Fetching real-time price for:', pieceProductUuid);
+    console.log('Fetching real-time price for:', pieceProductUuid);
 
     const response = await fetch(
       `${API_BASE_URL}/real-time-data-service/api/v1/kis-api/real-time-price/${pieceProductUuid}`,
@@ -246,7 +246,7 @@ export async function getRealTimePrice(
     }
 
     const data: RealTimePriceResponse = await response.json();
-    //console.log('API response data real-time price:', data);
+    console.log('API response data real-time price:', data);
 
     return data;
   } catch (error) {
@@ -260,7 +260,7 @@ export async function getPreviousDayQuotes(
   pieceProductUuid: string
 ): Promise<QoutesResponse | null> {
   try {
-    //console.log('Fetching previous day quotes for:', pieceProductUuid);
+    console.log('Fetching previous day quotes for:', pieceProductUuid);
 
     const response = await fetch(
       `${API_BASE_URL}/real-time-data-service/api/v1/kis-api/quotes/${pieceProductUuid}`,
@@ -281,7 +281,7 @@ export async function getPreviousDayQuotes(
     }
 
     const data: QoutesResponse = await response.json();
-    //console.log('API response data previous day quotes:', data);
+    console.log('API response data previous day quotes:', data);
 
     return data;
   } catch (error) {

@@ -9,7 +9,7 @@ export async function GET(
   const baseUrl = process.env.BASE_API_URL || 'https://api.pieceofcake.site';
   const sseUrl = `${baseUrl}/real-time-data-service/api/v1/kis-api/stream/quotes-update/${pieceUuid}`;
 
-  //console.log('Proxying SSE quotes request to:', sseUrl);
+  console.log('Proxying SSE quotes request to:', sseUrl);
 
   try {
     const response = await fetch(sseUrl, {

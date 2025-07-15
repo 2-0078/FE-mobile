@@ -220,7 +220,7 @@ class OrderBookService {
     // this.eventSource = new EventSource(`/api/sse/orderbook/${pieceUuid}`);
 
     // For now, we'll use the interval-based approach above
-    //console.log('SSE connection would be established here');
+    console.log('SSE connection would be established here');
   }
 }
 

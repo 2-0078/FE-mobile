@@ -133,7 +133,7 @@ export const checkPhoneNumber = async (
 // 일반 함수로 signin 구현 (NextAuth용)
 export const signin = async (email: string, password: string) => {
   try {
-    //console.log('Signin attempt for email:', email);
+    console.log('Signin attempt for email:', email);
 
     const response = await fetch(
       `${process.env.BASE_API_URL}/auth-service/api/v1/login`,
@@ -147,19 +147,19 @@ export const signin = async (email: string, password: string) => {
     );
 
     const res = await response.json();
-    //console.log('API Response:', res);
+    console.log('API Response:', res);
 
     // API 응답에서 에러 메시지 추출
     if (!res.isSuccess) {
       const errorMessage = res.message || res.error || '로그인에 실패했습니다.';
-      //console.log('Login failed:', errorMessage);
+      console.log('Login failed:', errorMessage);
       throw new Error(errorMessage);
     }
 
-    //console.log('Login successful');
+    console.log('Login successful');
     return res;
   } catch (error) {
-    //console.log('Signin error:', error);
+    console.log('Signin error:', error);
     if (error instanceof Error) {
       throw error;
     }
@@ -172,7 +172,7 @@ export const signinAction = async (email: string, password: string) => {
   'use server';
 
   try {
-    //console.log('Signin action attempt for email:', email);
+    console.log('Signin action attempt for email:', email);
 
     const response = await fetch(
       `${process.env.BASE_API_URL}/auth-service/api/v1/login`,
@@ -186,19 +186,19 @@ export const signinAction = async (email: string, password: string) => {
     );
 
     const res = await response.json();
-    //console.log('API Response:', res);
+    console.log('API Response:', res);
 
     // API 응답에서 에러 메시지 추출
     if (!res.isSuccess) {
       const errorMessage = res.message || res.error || '로그인에 실패했습니다.';
-      //console.log('Login failed:', errorMessage);
+      console.log('Login failed:', errorMessage);
       throw new Error(errorMessage);
     }
 
-    //console.log('Login successful');
+    console.log('Login successful');
     return res;
   } catch (error) {
-    //console.log('Signin error:', error);
+    console.log('Signin error:', error);
     if (error instanceof Error) {
       throw error;
     }
@@ -225,7 +225,7 @@ export const signup = async (data: any) => {
     );
 
     const res = await response.json();
-    //console.log('Signup response:', res);
+    console.log('Signup response:', res);
 
     // API 응답에서 에러 메시지 추출
     if (!res.isSuccess) {

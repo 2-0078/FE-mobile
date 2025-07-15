@@ -56,7 +56,7 @@ export default function SellPage() {
     setIsSubmitting(true);
 
     try {
-      //console.log('상품 등록:', form);
+      console.log('상품 등록:', form);
       alert('상품이 성공적으로 등록되었습니다!');
     } catch {
       alert('상품 등록에 실패했습니다. 다시 시도해주세요.');
