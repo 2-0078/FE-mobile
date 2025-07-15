@@ -43,51 +43,14 @@ export default function OrderBook({ pieceUuid }: OrderBookProps) {
   const [isLoadingPreviousDayData, setIsLoadingPreviousDayData] =
     useState(false);
 
-  // 장 시간 체크 함수
-  const isMarketOpenTime = () => {
-    const now = new Date();
-    const day = now.getDay(); // 0: 일요일, 1: 월요일, ..., 6: 토요일
-    const hour = now.getHours();
-    const minute = now.getMinutes();
-    const currentTime = hour * 100 + minute; // HHMM 형식
-
-    console.log('장 시간 체크:', {
-      day,
-      hour,
-      minute,
-      currentTime,
-      marketOpen: 900,
-      marketClose: 1530,
-      isWeekend: day === 0 || day === 6,
-      isMarketOpen: currentTime >= 900 && currentTime <= 1530,
-    });
-
-    // 주말 체크
-    if (day === 0 || day === 6) {
-      console.log('주말이므로 장이 닫혀있습니다');
-      return false;
-    }
-
-    // 장 시간 체크 (09:00-15:30)
-    const marketOpen = 900; // 09:00
-    const marketClose = 1530; // 15:30
-
-    const isOpen = currentTime >= marketOpen && currentTime <= marketClose;
-    console.log(
-      `장 상태: ${isOpen ? '열림' : '닫힘'} (${hour}:${minute.toString().padStart(2, '0')})`
-    );
-
-    return isOpen;
-  };
-
   // SSE 실시간 호가 데이터 처리
   const handleQuotesUpdate = (data: RealTimeQuotesData) => {
     console.log('실시간 호가 업데이트:', data);
 
-    // 데이터 유효성 검사
-    if (!data || !data.askp || !data.bidp) {
-      console.warn('유효하지 않은 호가 데이터:', data);
-      return;
+    // 연결 타임아웃 제거
+    if (connectionTimeout) {
+      clearTimeout(connectionTimeout);
+      setConnectionTimeout(null);
     }
 
     const asks: OrderBookItem[] = data.askp
@@ -116,7 +79,7 @@ export default function OrderBook({ pieceUuid }: OrderBookProps) {
       0
     );
 
-    const newOrderBook = {
+    setOrderBook({
       asks: asks.sort((a, b) => a.price - b.price), // 매도는 낮은 가격부터
       bids: bids.sort((a, b) => b.price - a.price), // 매수는 높은 가격부터
       lastPrice: bids.length > 0 ? bids[0].price : 0,
@@ -124,17 +87,8 @@ export default function OrderBook({ pieceUuid }: OrderBookProps) {
       changePercent: 0,
       spread,
       volume: totalVolume,
-    };
-
-    console.log('호가창 상태 업데이트:', {
-      asksCount: newOrderBook.asks.length,
-      bidsCount: newOrderBook.bids.length,
-      lastPrice: newOrderBook.lastPrice,
-      spread: newOrderBook.spread,
-      volume: newOrderBook.volume,
     });
 
-    setOrderBook(newOrderBook);
     setIsConnected(true);
     setIsMarketOpen(true);
     setLoading(false);
@@ -142,8 +96,6 @@ export default function OrderBook({ pieceUuid }: OrderBookProps) {
   };
 
   useEffect(() => {
-    console.log(`OrderBook 컴포넌트 마운트: ${pieceUuid}`);
-
     const fetchOrderBook = async () => {
       try {
         setLoading(true);
@@ -262,16 +214,42 @@ export default function OrderBook({ pieceUuid }: OrderBookProps) {
 
     // SSE 실시간 연결
     const quotesService = QuotesStreamService.getInstance();
-    console.log(`SSE 연결 시작: ${pieceUuid}`);
     const disconnect = quotesService.connectToQuotesStream(
       pieceUuid,
       handleQuotesUpdate
     );
 
+    // 연결 타임아웃 설정 (10초 후 장이 닫혀있다고 표시)
+    const timeout = setTimeout(async () => {
+      // 연결이 성공하지 않았을 때만 장 닫힘 상태로 설정
+      setIsMarketOpen(false);
+      setError('장이 닫혀있습니다. 장 시간(09:00-15:30)에 다시 시도해주세요.');
+
+      // 장이 닫혀있을 때 전날 업데이트된 마지막 호가 데이터 가져오기
+      setIsLoadingPreviousDayData(true);
+      try {
+        const previousDayQuotesResponse = await getPreviousDayQuotes(pieceUuid);
+        if (
+          previousDayQuotesResponse?.isSuccess &&
+          previousDayQuotesResponse.result
+        ) {
+          setPreviousDayQuotesData(previousDayQuotesResponse.result);
+        }
+      } catch (error) {
+        console.error('Error fetching previous day quotes:', error);
+      } finally {
+        setIsLoadingPreviousDayData(false);
+      }
+    }, 10000);
+
+    setConnectionTimeout(timeout);
+
     // 컴포넌트 언마운트 시 연결 해제
     return () => {
-      console.log(`OrderBook 컴포넌트 언마운트: ${pieceUuid}`);
       disconnect();
+      if (connectionTimeout) {
+        clearTimeout(connectionTimeout);
+      }
     };
   }, [pieceUuid]);
 
@@ -280,7 +258,6 @@ export default function OrderBook({ pieceUuid }: OrderBookProps) {
     if (isConnected) {
       // 연결이 성공했으면 타임아웃 제거
       if (connectionTimeout) {
-        console.log('연결 성공으로 타임아웃 제거');
         clearTimeout(connectionTimeout);
         setConnectionTimeout(null);
       }
@@ -289,49 +266,35 @@ export default function OrderBook({ pieceUuid }: OrderBookProps) {
 
     // 연결되지 않은 상태에서만 타임아웃 설정
     if (!isConnected && !connectionTimeout) {
-      console.log('연결 타임아웃 설정 (8초)');
       const timeout = setTimeout(async () => {
-        console.log('연결 타임아웃 발생');
-        // 장 시간을 체크하여 실제로 장이 닫혀있는지 확인
-        if (!isMarketOpenTime()) {
-          console.log('장이 닫혀있음 - 전날 데이터 로드');
-          setIsMarketOpen(false);
-          setError(
-            '장이 닫혀있습니다. 장 시간(09:00-15:30)에 다시 시도해주세요.'
-          );
+        setIsMarketOpen(false);
+        setError(
+          '장이 닫혀있습니다. 장 시간(09:00-15:30)에 다시 시도해주세요.'
+        );
 
-          // 장이 닫혀있을 때 전날 업데이트된 마지막 호가 데이터 가져오기
-          setIsLoadingPreviousDayData(true);
-          try {
-            const previousDayQuotesResponse =
-              await getPreviousDayQuotes(pieceUuid);
-            if (
-              previousDayQuotesResponse?.isSuccess &&
-              previousDayQuotesResponse.result
-            ) {
-              setPreviousDayQuotesData(previousDayQuotesResponse.result);
-            }
-          } catch (error) {
-            console.error('Error fetching previous day quotes:', error);
-          } finally {
-            setIsLoadingPreviousDayData(false);
+        // 장이 닫혀있을 때 전날 업데이트된 마지막 호가 데이터 가져오기
+        setIsLoadingPreviousDayData(true);
+        try {
+          const previousDayQuotesResponse =
+            await getPreviousDayQuotes(pieceUuid);
+          if (
+            previousDayQuotesResponse?.isSuccess &&
+            previousDayQuotesResponse.result
+          ) {
+            setPreviousDayQuotesData(previousDayQuotesResponse.result);
           }
-        } else {
-          // 장이 열려있지만 연결이 안된 경우 에러 메시지 표시
-          console.log('장이 열려있지만 연결 실패');
-          setError(
-            '호가 데이터를 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요.'
-          );
-          setLoading(false); // 로딩 상태 해제
+        } catch (error) {
+          console.error('Error fetching previous day quotes:', error);
+        } finally {
+          setIsLoadingPreviousDayData(false);
         }
-      }, 8000); // 타임아웃 시간을 8초로 단축
+      }, 10000);
 
       setConnectionTimeout(timeout);
     }
 
     return () => {
       if (connectionTimeout) {
-        console.log('타임아웃 정리');
         clearTimeout(connectionTimeout);
       }
     };
@@ -342,13 +305,8 @@ export default function OrderBook({ pieceUuid }: OrderBookProps) {
     ...orderBook.bids.map((bid) => bid.total)
   );
 
-  // 장이 닫혀있을 때 표시할 컴포넌트 (실시간 데이터 업데이트 중이 아닐 때만)
-  if (
-    !isMarketOpen &&
-    !loading &&
-    !isConnected &&
-    error?.includes('장이 닫혀있습니다')
-  ) {
+  // 장이 닫혀있을 때 표시할 컴포넌트
+  if (!isMarketOpen && !loading) {
     return (
       <div className="bg-gray-900 rounded-lg p-4">
         <div className="flex justify-between items-center mb-3">
@@ -450,26 +408,17 @@ export default function OrderBook({ pieceUuid }: OrderBookProps) {
     return (
       <div className="bg-gray-900 rounded-lg p-4">
         <h3 className="text-base font-semibold text-white mb-3">호가창</h3>
-        <div className="text-center py-6">
-          <div className="mb-4">
-            <div className="animate-spin w-8 h-8 border-2 border-gray-600 border-t-white rounded-full mx-auto mb-2"></div>
-            <p className="text-sm text-gray-400">호가를 가져오고 있습니다</p>
-            <p className="text-xs text-gray-500 mt-1">
-              실시간 데이터 연결 중...
-            </p>
-          </div>
-          <div className="animate-pulse">
-            <div className="grid grid-cols-2 gap-3">
-              {[...Array(5)].map((_, index) => (
-                <div key={index} className="space-y-1">
-                  <div className="h-4 bg-gray-700 rounded"></div>
-                  <div className="h-4 bg-gray-700 rounded"></div>
-                  <div className="h-4 bg-gray-700 rounded"></div>
-                  <div className="h-4 bg-gray-700 rounded"></div>
-                  <div className="h-4 bg-gray-700 rounded"></div>
-                </div>
-              ))}
-            </div>
+        <div className="animate-pulse">
+          <div className="grid grid-cols-2 gap-3">
+            {[...Array(5)].map((_, index) => (
+              <div key={index} className="space-y-1">
+                <div className="h-4 bg-gray-700 rounded"></div>
+                <div className="h-4 bg-gray-700 rounded"></div>
+                <div className="h-4 bg-gray-700 rounded"></div>
+                <div className="h-4 bg-gray-700 rounded"></div>
+                <div className="h-4 bg-gray-700 rounded"></div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -485,12 +434,6 @@ export default function OrderBook({ pieceUuid }: OrderBookProps) {
             <div className="flex items-center space-x-1">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
               <span className="text-xs text-green-400">실시간</span>
-            </div>
-          )}
-          {error && !isConnected && (
-            <div className="flex items-center space-x-1">
-              <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-              <span className="text-xs text-red-400">연결 실패</span>
             </div>
           )}
           {error && <span className="text-xs text-red-400">{error}</span>}
