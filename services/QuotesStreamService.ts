@@ -30,9 +30,11 @@ class QuotesStreamService {
     let eventSource = this.eventSources.get(key);
 
     if (!eventSource) {
-      // 새로운 EventSource 생성
-      const sseUrl = `/api/sse/quotes/${pieceProductUuid}`;
-      console.log(`SSE 연결 시도: ${sseUrl}`);
+      // 직접 외부 API에 EventSource 연결
+      const baseUrl =
+        process.env.NEXT_PUBLIC_BASE_API_URL || 'https://api.pieceofcake.site';
+      const sseUrl = `${baseUrl}/real-time-data-service/api/v1/kis-api/stream/quotes-update/${pieceProductUuid}`;
+      console.log(`SSE 직접 연결 시도: ${sseUrl}`);
 
       eventSource = new EventSource(sseUrl);
 
