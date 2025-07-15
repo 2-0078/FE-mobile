@@ -129,27 +129,13 @@ export default function PieceDetailCard({ product }: PieceDetailCardProps) {
           setQoutesData(qoutesResponse.result);
         } else {
           console.log('Qoutes API failed or no data');
-          // 임시로 더미 데이터 사용 (테스트용)
-          const dummyQoutesData: QoutesData = {
-            askp: [piece.closingPrice ? piece.closingPrice + 10 : 1010],
-            bidp: [piece.closingPrice ? piece.closingPrice - 10 : 990],
-            askpRsq: [1.0],
-            bidpRsq: [-1.0],
-          };
-          console.log('Using dummy qoutes data:', dummyQoutesData);
-          setQoutesData(dummyQoutesData);
+          // API 실패 시 더미 데이터 대신 null로 설정하여 로딩 상태 유지
+          setQoutesData(null);
         }
       } catch (error) {
         console.error('Error fetching qoutes:', error);
-        // 에러 시에도 더미 데이터 사용
-        const dummyQoutesData: QoutesData = {
-          askp: [piece.closingPrice ? piece.closingPrice + 10 : 1010],
-          bidp: [piece.closingPrice ? piece.closingPrice - 10 : 990],
-          askpRsq: [1.0],
-          bidpRsq: [-1.0],
-        };
-        console.log('Using dummy qoutes data due to error:', dummyQoutesData);
-        setQoutesData(dummyQoutesData);
+        // 에러 시에도 더미 데이터 대신 null로 설정
+        setQoutesData(null);
       }
 
       // 전날 업데이트된 마지막 호가 데이터 가져오기
@@ -307,8 +293,8 @@ export default function PieceDetailCard({ product }: PieceDetailCardProps) {
           )}
         </div>
         <div className="px-4 pb-4 flex justify-start items-center gap-1 min-h-[20px]">
-          {isLoadingMarketData ? (
-            // 로딩 중일 때 스켈레톤
+          {isLoadingMarketData || !qoutesData ? (
+            // 로딩 중이거나 데이터가 없을 때 스켈레톤
             <div className="flex items-center gap-1">
               <Skeleton width="w-12" height="h-5" rounded="sm" />
               <Skeleton width="w-12" height="h-5" rounded="sm" />

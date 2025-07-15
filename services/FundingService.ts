@@ -47,16 +47,8 @@ export class FundingService {
       const productsWithNull = await Promise.all(
         fundingProductsUuidList.fundingUuidList.map(async (uuid, index) => {
           try {
-            console.log(
-              `Loading funding product ${index + 1}/${fundingProductsUuidList.fundingUuidList.length}:`,
-              uuid
-            );
             const product = await getFundingProduct(uuid);
-            console.log(
-              'Individual funding product loaded:',
-              product?.productName,
-              product?.funding?.fundingUuid
-            );
+
             return product;
           } catch (error) {
             console.error(

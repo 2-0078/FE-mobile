@@ -245,8 +245,9 @@ export default function OrderBook({ pieceUuid }: OrderBookProps) {
           setError(
             '호가 데이터를 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요.'
           );
+          setLoading(false); // 로딩 상태 해제
         }
-      }, 10000);
+      }, 8000); // 타임아웃 시간을 8초로 단축
 
       setConnectionTimeout(timeout);
     }
@@ -375,6 +376,9 @@ export default function OrderBook({ pieceUuid }: OrderBookProps) {
           <div className="mb-4">
             <div className="animate-spin w-8 h-8 border-2 border-gray-600 border-t-white rounded-full mx-auto mb-2"></div>
             <p className="text-sm text-gray-400">호가를 가져오고 있습니다</p>
+            <p className="text-xs text-gray-500 mt-1">
+              실시간 데이터 연결 중...
+            </p>
           </div>
           <div className="animate-pulse">
             <div className="grid grid-cols-2 gap-3">
@@ -403,6 +407,12 @@ export default function OrderBook({ pieceUuid }: OrderBookProps) {
             <div className="flex items-center space-x-1">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
               <span className="text-xs text-green-400">실시간</span>
+            </div>
+          )}
+          {error && !isConnected && (
+            <div className="flex items-center space-x-1">
+              <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+              <span className="text-xs text-red-400">연결 실패</span>
             </div>
           )}
           {error && <span className="text-xs text-red-400">{error}</span>}

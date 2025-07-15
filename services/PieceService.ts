@@ -47,16 +47,8 @@ export class PieceService {
       const productsWithNull = await Promise.all(
         pieceProductUuidList.pieceProductUuidList.map(async (uuid, index) => {
           try {
-            console.log(
-              `Loading piece product ${index + 1}/${pieceProductUuidList.pieceProductUuidList.length}:`,
-              uuid
-            );
             const product = await getPieceProducts(uuid);
-            console.log(
-              'Individual piece product loaded:',
-              product?.productName,
-              product?.piece?.pieceProductUuid
-            );
+
             return product;
           } catch (error) {
             console.error(
