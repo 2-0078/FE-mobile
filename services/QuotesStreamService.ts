@@ -8,6 +8,7 @@ class QuotesStreamService {
   private static instance: QuotesStreamService;
   private eventSources: Map<string, EventSource> = new Map();
   private callbacks: Map<string, QuotesUpdateCallback[]> = new Map();
+  private connectionStatus: Map<string, boolean> = new Map();
 
   private constructor() {}
 
@@ -37,6 +38,7 @@ class QuotesStreamService {
 
       eventSource.onopen = () => {
         console.log(`SSE 연결 성공: ${pieceProductUuid}`);
+        this.connectionStatus.set(key, true);
       };
 
       eventSource.onmessage = (event) => {
@@ -46,8 +48,19 @@ class QuotesStreamService {
 
           // 등록된 모든 콜백 호출
           const callbacks = this.callbacks.get(key);
-          if (callbacks) {
-            callbacks.forEach((cb) => cb(data));
+          if (callbacks && callbacks.length > 0) {
+            console.log(
+              `콜백 실행: ${pieceProductUuid} (${callbacks.length}개 콜백)`
+            );
+            callbacks.forEach((cb) => {
+              try {
+                cb(data);
+              } catch (error) {
+                console.error('콜백 실행 중 오류:', error);
+              }
+            });
+          } else {
+            console.warn(`콜백이 없음: ${pieceProductUuid}`);
           }
         } catch (error) {
           console.error(
@@ -61,6 +74,8 @@ class QuotesStreamService {
 
       eventSource.onerror = (error) => {
         console.error(`SSE 연결 오류 (${pieceProductUuid}):`, error);
+        this.connectionStatus.set(key, false);
+
         if (eventSource) {
           console.error('EventSource readyState:', eventSource.readyState);
 
@@ -82,7 +97,17 @@ class QuotesStreamService {
     if (!this.callbacks.has(key)) {
       this.callbacks.set(key, []);
     }
-    this.callbacks.get(key)!.push(callback);
+
+    // 중복 콜백 방지
+    const existingCallbacks = this.callbacks.get(key)!;
+    if (!existingCallbacks.includes(callback)) {
+      existingCallbacks.push(callback);
+      console.log(
+        `콜백 등록: ${pieceProductUuid} (총 ${existingCallbacks.length}개)`
+      );
+    } else {
+      console.log(`콜백 이미 존재: ${pieceProductUuid}`);
+    }
 
     // 연결 해제 함수 반환 (특정 콜백만 제거)
     return () => {
@@ -123,6 +148,7 @@ class QuotesStreamService {
     if (eventSource) {
       eventSource.close();
       this.eventSources.delete(key);
+      this.connectionStatus.delete(key);
       console.log(`SSE 연결 해제: ${pieceProductUuid}`);
     }
 
@@ -130,13 +156,20 @@ class QuotesStreamService {
     this.callbacks.delete(key);
   }
 
+  // 연결 상태 확인
+  isConnected(pieceProductUuid: string): boolean {
+    const key = `quotes-${pieceProductUuid}`;
+    return this.connectionStatus.get(key) || false;
+  }
+
   // 모든 연결 해제
   disconnectAll(): void {
-    this.eventSources.forEach((eventSource, key) => {
+    this.eventSources.forEach((eventSource) => {
       eventSource.close();
     });
     this.eventSources.clear();
     this.callbacks.clear();
+    this.connectionStatus.clear();
     console.log('모든 SSE 연결 해제');
   }
 }
