@@ -35,10 +35,13 @@ class QuotesStreamService {
     this.callbacks.get(key)!.push(callback);
 
     // 내부 API를 통해 SSE 연결 생성
-    const eventSource = new EventSource(`/api/sse/quotes/${pieceProductUuid}`);
+    const sseUrl = `/api/sse/quotes/${pieceProductUuid}`;
+    console.log(`SSE 연결 시도: ${sseUrl}`);
+
+    const eventSource = new EventSource(sseUrl);
 
     eventSource.onopen = () => {
-      console.log(`SSE 연결 시작: ${pieceProductUuid}`);
+      console.log(`SSE 연결 성공: ${pieceProductUuid}`);
     };
 
     eventSource.onmessage = (event) => {
@@ -52,13 +55,23 @@ class QuotesStreamService {
           callbacks.forEach((cb) => cb(data));
         }
       } catch (error) {
-        console.error('SSE 데이터 파싱 오류:', error);
+        console.error('SSE 데이터 파싱 오류:', error, 'Raw data:', event.data);
       }
     };
 
     eventSource.onerror = (error) => {
       console.error(`SSE 연결 오류 (${pieceProductUuid}):`, error);
-      this.disconnectFromQuotesStream(pieceProductUuid);
+      console.error('EventSource readyState:', eventSource.readyState);
+
+      // 연결 상태에 따른 처리
+      if (eventSource.readyState === EventSource.CLOSED) {
+        console.log(`SSE 연결이 닫힘: ${pieceProductUuid}`);
+      } else if (eventSource.readyState === EventSource.CONNECTING) {
+        console.log(`SSE 재연결 시도 중: ${pieceProductUuid}`);
+      }
+
+      // 에러 발생 시 연결 해제하지 않고 재연결 시도
+      // this.disconnectFromQuotesStream(pieceProductUuid);
     };
 
     this.eventSources.set(key, eventSource);

@@ -17,13 +17,22 @@ export async function GET(
       headers: {
         'Accept': 'text/event-stream',
         'Cache-Control': 'no-cache',
+        'User-Agent': 'PieceOfCake-Mobile/1.0',
       },
     });
 
     if (!response.ok) {
-      console.error('SSE quotes endpoint returned error:', response.status);
-      return new Response('SSE quotes endpoint error', {
+      console.error(
+        'SSE quotes endpoint returned error:',
+        response.status,
+        response.statusText
+      );
+      return new Response(`SSE quotes endpoint error: ${response.status}`, {
         status: response.status,
+        headers: {
+          'Content-Type': 'text/plain',
+          'Cache-Control': 'no-cache',
+        },
       });
     }
 
@@ -31,15 +40,37 @@ export async function GET(
     return new Response(response.body, {
       headers: {
         'Content-Type': 'text/event-stream',
-        'Cache-Control': 'no-cache',
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
         'Connection': 'keep-alive',
         'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET',
-        'Access-Control-Allow-Headers': 'Cache-Control',
+        'Access-Control-Allow-Methods': 'GET, OPTIONS',
+        'Access-Control-Allow-Headers': 'Cache-Control, Content-Type',
+        'Access-Control-Allow-Credentials': 'true',
       },
     });
   } catch (error) {
     console.error('SSE quotes proxy error:', error);
-    return new Response('Internal server error', { status: 500 });
+    return new Response(
+      `Internal server error: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      {
+        status: 500,
+        headers: {
+          'Content-Type': 'text/plain',
+          'Cache-Control': 'no-cache',
+        },
+      }
+    );
   }
+}
+
+export async function OPTIONS() {
+  return new Response(null, {
+    status: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, OPTIONS',
+      'Access-Control-Allow-Headers': 'Cache-Control, Content-Type',
+      'Access-Control-Allow-Credentials': 'true',
+    },
+  });
 }
