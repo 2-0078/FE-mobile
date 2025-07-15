@@ -352,8 +352,22 @@ export default function ModalSection({
                       const minute = now.getMinutes();
                       const currentTime = hour * 100 + minute;
 
+                      console.log('ModalSection 장 시간 체크:', {
+                        day,
+                        hour,
+                        minute,
+                        currentTime,
+                        marketOpen: 900,
+                        marketClose: 1530,
+                        isWeekend: day === 0 || day === 6,
+                        isMarketOpen: currentTime >= 900 && currentTime <= 1530,
+                      });
+
                       // 주말 체크
                       if (day === 0 || day === 6) {
+                        console.log(
+                          'ModalSection: 주말이므로 장이 닫혀있습니다'
+                        );
                         return true;
                       }
 
@@ -363,12 +377,22 @@ export default function ModalSection({
                       const isMarketOpen =
                         currentTime >= marketOpen && currentTime <= marketClose;
 
+                      console.log(
+                        `ModalSection 장 상태: ${isMarketOpen ? '열림' : '닫힘'} (${hour}:${minute.toString().padStart(2, '0')})`
+                      );
+
                       // 장이 닫혀있으면 true
                       if (!isMarketOpen) {
+                        console.log(
+                          'ModalSection: 장이 닫혀있으므로 이전 가격 표시'
+                        );
                         return true;
                       }
 
                       // 장이 열려있으면 false (거래 가능)
+                      console.log(
+                        'ModalSection: 장이 열려있으므로 현재 가격 표시'
+                      );
                       return false;
                     })()}
                   />

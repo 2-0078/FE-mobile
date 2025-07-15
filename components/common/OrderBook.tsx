@@ -54,8 +54,20 @@ export default function OrderBook({ pieceUuid }: OrderBookProps) {
     const minute = now.getMinutes();
     const currentTime = hour * 100 + minute; // HHMM 형식
 
+    console.log('장 시간 체크:', {
+      day,
+      hour,
+      minute,
+      currentTime,
+      marketOpen: 900,
+      marketClose: 1530,
+      isWeekend: day === 0 || day === 6,
+      isMarketOpen: currentTime >= 900 && currentTime <= 1530,
+    });
+
     // 주말 체크
     if (day === 0 || day === 6) {
+      console.log('주말이므로 장이 닫혀있습니다');
       return false;
     }
 
@@ -63,7 +75,12 @@ export default function OrderBook({ pieceUuid }: OrderBookProps) {
     const marketOpen = 900; // 09:00
     const marketClose = 1530; // 15:30
 
-    return currentTime >= marketOpen && currentTime <= marketClose;
+    const isOpen = currentTime >= marketOpen && currentTime <= marketClose;
+    console.log(
+      `장 상태: ${isOpen ? '열림' : '닫힘'} (${hour}:${minute.toString().padStart(2, '0')})`
+    );
+
+    return isOpen;
   };
 
   // SSE 실시간 호가 데이터 처리
