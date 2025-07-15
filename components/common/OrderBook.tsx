@@ -1,10 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import {
-  getOrderBook,
-  getPreviousDayQuotes,
-} from '@/action/market-price-service';
+import { getPreviousDayQuotes } from '@/action/market-price-service';
 import { OrderBookItem } from '@/types/ProductTypes';
 import { RealTimeQuotesData } from '@/types/ProductTypes';
 import QuotesStreamService from '@/services/QuotesStreamService';
@@ -152,7 +149,27 @@ export default function OrderBook({ pieceUuid }: OrderBookProps) {
         setLoading(true);
         setError(null);
 
-        const data = await getOrderBook(pieceUuid);
+        // 클라이언트에서 직접 API 호출
+        const baseUrl =
+          process.env.NEXT_PUBLIC_BASE_API_URL ||
+          'https://api.pieceofcake.site';
+        const apiUrl = `${baseUrl}/real-time-data-service/api/v1/kis-api/orderbook/${pieceUuid}`;
+
+        console.log('호가 데이터 직접 호출:', apiUrl);
+
+        const response = await fetch(apiUrl, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`API 호출 실패: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('호가 데이터 응답:', data);
 
         if (data && data.result) {
           setOrderBook({
