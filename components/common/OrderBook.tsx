@@ -149,63 +149,83 @@ export default function OrderBook({ pieceUuid }: OrderBookProps) {
         setLoading(true);
         setError(null);
 
-        // 클라이언트에서 직접 API 호출
+        // EventSource를 사용하여 호가 데이터 가져오기
         const baseUrl =
           process.env.NEXT_PUBLIC_BASE_API_URL ||
           'https://api.pieceofcake.site';
         const apiUrl = `${baseUrl}/real-time-data-service/api/v1/kis-api/orderbook/${pieceUuid}`;
 
-        console.log('호가 데이터 직접 호출:', apiUrl);
+        console.log('호가 데이터 EventSource 연결:', apiUrl);
 
-        const response = await fetch(apiUrl, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+        return new Promise<void>((resolve, reject) => {
+          const eventSource = new EventSource(apiUrl);
 
-        if (!response.ok) {
-          throw new Error(`API 호출 실패: ${response.status}`);
-        }
-
-        const data = await response.json();
-        console.log('호가 데이터 응답:', data);
-
-        if (data && data.result) {
-          setOrderBook({
-            asks: data.result.asks || [],
-            bids: data.result.bids || [],
-            lastPrice: data.result.lastPrice || 0,
-            change: data.result.change || 0,
-            changePercent: data.result.changePercent || 0,
-            spread: data.result.spread || 0,
-            volume: data.result.volume || 0,
-          });
-        } else {
-          // API 응답이 없거나 실패한 경우 기본 데이터 사용
-          const fallbackData = {
-            asks: [
-              { price: 15000, quantity: 10, total: 150000 },
-              { price: 14900, quantity: 15, total: 223500 },
-              { price: 14800, quantity: 20, total: 296000 },
-              { price: 14700, quantity: 25, total: 367500 },
-              { price: 14600, quantity: 30, total: 438000 },
-            ],
-            bids: [
-              { price: 14500, quantity: 12, total: 174000 },
-              { price: 14400, quantity: 18, total: 259200 },
-              { price: 14300, quantity: 22, total: 314600 },
-              { price: 14200, quantity: 28, total: 397600 },
-              { price: 14100, quantity: 35, total: 493500 },
-            ],
-            lastPrice: 14500,
-            change: 500,
-            changePercent: 3.57,
-            spread: 100,
-            volume: 1000,
+          eventSource.onopen = () => {
+            console.log('호가 데이터 EventSource 연결 성공');
           };
-          setOrderBook(fallbackData);
-        }
+
+          eventSource.onmessage = (event) => {
+            try {
+              const data = JSON.parse(event.data);
+              console.log('호가 데이터 응답:', data);
+
+              if (data && data.result) {
+                setOrderBook({
+                  asks: data.result.asks || [],
+                  bids: data.result.bids || [],
+                  lastPrice: data.result.lastPrice || 0,
+                  change: data.result.change || 0,
+                  changePercent: data.result.changePercent || 0,
+                  spread: data.result.spread || 0,
+                  volume: data.result.volume || 0,
+                });
+              } else {
+                // API 응답이 없거나 실패한 경우 기본 데이터 사용
+                const fallbackData = {
+                  asks: [
+                    { price: 15000, quantity: 10, total: 150000 },
+                    { price: 14900, quantity: 15, total: 223500 },
+                    { price: 14800, quantity: 20, total: 296000 },
+                    { price: 14700, quantity: 25, total: 367500 },
+                    { price: 14600, quantity: 30, total: 438000 },
+                  ],
+                  bids: [
+                    { price: 14500, quantity: 12, total: 174000 },
+                    { price: 14400, quantity: 18, total: 259200 },
+                    { price: 14300, quantity: 22, total: 314600 },
+                    { price: 14200, quantity: 28, total: 397600 },
+                    { price: 14100, quantity: 35, total: 493500 },
+                  ],
+                  lastPrice: 14500,
+                  change: 500,
+                  changePercent: 3.57,
+                  spread: 100,
+                  volume: 1000,
+                };
+                setOrderBook(fallbackData);
+              }
+
+              setLoading(false);
+              eventSource.close();
+              resolve();
+            } catch (error) {
+              console.error('호가 데이터 파싱 오류:', error);
+              reject(error);
+            }
+          };
+
+          eventSource.onerror = (error) => {
+            console.error('호가 데이터 EventSource 오류:', error);
+            eventSource.close();
+            reject(error);
+          };
+
+          // 타임아웃 설정 (5초)
+          setTimeout(() => {
+            eventSource.close();
+            reject(new Error('호가 데이터 요청 타임아웃'));
+          }, 5000);
+        });
       } catch (err) {
         console.error('Failed to fetch order book:', err);
         setError('호가 데이터를 불러오는데 실패했습니다.');
@@ -233,7 +253,6 @@ export default function OrderBook({ pieceUuid }: OrderBookProps) {
           volume: 1000,
         };
         setOrderBook(fallbackData);
-      } finally {
         setLoading(false);
       }
     };
