@@ -46,15 +46,29 @@ export default function OrderBook({ pieceUuid }: OrderBookProps) {
   const [isLoadingPreviousDayData, setIsLoadingPreviousDayData] =
     useState(false);
 
+  // 장 시간 체크 함수
+  const isMarketOpenTime = () => {
+    const now = new Date();
+    const day = now.getDay(); // 0: 일요일, 1: 월요일, ..., 6: 토요일
+    const hour = now.getHours();
+    const minute = now.getMinutes();
+    const currentTime = hour * 100 + minute; // HHMM 형식
+
+    // 주말 체크
+    if (day === 0 || day === 6) {
+      return false;
+    }
+
+    // 장 시간 체크 (09:00-15:30)
+    const marketOpen = 900; // 09:00
+    const marketClose = 1530; // 15:30
+
+    return currentTime >= marketOpen && currentTime <= marketClose;
+  };
+
   // SSE 실시간 호가 데이터 처리
   const handleQuotesUpdate = (data: RealTimeQuotesData) => {
     console.log('실시간 호가 업데이트:', data);
-
-    // 연결 타임아웃 제거
-    if (connectionTimeout) {
-      clearTimeout(connectionTimeout);
-      setConnectionTimeout(null);
-    }
 
     const asks: OrderBookItem[] = data.askp
       .map((price, index) => ({
@@ -95,6 +109,7 @@ export default function OrderBook({ pieceUuid }: OrderBookProps) {
     setIsConnected(true);
     setIsMarketOpen(true);
     setLoading(false);
+    setError(null); // 연결 성공 시 에러 메시지 제거
   };
 
   useEffect(() => {
@@ -182,51 +197,79 @@ export default function OrderBook({ pieceUuid }: OrderBookProps) {
       handleQuotesUpdate
     );
 
-    // 연결 타임아웃 설정 (10초 후 장이 닫혀있다고 표시)
-    const timeout = setTimeout(async () => {
-      if (!isConnected) {
-        setIsMarketOpen(false);
-        setError(
-          '장이 닫혀있습니다. 장 시간(09:00-15:30)에 다시 시도해주세요.'
-        );
-
-        // 장이 닫혀있을 때 전날 업데이트된 마지막 호가 데이터 가져오기
-        setIsLoadingPreviousDayData(true);
-        try {
-          const previousDayQuotesResponse =
-            await getPreviousDayQuotes(pieceUuid);
-          if (
-            previousDayQuotesResponse?.isSuccess &&
-            previousDayQuotesResponse.result
-          ) {
-            setPreviousDayQuotesData(previousDayQuotesResponse.result);
-          }
-        } catch (error) {
-          console.error('Error fetching previous day quotes:', error);
-        } finally {
-          setIsLoadingPreviousDayData(false);
-        }
-      }
-    }, 10000);
-
-    setConnectionTimeout(timeout);
-
     // 컴포넌트 언마운트 시 연결 해제
     return () => {
       disconnect();
+    };
+  }, [pieceUuid]);
+
+  // 연결 타임아웃 관리
+  useEffect(() => {
+    if (isConnected) {
+      // 연결이 성공했으면 타임아웃 제거
+      if (connectionTimeout) {
+        clearTimeout(connectionTimeout);
+        setConnectionTimeout(null);
+      }
+      return;
+    }
+
+    // 연결되지 않은 상태에서만 타임아웃 설정
+    if (!isConnected && !connectionTimeout) {
+      const timeout = setTimeout(async () => {
+        // 장 시간을 체크하여 실제로 장이 닫혀있는지 확인
+        if (!isMarketOpenTime()) {
+          setIsMarketOpen(false);
+          setError(
+            '장이 닫혀있습니다. 장 시간(09:00-15:30)에 다시 시도해주세요.'
+          );
+
+          // 장이 닫혀있을 때 전날 업데이트된 마지막 호가 데이터 가져오기
+          setIsLoadingPreviousDayData(true);
+          try {
+            const previousDayQuotesResponse =
+              await getPreviousDayQuotes(pieceUuid);
+            if (
+              previousDayQuotesResponse?.isSuccess &&
+              previousDayQuotesResponse.result
+            ) {
+              setPreviousDayQuotesData(previousDayQuotesResponse.result);
+            }
+          } catch (error) {
+            console.error('Error fetching previous day quotes:', error);
+          } finally {
+            setIsLoadingPreviousDayData(false);
+          }
+        } else {
+          // 장이 열려있지만 연결이 안된 경우 에러 메시지 표시
+          setError(
+            '호가 데이터를 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요.'
+          );
+        }
+      }, 10000);
+
+      setConnectionTimeout(timeout);
+    }
+
+    return () => {
       if (connectionTimeout) {
         clearTimeout(connectionTimeout);
       }
     };
-  }, [pieceUuid]);
+  }, [isConnected, pieceUuid, connectionTimeout]);
 
   const maxTotal = Math.max(
     ...orderBook.asks.map((ask) => ask.total),
     ...orderBook.bids.map((bid) => bid.total)
   );
 
-  // 장이 닫혀있을 때 표시할 컴포넌트
-  if (!isMarketOpen && !loading) {
+  // 장이 닫혀있을 때 표시할 컴포넌트 (실시간 데이터 업데이트 중이 아닐 때만)
+  if (
+    !isMarketOpen &&
+    !loading &&
+    !isConnected &&
+    error?.includes('장이 닫혀있습니다')
+  ) {
     return (
       <div className="bg-gray-900 rounded-lg p-4">
         <div className="flex justify-between items-center mb-3">
@@ -328,17 +371,23 @@ export default function OrderBook({ pieceUuid }: OrderBookProps) {
     return (
       <div className="bg-gray-900 rounded-lg p-4">
         <h3 className="text-base font-semibold text-white mb-3">호가창</h3>
-        <div className="animate-pulse">
-          <div className="grid grid-cols-2 gap-3">
-            {[...Array(5)].map((_, index) => (
-              <div key={index} className="space-y-1">
-                <div className="h-4 bg-gray-700 rounded"></div>
-                <div className="h-4 bg-gray-700 rounded"></div>
-                <div className="h-4 bg-gray-700 rounded"></div>
-                <div className="h-4 bg-gray-700 rounded"></div>
-                <div className="h-4 bg-gray-700 rounded"></div>
-              </div>
-            ))}
+        <div className="text-center py-6">
+          <div className="mb-4">
+            <div className="animate-spin w-8 h-8 border-2 border-gray-600 border-t-white rounded-full mx-auto mb-2"></div>
+            <p className="text-sm text-gray-400">호가를 가져오고 있습니다</p>
+          </div>
+          <div className="animate-pulse">
+            <div className="grid grid-cols-2 gap-3">
+              {[...Array(5)].map((_, index) => (
+                <div key={index} className="space-y-1">
+                  <div className="h-4 bg-gray-700 rounded"></div>
+                  <div className="h-4 bg-gray-700 rounded"></div>
+                  <div className="h-4 bg-gray-700 rounded"></div>
+                  <div className="h-4 bg-gray-700 rounded"></div>
+                  <div className="h-4 bg-gray-700 rounded"></div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
