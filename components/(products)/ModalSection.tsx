@@ -29,7 +29,7 @@ export default function ModalSection({
   itemUuid: string;
   type: 'FUNDING' | 'PIECE';
 }) {
-  console.log(type);
+  //console.log(type);
   const commentPage = useSearchParams().get('commentPage') || '1';
   const [replies, setReplies] = useState<ReplyType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -47,39 +47,86 @@ export default function ModalSection({
       } else {
         latestData = await getPieceProducts(itemUuid);
 
-        // Piece 상품의 경우 전일 마지막 가격도 가져오기
-        if (latestData && !latestData.piece.closingPrice) {
+        // Piece 상품의 경우 실시간 시세 데이터와 전일 마지막 가격 가져오기
+        if (latestData) {
           try {
-            const { getPreviousDayQuotes } = await import(
+            // 장 시간 체크 함수
+            const isMarketOpenTime = () => {
+              const now = new Date();
+              const day = now.getDay(); // 0: 일요일, 1: 월요일, ..., 6: 토요일
+              const hour = now.getHours();
+              const minute = now.getMinutes();
+              const currentTime = hour * 100 + minute; // HHMM 형식
+
+              // 주말 체크
+              if (day === 0 || day === 6) {
+                return false;
+              }
+
+              // 장 시간 체크 (09:00-15:30)
+              const marketOpen = 900; // 09:00
+              const marketClose = 1530; // 15:30
+
+              return currentTime >= marketOpen && currentTime <= marketClose;
+            };
+
+            // 실시간 시세 데이터 가져오기
+            const { getRealTimePrice } = await import(
               '@/action/market-price-service'
             );
-            const previousDayQuotesResponse =
-              await getPreviousDayQuotes(itemUuid);
+            const realTimePriceResponse = await getRealTimePrice(itemUuid);
 
             if (
-              previousDayQuotesResponse?.isSuccess &&
-              previousDayQuotesResponse.result
+              realTimePriceResponse?.isSuccess &&
+              realTimePriceResponse.result &&
+              realTimePriceResponse.result.price > 0
             ) {
-              // 전일 마지막 가격을 계산 (매수/매도 호가의 중간값)
-              const askp = previousDayQuotesResponse.result.askp[0] || 0;
-              const bidp = previousDayQuotesResponse.result.bidp[0] || 0;
-              const previousClosingPrice =
-                askp > 0 && bidp > 0
-                  ? Math.round((askp + bidp) / 2)
-                  : askp || bidp;
+              // 실시간 가격으로 closingPrice 업데이트
+              latestData = {
+                ...latestData,
+                piece: {
+                  ...latestData.piece,
+                  closingPrice: realTimePriceResponse.result.price,
+                },
+              };
+            } else {
+              // 실시간 데이터가 없거나 장이 닫혀있을 때 전일 마지막 가격 가져오기
+              if (!latestData.piece.closingPrice || !isMarketOpenTime()) {
+                const { getPreviousDayQuotes } = await import(
+                  '@/action/market-price-service'
+                );
+                const previousDayQuotesResponse =
+                  await getPreviousDayQuotes(itemUuid);
 
-              if (previousClosingPrice > 0) {
-                latestData = {
-                  ...latestData,
-                  piece: {
-                    ...latestData.piece,
-                    previousClosingPrice: previousClosingPrice,
-                  },
-                };
+                if (
+                  previousDayQuotesResponse?.isSuccess &&
+                  previousDayQuotesResponse.result
+                ) {
+                  // 전일 마지막 가격을 계산 (매수/매도 호가의 중간값)
+                  const askp = previousDayQuotesResponse.result.askp[0] || 0;
+                  const bidp = previousDayQuotesResponse.result.bidp[0] || 0;
+                  const previousClosingPrice =
+                    askp > 0 && bidp > 0
+                      ? Math.round((askp + bidp) / 2)
+                      : askp || bidp;
+
+                  if (previousClosingPrice > 0) {
+                    latestData = {
+                      ...latestData,
+                      piece: {
+                        ...latestData.piece,
+                        previousClosingPrice: previousClosingPrice,
+                      },
+                    };
+                  }
+                }
               }
             }
           } catch (error) {
-            console.error('Failed to fetch previous day quotes:', error);
+            console.error(
+              'Failed to fetch real-time price or previous day quotes:',
+              error
+            );
           }
         }
       }
@@ -298,12 +345,32 @@ export default function ModalSection({
                         .tradeQuantity
                     }
                     onTradingCompleted={handleTradingCompleted}
-                    isPreviousPrice={
-                      !(currentProductData as PieceProductType).piece
-                        .closingPrice &&
-                      !!(currentProductData as PieceProductType).piece
-                        .previousClosingPrice
-                    }
+                    isPreviousPrice={(() => {
+                      const now = new Date();
+                      const day = now.getDay();
+                      const hour = now.getHours();
+                      const minute = now.getMinutes();
+                      const currentTime = hour * 100 + minute;
+
+                      // 주말 체크
+                      if (day === 0 || day === 6) {
+                        return true;
+                      }
+
+                      // 장 시간 체크 (09:00-15:30)
+                      const marketOpen = 900;
+                      const marketClose = 1530;
+                      const isMarketOpen =
+                        currentTime >= marketOpen && currentTime <= marketClose;
+
+                      // 장이 닫혀있으면 true
+                      if (!isMarketOpen) {
+                        return true;
+                      }
+
+                      // 장이 열려있으면 false (거래 가능)
+                      return false;
+                    })()}
                   />
                 </div>
               )}

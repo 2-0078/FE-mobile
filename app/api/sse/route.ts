@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
     ? `${baseUrl}/alert-service/api/v1/alert/stream/new?memberUuid=${memberUuid}`
     : `${baseUrl}/alert-service/api/v1/alert/stream/new`;
 
-  console.log('Proxying SSE request to:', sseUrl);
+  //console.log('Proxying SSE request to:', sseUrl);
 
   try {
     const response = await fetch(sseUrl, {

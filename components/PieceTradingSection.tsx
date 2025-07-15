@@ -216,13 +216,34 @@ export function PieceTradingSection({
     });
   };
 
+  // 장 시간 체크 함수
+  const isMarketOpenTime = () => {
+    const now = new Date();
+    const day = now.getDay(); // 0: 일요일, 1: 월요일, ..., 6: 토요일
+    const hour = now.getHours();
+    const minute = now.getMinutes();
+    const currentTime = hour * 100 + minute; // HHMM 형식
+
+    // 주말 체크
+    if (day === 0 || day === 6) {
+      return false;
+    }
+
+    // 장 시간 체크 (09:00-15:30)
+    const marketOpen = 900; // 09:00
+    const marketClose = 1530; // 15:30
+
+    return currentTime >= marketOpen && currentTime <= marketClose;
+  };
+
   const isBuyDisabled =
     !quantity ||
     Number(quantity) === 0 ||
     !price ||
     Number(price) === 0 ||
     isPending ||
-    isPreviousPrice; // 장 마감 시 거래 불가
+    isPreviousPrice ||
+    !isMarketOpenTime(); // 장 마감 시 거래 불가
   const isSellDisabled =
     !quantity ||
     Number(quantity) === 0 ||
@@ -231,7 +252,8 @@ export function PieceTradingSection({
     isPending ||
     !userHoldings ||
     userHoldings.quantity === 0 ||
-    isPreviousPrice; // 장 마감 시 거래 불가
+    isPreviousPrice ||
+    !isMarketOpenTime(); // 장 마감 시 거래 불가
 
   // 예치금이 부족한지 확인 (매수 시에만)
   const isInsufficientBalance = Number(quantity) * Number(price) > balance;
@@ -242,12 +264,12 @@ export function PieceTradingSection({
       <div className="flex justify-around gap-x-3 mb-4">
         <div className="text-center">
           <p className="text-gray-600 text-xs">
-            {isPreviousPrice ? '전일 종가' : '현재가'}
+            {!isMarketOpenTime() ? '전일 종가' : '현재가'}
           </p>
           <p className="text-black text-lg font-bold">
             {currentPrice.toLocaleString()}원
           </p>
-          {isPreviousPrice && (
+          {!isMarketOpenTime() && (
             <p className="text-gray-500 text-xs mt-1">(장 마감)</p>
           )}
         </div>
@@ -354,14 +376,14 @@ export function PieceTradingSection({
             min="1"
           />
           <div className="text-right text-gray-400 text-sm mt-1">
-            {isPreviousPrice ? '전일 종가' : '현재가'}:{' '}
+            {!isMarketOpenTime() ? '전일 종가' : '현재가'}:{' '}
             {currentPrice.toLocaleString()}원
           </div>
         </div>
       </div>
 
       {/* 장 마감 알림 */}
-      {isPreviousPrice && (
+      {!isMarketOpenTime() && (
         <div className="px-6 mb-4">
           <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
             <p className="text-yellow-800 text-sm text-center">
@@ -384,7 +406,7 @@ export function PieceTradingSection({
             >
               {isPending
                 ? '처리중...'
-                : isPreviousPrice
+                : !isMarketOpenTime()
                   ? '장 마감'
                   : '매도하기'}
             </Button>
@@ -394,7 +416,11 @@ export function PieceTradingSection({
             disabled={isBuyDisabled}
             className={`h-14 bg-custom-green text-black text-lg font-bold rounded-full disabled:opacity-50 disabled:cursor-not-allowed hover:bg-green-600 ${userHoldings && userHoldings.quantity > 0 ? 'flex-1' : 'w-full'}`}
           >
-            {isPending ? '처리중...' : isPreviousPrice ? '장 마감' : '매수하기'}
+            {isPending
+              ? '처리중...'
+              : !isMarketOpenTime()
+                ? '장 마감'
+                : '매수하기'}
           </Button>
         </div>
       </div>

@@ -61,7 +61,7 @@ export const getFundingWish = async (fundingUuid: string) => {
     const data = (await response.json()) as CommonResponseType<{
       result: boolean;
     }>;
-    console.log('getwishdata', data);
+    //console.log('getwishdata', data);
     return data.result;
   } catch (error) {
     console.error('Failed to get funding wish status:', error);
@@ -93,11 +93,11 @@ export const fundingWish = async (fundingUuid: string, productUuid: string) => {
       }),
     }
   );
-  console.log('response', response);
+  //console.log('response', response);
   const data = (await response.json()) as CommonResponseType<{
     result: unknown;
   }>;
-  console.log('wishdata', data);
+  //console.log('wishdata', data);
 
   // 정상적으로 좋아요 처리되면 revalidateTag 호출
   if (data.isSuccess) {

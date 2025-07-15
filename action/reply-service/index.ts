@@ -10,7 +10,7 @@ export async function getRepliesUuid(
   productUuid: string,
   commentPage: string
 ) {
-  console.log(productUuid);
+  //console.log(productUuid);
   const queryParams = new URLSearchParams();
   queryParams.append('page', (Number(commentPage) - 1).toString());
   const response = await fetch(
@@ -44,7 +44,7 @@ export async function getRepliesWithChildren(
   const token = session?.user?.accessToken || null;
   const memberUuid = session?.user?.memberUuid || null;
 
-  console.log('Fetching replies with children:', {
+  //console.log('Fetching replies with children:', {
     type,
     productUuid,
     commentPage,
@@ -95,7 +95,7 @@ export async function getRepliesWithChildren(
   const listData = (await response.json()) as CommonResponseType<
     ReplyListItemType[]
   >;
-  console.log('Get replies list success:', listData);
+  //console.log('Get replies list success:', listData);
 
   if (!listData.result || listData.result.length === 0) {
     return [];
@@ -139,7 +139,7 @@ export async function getRepliesWithChildren(
   const validReplies = replyDetails.filter(
     (reply): reply is ReplyType => reply !== null
   );
-  console.log('Final replies with children:', validReplies);
+  //console.log('Final replies with children:', validReplies);
 
   return validReplies;
 }
@@ -149,7 +149,7 @@ export async function getReplies(replyUuid: string) {
   const token = session?.user?.accessToken || null;
   const memberUuid = session?.user?.memberUuid || null;
 
-  console.log('Fetching reply detail:', replyUuid);
+  //console.log('Fetching reply detail:', replyUuid);
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -187,7 +187,7 @@ export async function getReplies(replyUuid: string) {
   }
 
   const data = (await response.json()) as CommonResponseType<ReplyType>;
-  console.log('Get reply detail success:', data);
+  //console.log('Get reply detail success:', data);
 
   // If the reply has child replies, fetch them
   if (data.result) {
@@ -208,7 +208,7 @@ export async function getChildReplies(parentReplyUuid: string) {
   const token = session?.user?.accessToken || null;
   const memberUuid = session?.user?.memberUuid || null;
 
-  console.log('Fetching child replies for:', parentReplyUuid);
+  //console.log('Fetching child replies for:', parentReplyUuid);
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -230,7 +230,7 @@ export async function getChildReplies(parentReplyUuid: string) {
     }
   );
 
-  console.log('Get child replies response status:', response.status);
+  //console.log('Get child replies response status:', response.status);
 
   if (!response.ok) {
     const errorText = await response.text();
@@ -245,7 +245,7 @@ export async function getChildReplies(parentReplyUuid: string) {
   }
 
   const data = (await response.json()) as CommonResponseType<ReplyType[]>;
-  console.log('Get child replies success:', data);
+  //console.log('Get child replies success:', data);
   return data.result;
 }
 
@@ -322,7 +322,7 @@ export async function createChildReply({
     throw new Error('회원 정보가 필요합니다.');
   }
 
-  console.log('Creating child reply:', { parentReplyUuid, replyContent });
+  //console.log('Creating child reply:', { parentReplyUuid, replyContent });
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -341,8 +341,8 @@ export async function createChildReply({
     }
   );
 
-  console.log('Child reply response status:', response.status);
-  console.log('Child reply response headers:', response.headers);
+  //console.log('Child reply response status:', response.status);
+  //console.log('Child reply response headers:', response.headers);
 
   if (!response.ok) {
     const errorText = await response.text();
@@ -357,7 +357,7 @@ export async function createChildReply({
   }
 
   const data = (await response.json()) as CommonResponseType<ReplyType>;
-  console.log('Child reply success:', data);
+  //console.log('Child reply success:', data);
 
   // 대댓글 작성 후 해당 부모 댓글만 캐시 무효화
   revalidateTag(`reply-${parentReplyUuid}`);
@@ -395,7 +395,7 @@ export async function updateReply({
     throw new Error('회원 정보가 필요합니다.');
   }
 
-  console.log('Updating reply:', { replyUuid, replyContent });
+  //console.log('Updating reply:', { replyUuid, replyContent });
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -414,7 +414,7 @@ export async function updateReply({
     }
   );
 
-  console.log('Update reply response status:', response.status);
+  //console.log('Update reply response status:', response.status);
 
   if (!response.ok) {
     const errorText = await response.text();
@@ -429,7 +429,7 @@ export async function updateReply({
   }
 
   const data = (await response.json()) as CommonResponseType<ReplyType>;
-  console.log('Update reply success:', data);
+  //console.log('Update reply success:', data);
 
   // 댓글 수정 후 관련 캐시 무효화
   revalidateTag(`reply-${replyUuid}`);
@@ -465,7 +465,7 @@ export async function deleteReply({
     throw new Error('회원 정보가 필요합니다.');
   }
 
-  console.log('Deleting reply:', replyUuid);
+  //console.log('Deleting reply:', replyUuid);
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -481,7 +481,7 @@ export async function deleteReply({
     }
   );
 
-  console.log('Delete reply response status:', response.status);
+  //console.log('Delete reply response status:', response.status);
 
   if (!response.ok) {
     const errorText = await response.text();
@@ -531,7 +531,7 @@ export async function deleteChildReply({
     throw new Error('회원 정보가 필요합니다.');
   }
 
-  console.log('Deleting child reply:', replyUuid);
+  //console.log('Deleting child reply:', replyUuid);
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -547,7 +547,7 @@ export async function deleteChildReply({
     }
   );
 
-  console.log('Delete child reply response status:', response.status);
+  //console.log('Delete child reply response status:', response.status);
 
   if (!response.ok) {
     const errorText = await response.text();
@@ -599,7 +599,7 @@ export async function updateChildReply({
     throw new Error('회원 정보가 필요합니다.');
   }
 
-  console.log('Updating child reply:', { replyUuid, replyContent });
+  //console.log('Updating child reply:', { replyUuid, replyContent });
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -618,7 +618,7 @@ export async function updateChildReply({
     }
   );
 
-  console.log('Update child reply response status:', response.status);
+  //console.log('Update child reply response status:', response.status);
 
   if (!response.ok) {
     const errorText = await response.text();
@@ -633,7 +633,7 @@ export async function updateChildReply({
   }
 
   const data = (await response.json()) as CommonResponseType<ReplyType>;
-  console.log('Update child reply success:', data);
+  //console.log('Update child reply success:', data);
 
   // 대댓글 수정 후 해당 부모 댓글만 캐시 무효화
   revalidateTag(`reply-${parentReplyUuid}`);

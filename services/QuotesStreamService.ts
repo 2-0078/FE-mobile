@@ -38,13 +38,13 @@ class QuotesStreamService {
     const eventSource = new EventSource(`/api/sse/quotes/${pieceProductUuid}`);
 
     eventSource.onopen = () => {
-      console.log(`SSE 연결 시작: ${pieceProductUuid}`);
+      //console.log(`SSE 연결 시작: ${pieceProductUuid}`);
     };
 
     eventSource.onmessage = (event) => {
       try {
         const data: RealTimeQuotesData = JSON.parse(event.data);
-        console.log('실시간 호가 데이터 수신:', data);
+        //console.log('실시간 호가 데이터 수신:', data);
 
         // 등록된 모든 콜백 호출
         const callbacks = this.callbacks.get(key);
@@ -78,7 +78,7 @@ class QuotesStreamService {
     if (eventSource) {
       eventSource.close();
       this.eventSources.delete(key);
-      console.log(`SSE 연결 해제: ${pieceProductUuid}`);
+      //console.log(`SSE 연결 해제: ${pieceProductUuid}`);
     }
 
     // 콜백 제거
@@ -92,7 +92,7 @@ class QuotesStreamService {
     });
     this.eventSources.clear();
     this.callbacks.clear();
-    console.log('모든 SSE 연결 해제');
+    //console.log('모든 SSE 연결 해제');
   }
 }
 

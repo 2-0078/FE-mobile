@@ -68,7 +68,7 @@ export default function OrderBook({ pieceUuid }: OrderBookProps) {
 
   // SSE 실시간 호가 데이터 처리
   const handleQuotesUpdate = (data: RealTimeQuotesData) => {
-    console.log('실시간 호가 업데이트:', data);
+    //console.log('실시간 호가 업데이트:', data);
 
     const asks: OrderBookItem[] = data.askp
       .map((price, index) => ({

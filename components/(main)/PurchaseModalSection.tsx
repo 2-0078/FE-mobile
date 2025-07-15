@@ -44,7 +44,7 @@ export default function PurchaseModalSection() {
     // 결제 요청 예시 (실제 연동 시 아래 코드 사용)
     // await payment.requestPayment({ ... });
     // 현재는 결제창을 띄우지 않습니다.
-    console.log('충전 금액:', Number(amount));
+    //console.log('충전 금액:', Number(amount));
   };
 
   return (

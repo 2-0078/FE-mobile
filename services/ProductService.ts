@@ -66,7 +66,7 @@ export class ProductService {
               // 시장가 가져오기
               try {
                 const marketPriceData = await getPieceMarketPrice(pieceUuid);
-                console.log(`Market price for ${pieceUuid}:`, marketPriceData);
+                //console.log(`Market price for ${pieceUuid}:`, marketPriceData);
 
                 // 시장가가 유효한 숫자인지 확인
                 const marketPrice = marketPriceData.marketPrice;

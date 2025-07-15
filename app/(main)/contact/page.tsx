@@ -52,7 +52,7 @@ export default function ContactPage() {
 
     try {
       // TODO: 실제 API 호출
-      console.log('문의 제출:', form);
+      //console.log('문의 제출:', form);
       alert(
         '문의가 성공적으로 접수되었습니다. 빠른 시일 내에 답변드리겠습니다.'
       );
